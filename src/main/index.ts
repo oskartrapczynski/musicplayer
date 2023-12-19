@@ -1,7 +1,52 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import * as fs from 'fs'
+import { readAudioTags } from './utils'
+import { musicResponse, READ_MUSIC_STATE } from '../global'
+
+const readFileJSON = async () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./db.json', 'utf8', function (err, data) {
+      if (err) {
+        reject(err)
+      }
+      resolve(JSON.parse(data))
+    })
+  })
+}
+const readMusicFile = async (path) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    fs.readFile(path, function (err, data) {
+      if (err) {
+        reject(err)
+      }
+      resolve(data)
+    })
+  })
+} // sprobowac to uproscic do natywnego roziwazania FS
+
+const handleMusicFileOpen = async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'Music files', extensions: ['mp3', 'wav'] }]
+  })
+  try {
+    if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
+    const data = await readMusicFile(filePaths[0])
+    if (!data) throw new Error(READ_MUSIC_STATE.ERROR)
+    const audioTags = readAudioTags(data)
+    return {
+      song: data,
+      filePath: filePaths[0],
+      tags: audioTags,
+      info: READ_MUSIC_STATE.SUCCESS
+    } as musicResponse
+  } catch (err) {
+    return { song: undefined, info: (err as Error).message }
+  }
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -13,7 +58,10 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      // webSecurity: true,
+      webSecurity: false,
+      nodeIntegration: true
     }
   })
 
@@ -48,6 +96,9 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  ipcMain.handle('dialog:openMusic', handleMusicFileOpen)
+  ipcMain.handle('readFileJSON', readFileJSON)
 
   createWindow()
 
