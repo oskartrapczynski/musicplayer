@@ -1,34 +1,41 @@
 # musicplayer
 
-An Electron application with React and TypeScript
+## Description
 
-## Recommended IDE Setup
+This is my BEng project
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Tech stack
 
-## Project Setup
+- Electron
+- React
+- NODE
+- TypeScript
+- MUI
+- Vite
+- NODE-ID3
+- React Router
 
-### Install
+## Goal
 
-```bash
-$ npm install
-```
+Desktop app with 2 modes:
 
-### Development
+- _NORMAL_
+- _PRO_
 
-```bash
-$ npm run dev
-```
+_NORMAL_ mode let you:
 
-### Build
+- play/pause/rewind/change 1 song
+- add/edit/use playlist
+- add/edit/use own tags associated with song
 
-```bash
-# For windows
-$ npm run build:win
+_PRO_ mode let you:
 
-# For macOS
-$ npm run build:mac
+- play/pause/rewind/change 2 songs and mix them
+- add/edit/use playlist
+- add/edit/use own tags associated with song
+- loop music as DJ via LOOP mode
+- add/edit/use HOT CUE (special saved positions of song)
 
-# For Linux
-$ npm run build:linux
-```
+## Prototype
+
+[Figma Link](https://www.figma.com/file/zNbAxSZ5IPf8iJppi8eLOv/Inzynierka?type=design&node-id=0-1&mode=design&t=1Qq58nvYJB8lZKF9-0)
