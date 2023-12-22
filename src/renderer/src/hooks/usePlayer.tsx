@@ -1,15 +1,26 @@
 import { useMemo, useEffect, useState } from 'react'
 
-const usePlayer = (src: string | undefined) => {
-  const audio = useMemo(() => new Audio(src), [src])
+interface Props {
+  audioObj: HTMLAudioElement
+  src: string | undefined
+}
+
+const usePlayer = ({ audioObj, src }: Props) => {
+  const audio = useMemo(() => audioObj, [])
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState<null | number>(null)
   const [songPos, setSongPos] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
 
-  const toggle = () => setIsPlaying(!isPlaying)
-
+  const toggle = () => setIsPlaying((prev) => !prev)
   const changeSongPos = (seek: number) => setSongPos(seek)
+
+  if (src && audio.src !== src) {
+    setIsPlaying(false)
+    changeSongPos(0)
+    URL.revokeObjectURL(audio.src)
+    audio.src = src
+  }
 
   audio.preload = 'metadata'
   audio.onloadedmetadata = () => {
@@ -20,15 +31,14 @@ const usePlayer = (src: string | undefined) => {
     setCurrentTime(audio.currentTime)
   }
 
-  // wsadzic timeout i zmieniac zwracac wartosc seek co sekunde
+  audio.onended = () => {
+    toggle()
+    changeSongPos(0)
+  }
 
+  // sprawdzic przy zmianie normal vs pro
   // useEffect(() => {
-  //   const idTimeout = setInterval(() => {
-  //     console.log(audio.currentTime)
-  //   }, 1000)
-  //   return (): void => {
-  //     clearInterval(idTimeout)
-  //   }
+  //   return () => URL.revokeObjectURL(audio.src)
   // }, [])
 
   useEffect(() => {
@@ -37,15 +47,7 @@ const usePlayer = (src: string | undefined) => {
 
   useEffect(() => {
     audio.currentTime = songPos
-    // setCurrentTime(songPos)
   }, [songPos])
-
-  // useEffect(() => {
-  //   audio.addEventListener('ended', () => setIsPlaying(false))
-  //   return (): void => {
-  //     audio.removeEventListener('ended', () => setIsPlaying(false))
-  //   }
-  // }, [])
 
   return { isPlaying, toggle, duration, changeSongPos, songPos, currentTime } as const
 }

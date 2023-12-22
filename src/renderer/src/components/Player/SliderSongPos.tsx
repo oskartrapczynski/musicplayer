@@ -7,6 +7,7 @@ interface Props {
   changeSongPos: (seek: number) => void
   duration: number | null
   currentTime: number
+  isDisabled: boolean
 }
 
 const SliderSongPos = ({
@@ -15,10 +16,11 @@ const SliderSongPos = ({
   orientation = 'horizontal',
   changeSongPos,
   duration,
-  currentTime
+  currentTime,
+  isDisabled
 }: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
-    console.log(newValue)
+    // console.log(newValue)
     changeSongPos(newValue as number)
   }
   return (
@@ -33,6 +35,7 @@ const SliderSongPos = ({
         value={currentTime}
         onChange={handleChange}
         max={duration ? duration : 0}
+        disabled={isDisabled}
       />
     </Box>
   )

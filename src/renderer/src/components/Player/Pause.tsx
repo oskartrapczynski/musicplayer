@@ -3,11 +3,12 @@ import PauseIcon from '@mui/icons-material/Pause'
 
 interface Props {
   toggle: () => void
+  isDisabled: boolean
 }
 
-const Pause = ({ toggle }: Props) => {
+const Pause = ({ toggle, isDisabled }: Props) => {
   return (
-    <IconButton onClick={() => toggle()}>
+    <IconButton onClick={() => toggle()} disabled={isDisabled}>
       <PauseIcon />
     </IconButton>
   )

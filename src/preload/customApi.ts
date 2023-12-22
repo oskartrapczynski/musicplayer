@@ -1,6 +1,6 @@
-import musicResponse from '../global/musicResponse'
+import MusicResponse from '../global/musicResponse'
 
 export default interface CustomAPIs {
-  openMusic: () => Promise<musicResponse>
+  openMusic: () => Promise<MusicResponse>
   readFileJSON: () => Promise<JSON>
 }

@@ -4,6 +4,12 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
+    resolve: {
+      alias: {
+        '@main': resolve('src/main'),
+        '@global': resolve('src/global/index')
+      }
+    },
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
@@ -12,7 +18,8 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@global': resolve('src/global/index')
       }
     },
     plugins: [react()]

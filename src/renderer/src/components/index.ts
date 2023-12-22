@@ -1,11 +1,23 @@
-import MenuControlBottom from './MenuControlBottom'
-import Next from './Player/Next'
-import Pause from './Player/Pause'
-import Play from './Player/Play'
-import PlayerBasic from './Player/PlayerBasic'
-import Prev from './Player/Prev'
-import Stop from './Player/Stop'
-import SideMenuApp from './SideMenuApp'
-import SliderSongPos from './SliderSongPos'
+import MenuControlBottom from './player/MenuControlBottom'
+import Next from './player/Next'
+import Pause from './player/Pause'
+import Play from './player/Play'
+import Prev from './player/Prev'
+import SongInfo from './player/SongInfo'
+import Stop from './player/Stop'
+import SliderSongPos from './player/SliderSongPos'
+import MenuApp from './player/MenuApp'
+import SwitchAppMode from './player/SwitchAppMode'
 
-export { SideMenuApp, MenuControlBottom, SliderSongPos, Next, Prev, Play, Pause, Stop, PlayerBasic }
+export {
+  MenuControlBottom,
+  SliderSongPos,
+  Next,
+  Prev,
+  Play,
+  Pause,
+  Stop,
+  SongInfo,
+  MenuApp,
+  SwitchAppMode
+}

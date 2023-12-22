@@ -1,4 +1,5 @@
-const secondsToMusicTime = (duration: number) => {
+const secondsToMusicTime = (duration: number | null) => {
+  if (!duration) return '00:00'
   const min = Math.floor(duration / 60)
   const sec = Math.floor(duration % 60)
 

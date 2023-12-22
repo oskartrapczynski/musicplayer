@@ -1,3 +1,4 @@
 import readAudioTags from './readAudioTags'
+import readMusicFile from './readMusicFile'
 
-export { readAudioTags }
+export { readAudioTags, readMusicFile }

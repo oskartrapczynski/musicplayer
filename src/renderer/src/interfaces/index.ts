@@ -1,3 +1,4 @@
+import NodeID3Image from './nodeTagsImage'
 import songTags from './songTags'
 
-export { songTags }
+export type { songTags, NodeID3Image }

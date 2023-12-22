@@ -1,9 +1,13 @@
 import { IconButton } from '@mui/material'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 
-const Next = () => {
+interface Props {
+  isDisabled: boolean
+}
+
+const Next = ({ isDisabled }: Props) => {
   return (
-    <IconButton>
+    <IconButton disabled={isDisabled}>
       <SkipNextIcon />
     </IconButton>
   )
