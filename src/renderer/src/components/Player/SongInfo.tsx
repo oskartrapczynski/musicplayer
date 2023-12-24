@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import { NodeID3Image } from '@renderer/interfaces'
 import { convertBuffetToImage, secondsToMusicTime } from '@renderer/utils'
 import NodeID3 from 'node-id3'
+import MusicNoteIcon from '@mui/icons-material/MusicNote'
 
 interface Props {
   tags?: NodeID3.Tags
@@ -24,7 +25,23 @@ const SongInfo = ({ tags, duration }: Props) => {
       {img ? (
         <img style={{ width: 200, height: 200 }} src={img} alt="cover photo" />
       ) : (
-        <Box sx={{ width: 200, height: 200, backgroundColor: '#000' }} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 200,
+            height: 200,
+            background: 'linear-gradient(#000,#333)'
+          }}
+        >
+          <MusicNoteIcon
+            htmlColor="#fff"
+            sx={{
+              fontSize: '150px'
+            }}
+          />
+        </Box>
       )}
       <Box sx={{ pl: 2 }}>
         <Typography variant="h5">{`Tytuł: ${tags!.title ? tags!.title : '-'}`}</Typography>
