@@ -11,7 +11,8 @@ const handleMusicFileOpen = async () => {
     if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
     const data = await readMusicFile(filePaths[0])
     if (!data) throw new Error(READ_MUSIC_STATE.ERROR)
-    const audioTags = readAudioTags(data)
+    const audioTags = readAudioTags(data, filePaths[0])
+
     return {
       song: data,
       filePath: filePaths[0],
