@@ -2,12 +2,18 @@ import { IconButton } from '@mui/material'
 import StopIcon from '@mui/icons-material/Stop'
 
 interface Props {
+  toggle: (play: boolean) => void
+  changeSongPos: (seek: number) => void
   isDisabled: boolean
 }
 
-const Stop = ({ isDisabled }: Props) => {
+const Stop = ({ isDisabled, toggle, changeSongPos }: Props) => {
+  const handleClick = () => {
+    toggle(false)
+    changeSongPos(0)
+  }
   return (
-    <IconButton disabled={isDisabled}>
+    <IconButton disabled={isDisabled} onClick={handleClick}>
       <StopIcon />
     </IconButton>
   )

@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom'
 interface Props {
   appMode: APP_MODE
   isPlaying: boolean
-  toggle: () => void
+  toggle: (play: boolean) => void
   changeSongPos: (seek: number) => void
   duration: number | null
   songPos: number

@@ -4,7 +4,7 @@ import { Prev, Play, Stop, Next, Pause, SliderSongPos } from '@renderer/componen
 
 interface Props {
   isPlaying: boolean
-  toggle: () => void
+  toggle: (play: boolean) => void
   songPos: number
   changeSongPos: (seek: number) => void
   duration: number | null
@@ -29,7 +29,7 @@ const MenuControlBottom = ({
         ) : (
           <Play toggle={toggle} isDisabled={isDisabled} />
         )}
-        <Stop isDisabled={isDisabled} />
+        <Stop isDisabled={isDisabled} toggle={toggle} changeSongPos={changeSongPos} />
         <Next isDisabled={isDisabled} />
         {!isDisabled && (
           <Typography>{`${secondsToMusicTime(currentTime)}/${secondsToMusicTime(
@@ -45,8 +45,6 @@ const MenuControlBottom = ({
           currentTime={currentTime}
           isDisabled={isDisabled}
         />
-        {/* zmienic slide volume i slider song pos  */}
-        {/* przekazac changeSongPos do onchangfe na slider  */}
       </Box>
     </Box>
   )

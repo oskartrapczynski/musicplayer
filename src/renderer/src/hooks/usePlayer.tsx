@@ -12,7 +12,10 @@ const usePlayer = ({ audioObj, src }: Props) => {
   const [songPos, setSongPos] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
 
-  const toggle = () => setIsPlaying((prev) => !prev)
+  const toggle = (play: boolean) => {
+    if (play === false) setIsPlaying(false)
+    if (play === true) setIsPlaying(true)
+  }
   const changeSongPos = (seek: number) => setSongPos(seek)
 
   if (src && audio.src !== src) {
@@ -32,7 +35,7 @@ const usePlayer = ({ audioObj, src }: Props) => {
   }
 
   audio.onended = () => {
-    toggle()
+    toggle(false)
     changeSongPos(0)
   }
 
