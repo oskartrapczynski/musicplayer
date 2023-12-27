@@ -14,6 +14,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MusicResponse, READ_MUSIC_STATE } from '@global'
 import { openDialogMusicFile } from './utils'
 import { usePlayer } from './hooks'
+import { enqueueSnackbar, SnackbarProvider } from 'notistack'
+import { SnackbarCloseButton } from '@renderer/components'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
@@ -37,13 +39,20 @@ const App = () => {
 
   const handleOpenMusicFile = async () => {
     const data = await openDialogMusicFile()
-    // setSrc(data.song)
-    if (data?.info === READ_MUSIC_STATE.ERROR || data?.info === READ_MUSIC_STATE.CANCELLED) return
+    console.log(data?.info)
+    if (data?.info !== READ_MUSIC_STATE.SUCCESS) {
+      enqueueSnackbar('Nie załadowano utworu', { variant: 'warning' })
+      return
+    }
     setPlayer({ song: data?.song, tags: data?.tags, info: data?.info as READ_MUSIC_STATE })
+    enqueueSnackbar('Załadowano utworu', { variant: 'success' })
   }
 
   return (
     <>
+      <SnackbarProvider
+        action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
+      />
       <BrowserRouter>
         <Routes>
           <Route

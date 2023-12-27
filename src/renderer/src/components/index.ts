@@ -10,6 +10,7 @@ import MenuApp from './player/MenuApp'
 import SwitchAppMode from './player/SwitchAppMode'
 import ContentSection from './player/ContentSection'
 import Queue from './player/Queue'
+import SnackbarCloseButton from './notistack/SnackbarCloseButton'
 
 export {
   MenuControlBottom,
@@ -23,5 +24,6 @@ export {
   MenuApp,
   SwitchAppMode,
   ContentSection,
-  Queue
+  Queue,
+  SnackbarCloseButton
 }
