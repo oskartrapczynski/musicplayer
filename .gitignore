@@ -3,3 +3,7 @@ dist
 out
 *.log*
 musicplayer.rar
+db.json
+settings.json
+tags.json
+playlists.json
