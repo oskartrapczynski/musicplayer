@@ -1,7 +1,14 @@
 // import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import { useState } from 'react'
-import { Genres, Layout, PlayerBasic, PlayerPro, Playlist, Settings } from '@renderer/pages'
+import {
+  GenresPage,
+  Layout,
+  PlayerBasicPage,
+  PlayerProPage,
+  QueuePage,
+  SettingsPage
+} from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MusicResponse, READ_MUSIC_STATE } from '@global'
@@ -59,19 +66,19 @@ const App = () => {
               index
               element={
                 appMode === APP_MODE.NORMAL ? (
-                  <PlayerBasic
+                  <PlayerBasicPage
                     handleOpenMusicFile={handleOpenMusicFile}
                     tags={player.tags}
                     duration={duration}
                   />
                 ) : (
-                  <PlayerPro />
+                  <PlayerProPage />
                 )
               }
             />
-            <Route path="/playlists" element={<Playlist />} />
-            <Route path="/genres" element={<Genres />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/queue" element={<QueuePage />} />
+            <Route path="/genres" element={<GenresPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

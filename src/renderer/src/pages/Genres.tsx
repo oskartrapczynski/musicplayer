@@ -1,5 +1,11 @@
-const Genres = () => {
-  return <div>Genres</div>
+import { ContentSection } from '@renderer/components'
+
+const GenresPage = () => {
+  return (
+    <ContentSection>
+      <div>Genres</div>
+    </ContentSection>
+  )
 }
 
-export default Genres
+export default GenresPage

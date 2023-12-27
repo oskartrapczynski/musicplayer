@@ -1,8 +1,8 @@
-import Genres from './Genres'
+import GenresPage from './Genres'
 import Layout from './Layout'
-import PlayerBasic from './PlayerBasic'
-import PlayerPro from './PlayerPro'
-import Playlist from './Playlist'
-import Settings from './Settings'
+import PlayerBasicPage from './PlayerBasic'
+import PlayerProPage from './PlayerPro'
+import QueuePage from './Queue'
+import SettingsPage from './Settings'
 
-export { PlayerBasic, PlayerPro, Playlist, Genres, Settings, Layout }
+export { PlayerBasicPage, PlayerProPage, QueuePage, GenresPage, SettingsPage, Layout }

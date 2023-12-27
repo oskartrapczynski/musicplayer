@@ -8,6 +8,8 @@ import Stop from './player/Stop'
 import SliderSongPos from './player/SliderSongPos'
 import MenuApp from './player/MenuApp'
 import SwitchAppMode from './player/SwitchAppMode'
+import ContentSection from './player/ContentSection'
+import Queue from './player/Queue'
 
 export {
   MenuControlBottom,
@@ -19,5 +21,7 @@ export {
   Stop,
   SongInfo,
   MenuApp,
-  SwitchAppMode
+  SwitchAppMode,
+  ContentSection,
+  Queue
 }

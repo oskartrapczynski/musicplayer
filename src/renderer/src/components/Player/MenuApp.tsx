@@ -21,7 +21,7 @@ const MenuApp = ({ appMode, setAppMode }: Props) => {
             <LibraryMusicIcon fontSize="large" />
           </IconButton>
         </Link>
-        <Link to="/playlists">
+        <Link to="/queue">
           <IconButton>
             <QueueMusicIcon fontSize="large" />
           </IconButton>

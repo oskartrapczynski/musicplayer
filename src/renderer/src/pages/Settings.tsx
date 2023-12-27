@@ -1,5 +1,11 @@
-const Settings = () => {
-  return <div>Settings</div>
+import { ContentSection } from '@renderer/components'
+
+const SettingsPage = () => {
+  return (
+    <ContentSection>
+      <div>Settings</div>
+    </ContentSection>
+  )
 }
 
-export default Settings
+export default SettingsPage
