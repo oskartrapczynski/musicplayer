@@ -39,13 +39,16 @@ const App = () => {
 
   const handleOpenMusicFile = async () => {
     const data = await openDialogMusicFile()
-    console.log(data?.info)
-    if (data?.info !== READ_MUSIC_STATE.SUCCESS) {
-      enqueueSnackbar('Nie załadowano utworu', { variant: 'warning' })
+    if (data?.info === READ_MUSIC_STATE.CANCELLED) {
+      enqueueSnackbar('Anulowano', { variant: 'warning' })
+      return
+    }
+    if (data?.info === READ_MUSIC_STATE.ERROR) {
+      enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
       return
     }
     setPlayer({ song: data?.song, tags: data?.tags, info: data?.info as READ_MUSIC_STATE })
-    enqueueSnackbar('Załadowano utworu', { variant: 'success' })
+    enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
   return (

@@ -10,7 +10,7 @@ const handleMusicFileOpen = async () => {
   try {
     if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
     const data = await readMusicFile(filePaths[0])
-    if (!data) throw new Error(READ_MUSIC_STATE.ERROR)
+    if (!data.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
     const audioTags = readAudioTags(data, filePaths[0])
 
     return {
@@ -20,7 +20,12 @@ const handleMusicFileOpen = async () => {
       info: READ_MUSIC_STATE.SUCCESS
     } as MusicResponse
   } catch (err) {
-    return { song: undefined, info: (err as Error).message }
+    return {
+      song: undefined,
+      filePath: undefined,
+      tags: undefined,
+      info: (err as Error).message
+    } as MusicResponse
   }
 }
 
