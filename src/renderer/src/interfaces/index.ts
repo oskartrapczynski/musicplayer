@@ -1,4 +1,4 @@
-import NodeID3Image from './nodeTagsImage'
-import songTags from './songTags'
+import ILibrary from './library/library'
+import INodeID3Image from './player/nodeTagsImage'
 
-export type { songTags, NodeID3Image }
+export type { INodeID3Image, ILibrary }

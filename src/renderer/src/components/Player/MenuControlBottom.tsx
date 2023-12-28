@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material'
-import { secondsToMusicTime } from '@renderer/utils'
 import { Prev, Play, Stop, Next, Pause, SliderSongPos } from '@renderer/components'
+import { secondsToMusicTime } from '@renderer/utils'
+import { Box, Typography } from '@mui/material'
 
 interface Props {
   isPlaying: boolean

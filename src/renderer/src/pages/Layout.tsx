@@ -1,7 +1,7 @@
+import { Outlet } from 'react-router-dom'
 import { Box, CssBaseline } from '@mui/material'
 import { MenuApp, MenuControlBottom } from '@renderer/components'
 import { APP_MODE } from '@renderer/constants'
-import { Outlet } from 'react-router-dom'
 
 interface Props {
   appMode: APP_MODE

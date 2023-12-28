@@ -1,4 +1,4 @@
-export default interface NodeID3Image {
+export default interface INodeID3Image {
   mime: string
   type: {
     id: number

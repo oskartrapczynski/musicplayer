@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import { PlayArrow as PlayArrowIcon } from '@mui/icons-material'
 
 interface Props {
   toggle: (play: boolean) => void

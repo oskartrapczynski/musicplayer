@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material'
-import StopIcon from '@mui/icons-material/Stop'
+import { Stop as StopIcon } from '@mui/icons-material'
 
 interface Props {
   toggle: (play: boolean) => void

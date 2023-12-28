@@ -14,8 +14,8 @@
       "@renderer/*": [
         "src/renderer/src/*"
       ],
-      "@global": [
-        "src/global/index"
+      "@global/*": [
+        "src/global/*"
       ],
     }
   }

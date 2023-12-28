@@ -7,7 +7,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@main': resolve('src/main'),
-        '@global': resolve('src/global/index')
+        '@global': resolve('src/global')
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -19,7 +19,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
-        '@global': resolve('src/global/index')
+        '@global': resolve('src/global')
       }
     },
     plugins: [react()]

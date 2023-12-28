@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material'
-import PauseIcon from '@mui/icons-material/Pause'
+import { Pause as PauseIcon } from '@mui/icons-material'
 
 interface Props {
   toggle: (play: boolean) => void

@@ -1,5 +1,5 @@
-import { Box } from '@mui/material'
 import { APP_MODE } from '@renderer/constants'
+import { Box } from '@mui/material'
 import { activeItemStyle, containerStyle, itemStyle } from './SwitchAppMode.style'
 
 interface Props {

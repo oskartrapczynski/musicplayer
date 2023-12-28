@@ -1,7 +1,10 @@
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic'
-import QueueMusicIcon from '@mui/icons-material/QueueMusic'
-import NightlifeIcon from '@mui/icons-material/Nightlife'
-import SettingsIcon from '@mui/icons-material/Settings'
+import {
+  Album as AlbumIcon,
+  LibraryMusic as LibraryMusicIcon,
+  QueueMusic as QueueMusicIcon,
+  Nightlife as NightlifeIcon,
+  Settings as SettingsIcon
+} from '@mui/icons-material'
 import { Box, IconButton, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { SwitchAppMode } from '@renderer/components'
@@ -17,6 +20,11 @@ const MenuApp = ({ appMode, setAppMode }: Props) => {
     <Box sx={{ width: '75px', backgroundColor: 'red' }}>
       <Stack direction="column" spacing="20px" sx={{ alignItems: 'center', mt: '20px' }}>
         <Link to="/">
+          <IconButton>
+            <AlbumIcon fontSize="large" />
+          </IconButton>
+        </Link>
+        <Link to="/library">
           <IconButton>
             <LibraryMusicIcon fontSize="large" />
           </IconButton>

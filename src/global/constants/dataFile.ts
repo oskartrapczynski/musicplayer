@@ -1,5 +1,5 @@
 enum DATA_FILE {
-  DB = 'db',
+  LIBRARY = 'library',
   SETTINGS = 'settings'
 }
 

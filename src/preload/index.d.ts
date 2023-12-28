@@ -1,9 +1,9 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import CustomAPIs from './customApi'
+import ICustomAPI from './customApi'
 
 declare global {
   interface Window {
     electron: ElectronAPI
-    api: CustomAPIs
+    api: ICustomAPI
   }
 }

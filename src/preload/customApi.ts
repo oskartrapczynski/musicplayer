@@ -1,6 +1,7 @@
-import MusicResponse from '../global/musicResponse'
+import { DATA_FILE } from '@global/constants'
+import { IMusicResponse } from '@global/interfaces'
 
-export default interface CustomAPIs {
-  openMusic: () => Promise<MusicResponse>
-  readFileJSON: () => Promise<JSON>
+export default interface ICustomAPI {
+  openMusic: () => Promise<IMusicResponse> // api
+  readFileJSON: (_: Electron.IpcMainInvokeEvent, type: DATA_FILE) => Promise<JSON> //invoke
 }

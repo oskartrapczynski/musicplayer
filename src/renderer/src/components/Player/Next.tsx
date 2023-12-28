@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material'
-import SkipNextIcon from '@mui/icons-material/SkipNext'
+import { SkipNext as SkipNextIcon } from '@mui/icons-material'
 
 interface Props {
   isDisabled: boolean

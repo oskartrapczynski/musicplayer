@@ -9,8 +9,8 @@
       "@main/*": [
         "src/main/*"
       ],
-      "@global": [
-        "src/global/index"
+      "@global/*": [
+        "src/global/*"
       ]
     }
   }

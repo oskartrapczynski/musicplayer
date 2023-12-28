@@ -1,30 +1,43 @@
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { enqueueSnackbar, SnackbarProvider } from 'notistack'
+import { IMusicResponse } from '@global/interfaces'
+import { READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
   Layout,
+  LibraryPage,
   PlayerBasicPage,
   PlayerProPage,
   QueuePage,
   SettingsPage
 } from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { MusicResponse, READ_MUSIC_STATE } from '@global'
-import { openDialogMusicFile } from './utils'
-import { usePlayer } from './hooks'
-import { enqueueSnackbar, SnackbarProvider } from 'notistack'
+import { loadLibrary, openDialogMusicFile } from '@renderer/utils'
+import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
+import { ILibrary } from '@renderer/interfaces'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
+  const [library, setLibrary] = useState<ILibrary[] | null>(null)
   // change for var from settings.json after read
+
+  const handleLoadDb = async () => {
+    const library: ILibrary[] = await loadLibrary()
+    setLibrary(library)
+  }
+
+  useEffect(() => {
+    handleLoadDb()
+  }, [])
+
+  // const db = useMemo(() => audioObj, [])
 
   const audioObj1 = new Audio(undefined)
   // const audioObj2 = new Audio(undefined)
 
-  const [player, setPlayer] = useState<MusicResponse>({
+  const [player, setPlayer] = useState<IMusicResponse>({
     song: undefined,
     tags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
@@ -47,7 +60,12 @@ const App = () => {
       enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
       return
     }
-    setPlayer({ song: data?.song, tags: data?.tags, info: data?.info as READ_MUSIC_STATE })
+    setPlayer({
+      song: data?.song,
+      tags: data?.tags,
+      info: data?.info as READ_MUSIC_STATE,
+      filePath: data.filePath
+    })
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
@@ -82,12 +100,14 @@ const App = () => {
                     handleOpenMusicFile={handleOpenMusicFile}
                     tags={player.tags}
                     duration={duration}
+                    filePath={player.filePath}
                   />
                 ) : (
                   <PlayerProPage />
                 )
               }
             />
+            <Route path="/library" element={<LibraryPage library={library} />} />
             <Route path="/queue" element={<QueuePage />} />
             <Route path="/genres" element={<GenresPage />} />
             <Route path="/settings" element={<SettingsPage />} />
