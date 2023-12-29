@@ -13,6 +13,11 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
+    resolve: {
+      alias: {
+        '@global': resolve('src/global')
+      }
+    },
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {

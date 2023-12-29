@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
 import { IMusicResponse } from '@global/interfaces'
-import { READ_MUSIC_STATE } from '@global/constants'
+import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
   Layout,
@@ -13,7 +13,7 @@ import {
   SettingsPage
 } from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
-import { loadLibrary, openDialogMusicFile } from '@renderer/utils'
+import { loadDataFile, readMusicDialog, readMusicPath } from '@renderer/utils'
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { ILibrary } from '@renderer/interfaces'
@@ -24,8 +24,13 @@ const App = () => {
   // change for var from settings.json after read
 
   const handleLoadDb = async () => {
-    const library: ILibrary[] = await loadLibrary()
-    setLibrary(library)
+    try {
+      const library: ILibrary[] = await loadDataFile(DATA_FILE.LIBRARY)
+      if (library) setLibrary(library)
+      console.log(library)
+    } catch (err) {
+      console.log((err as Error).message)
+    }
   }
 
   useEffect(() => {
@@ -50,8 +55,27 @@ const App = () => {
     src: player.song as string
   })
 
-  const handleOpenMusicFile = async () => {
-    const data = await openDialogMusicFile()
+  const handleReadMusicDialog = async () => {
+    const data = await readMusicDialog()
+    if (data?.info === READ_MUSIC_STATE.CANCELLED) {
+      enqueueSnackbar('Anulowano', { variant: 'warning' })
+      return
+    }
+    if (data?.info === READ_MUSIC_STATE.ERROR) {
+      enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
+      return
+    }
+    setPlayer({
+      song: data?.song,
+      tags: data?.tags,
+      info: data?.info as READ_MUSIC_STATE,
+      filePath: data.filePath
+    })
+    enqueueSnackbar('Załadowano utwór', { variant: 'success' })
+  }
+
+  const handleReadMusicPath = async (path: string) => {
+    const data = await readMusicPath(path)
     if (data?.info === READ_MUSIC_STATE.CANCELLED) {
       enqueueSnackbar('Anulowano', { variant: 'warning' })
       return
@@ -72,6 +96,11 @@ const App = () => {
   return (
     <>
       <SnackbarProvider
+        autoHideDuration={1000}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}
         action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
       />
       <BrowserRouter>
@@ -97,7 +126,7 @@ const App = () => {
               element={
                 appMode === APP_MODE.NORMAL ? (
                   <PlayerBasicPage
-                    handleOpenMusicFile={handleOpenMusicFile}
+                    handleReadMusicDialog={handleReadMusicDialog}
                     tags={player.tags}
                     duration={duration}
                     filePath={player.filePath}
@@ -107,7 +136,16 @@ const App = () => {
                 )
               }
             />
-            <Route path="/library" element={<LibraryPage library={library} />} />
+            <Route
+              path="/library"
+              element={
+                <LibraryPage
+                  library={library}
+                  filePath={player.filePath}
+                  handleReadMusicPath={handleReadMusicPath}
+                />
+              }
+            />
             <Route path="/queue" element={<QueuePage />} />
             <Route path="/genres" element={<GenresPage />} />
             <Route path="/settings" element={<SettingsPage />} />

@@ -1,13 +1,15 @@
-import loadLibrary from './library/loadLibrary'
+import loadDataFile from './library/loadDataFile'
 import convertBufferToImage from './player/convertBufferToImage'
 import convertBufferToSong from './player/convertBufferToSong'
-import openDialogMusicFile from './player/openDialogMusicFile'
+import readMusicDialog from './player/readMusicDialog'
+import readMusicPath from './player/readMusicPath'
 import secondsToMusicTime from './player/secondsToMusicTime'
 
 export {
   convertBufferToSong,
-  openDialogMusicFile,
-  loadLibrary,
   convertBufferToImage,
-  secondsToMusicTime
+  secondsToMusicTime,
+  loadDataFile,
+  readMusicDialog,
+  readMusicPath
 }

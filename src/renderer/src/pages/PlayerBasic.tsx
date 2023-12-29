@@ -4,16 +4,16 @@ import { Alert, Button } from '@mui/material'
 import { LibraryAdd as LibraryAddIcon } from '@mui/icons-material'
 
 interface Props {
-  handleOpenMusicFile: () => Promise<void>
+  handleReadMusicDialog: () => Promise<void>
   tags?: NodeID3.Tags | undefined
   duration: number | null
   filePath?: string
 }
 
-const PlayerBasicPage = ({ handleOpenMusicFile, tags, duration, filePath }: Props) => {
+const PlayerBasicPage = ({ handleReadMusicDialog, tags, duration, filePath }: Props) => {
   return (
     <ContentSection>
-      <Button onClick={handleOpenMusicFile} startIcon={<LibraryAddIcon />}>
+      <Button onClick={handleReadMusicDialog} startIcon={<LibraryAddIcon />}>
         Dodaj utwór
       </Button>
       {tags ? (

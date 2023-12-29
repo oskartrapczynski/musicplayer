@@ -6,7 +6,7 @@ interface Props {
 
 const ContentSection = ({ children }: Props) => {
   return (
-    <Box sx={{ width: '100%', height: 'auto', backgroundColor: 'blue', flexGrow: 1 }}>
+    <Box sx={{ width: '100%', height: '0px', backgroundColor: 'blue', flexGrow: 1 }}>
       {children}
     </Box>
   )

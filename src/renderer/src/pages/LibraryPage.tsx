@@ -4,12 +4,14 @@ import { ILibrary } from '@renderer/interfaces'
 
 interface Props {
   library: ILibrary[] | null
+  filePath?: string
+  handleReadMusicPath: (path: string) => Promise<void>
 }
 
-const LibraryPage = ({ library }: Props) => {
+const LibraryPage = ({ library, filePath, handleReadMusicPath }: Props) => {
   return (
     <ContentSection>
-      <Library library={library} />
+      <Library library={library} filePath={filePath} handleReadMusicPath={handleReadMusicPath} />
     </ContentSection>
   )
 }

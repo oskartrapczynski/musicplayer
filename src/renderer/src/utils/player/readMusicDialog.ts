@@ -1,8 +1,10 @@
+import { FUNCTIONS } from '@global/constants'
 import { IMusicResponse } from '@global/interfaces'
 import { convertBufferToSong } from '@renderer/utils'
 
-const openDialogMusicFile = async () => {
-  const { song, filePath, tags, info }: IMusicResponse = await window.api.openMusic()
+const readMusicDialog = async () => {
+  const { song, filePath, tags, info }: IMusicResponse =
+    await window.api[FUNCTIONS.READ_MUSIC_DIALOG]()
   if (!filePath || !song) {
     return { song, tags, info, filePath }
   }
@@ -11,4 +13,4 @@ const openDialogMusicFile = async () => {
   return { song: convertedSong, tags, info, filePath }
 }
 
-export default openDialogMusicFile
+export default readMusicDialog

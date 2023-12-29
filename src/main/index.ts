@@ -2,7 +2,14 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { handleMusicFileOpen, handleReadFileJSON } from '@main/handlers'
+import {
+  handleDialogMusicFileOpen,
+  handleReadFileJSON,
+  handleReadMusicFromPath
+} from '@main/handlers'
+import { FUNCTIONS } from '@global/constants'
+
+const { READ_MUSIC_DIALOG, READ_MUSIC_PATH, READ_FILE_JSON } = FUNCTIONS
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -53,8 +60,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  ipcMain.handle('dialog:openMusic', handleMusicFileOpen)
-  ipcMain.handle('readFileJSON', handleReadFileJSON)
+  ipcMain.handle(READ_MUSIC_DIALOG, handleDialogMusicFileOpen)
+  // ipcMain.handle('dialog:openMusic', handleDialogMusicFileOpen)
+  ipcMain.handle(READ_MUSIC_PATH, handleReadMusicFromPath)
+  ipcMain.handle(READ_FILE_JSON, handleReadFileJSON)
 
   createWindow()
 

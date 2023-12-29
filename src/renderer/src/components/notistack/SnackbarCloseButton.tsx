@@ -8,9 +8,9 @@ interface Props {
 
 const SnackbarCloseButton = ({ snackbarKey }: Props) => {
   const { closeSnackbar } = useSnackbar()
-
+  const handleClick = () => closeSnackbar(snackbarKey)
   return (
-    <IconButton onClick={() => closeSnackbar(snackbarKey)}>
+    <IconButton onClick={handleClick}>
       <CloseIcon htmlColor="#fff" />
     </IconButton>
   )

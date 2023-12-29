@@ -1,22 +1,15 @@
 import { READ_MUSIC_STATE } from '@global/constants'
 import { IMusicResponse } from '@global/interfaces'
-import { readMusicFile, readAudioTags } from '@main/utils'
-import { dialog } from 'electron'
+import { readAudioTags, readMusicFile } from '@main/utils'
 
-const handleMusicFileOpen = async () => {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{ name: 'Music files', extensions: ['mp3', 'wav'] }]
-  })
+const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, path: string) => {
   try {
-    if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
-    const data = await readMusicFile(filePaths[0])
+    const data = await readMusicFile(path)
     if (!data.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
     const audioTags = readAudioTags(data)
-
     return {
       song: data,
-      filePath: filePaths[0],
+      filePath: path,
       tags: audioTags,
       info: READ_MUSIC_STATE.SUCCESS
     } as IMusicResponse
@@ -29,5 +22,4 @@ const handleMusicFileOpen = async () => {
     } as IMusicResponse
   }
 }
-
-export default handleMusicFileOpen
+export default handleReadMusicFromPath

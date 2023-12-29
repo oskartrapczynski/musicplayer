@@ -1,4 +1,5 @@
-import handleMusicFileOpen from './handleMusicFileOpen'
+import handleDialogMusicFileOpen from './handleDialogMusicFileOpen'
 import handleReadFileJSON from './handleReadFileJSON'
+import handleReadMusicFromPath from './handleReadMusicFromPath'
 
-export { handleReadFileJSON, handleMusicFileOpen }
+export { handleReadFileJSON, handleDialogMusicFileOpen, handleReadMusicFromPath }
