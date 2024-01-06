@@ -1,5 +1,5 @@
 export default interface ILibrary {
-  id: string
+  id?: string
   path: string
-  userTags: string[]
+  userTags?: string[]
 }

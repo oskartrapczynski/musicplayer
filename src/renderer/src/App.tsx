@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
-import { IMusicResponse } from '@global/interfaces'
+import { IMusicResponse, ILibrary } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
@@ -13,19 +13,17 @@ import {
   SettingsPage
 } from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
-import { loadDataFile, readMusicDialog, readMusicPath } from '@renderer/utils'
+import { writeFileJSON, readFileJSON, readMusicDialog, readMusicPath } from '@renderer/utils'
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
-import { ILibrary } from '@renderer/interfaces'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
   const [library, setLibrary] = useState<ILibrary[] | null>(null)
-  // change for var from settings.json after read
 
   const handleLoadDb = async () => {
     try {
-      const library: ILibrary[] = await loadDataFile(DATA_FILE.LIBRARY)
+      const library: ILibrary[] = await readFileJSON(DATA_FILE.LIBRARY)
       if (library) setLibrary(library)
       console.log(library)
     } catch (err) {
@@ -71,6 +69,16 @@ const App = () => {
       info: data?.info as READ_MUSIC_STATE,
       filePath: data.filePath
     })
+    const isMusicSaved = library?.some((item) => item.path === data.filePath)
+    console.log(isMusicSaved)
+    if (!isMusicSaved) {
+      const newLibrary = library
+        ? [...library, { path: data.filePath! }]
+        : [{ path: data.filePath! }]
+      await writeFileJSON(DATA_FILE.LIBRARY, newLibrary)
+      setLibrary(newLibrary)
+    }
+    // if (!isMusicSaved) console.log(data.filePath!)
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 

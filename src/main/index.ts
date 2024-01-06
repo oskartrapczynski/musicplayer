@@ -3,13 +3,14 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import {
+  handleWriteFileJSON,
   handleDialogMusicFileOpen,
   handleReadFileJSON,
   handleReadMusicFromPath
 } from '@main/handlers'
 import { FUNCTIONS } from '@global/constants'
 
-const { READ_MUSIC_DIALOG, READ_MUSIC_PATH, READ_FILE_JSON } = FUNCTIONS
+const { READ_MUSIC_DIALOG, READ_MUSIC_PATH, READ_FILE_JSON, WRITE_FILE_JSON } = FUNCTIONS
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -50,7 +51,7 @@ const createWindow = (): void => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // Set app user model id for windows
+  // Set app user model id for windowsAPPEND_LIBRARY_JSON
   electronApp.setAppUserModelId('com.electron')
 
   // Default open or close DevTools by F12 in development
@@ -64,6 +65,7 @@ app.whenReady().then(() => {
   // ipcMain.handle('dialog:openMusic', handleDialogMusicFileOpen)
   ipcMain.handle(READ_MUSIC_PATH, handleReadMusicFromPath)
   ipcMain.handle(READ_FILE_JSON, handleReadFileJSON)
+  ipcMain.handle(WRITE_FILE_JSON, handleWriteFileJSON)
 
   createWindow()
 

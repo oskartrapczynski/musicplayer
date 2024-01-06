@@ -1,3 +1,4 @@
+import ILibrary from './library'
 import IMusicResponse from './musicResponse'
 
-export type { IMusicResponse }
+export type { IMusicResponse, ILibrary }

@@ -1,17 +1,17 @@
 import { useState } from 'react'
-import { ILibrary } from '@renderer/interfaces'
-import { Alert, Box, Button, Stack } from '@mui/material'
 import { getFileName } from '@global/utils'
+import { ILibrary } from '@global/interfaces'
+import { Alert, Box, Button, Stack } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon } from '@mui/icons-material'
 import { enqueueSnackbar } from 'notistack'
 
 interface Props {
   library: ILibrary[] | null
   filePath?: string
-  handleReadMusicPath
+  handleReadMusicPath: (path: string) => Promise<void>
 }
 
-// filePath is current playing
+// filePath is current playing song
 const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
   const [selected, setSelected] = useState('')
 

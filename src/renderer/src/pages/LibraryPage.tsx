@@ -1,6 +1,6 @@
+import { ILibrary } from '@global/interfaces'
 import { ContentSection } from '@renderer/components'
 import { Library } from '@renderer/components'
-import { ILibrary } from '@renderer/interfaces'
 
 interface Props {
   library: ILibrary[] | null

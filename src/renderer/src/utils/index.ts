@@ -1,4 +1,5 @@
-import loadDataFile from './library/loadDataFile'
+import writeFileJSON from './library/writeFileJSON'
+import readFileJSON from './library/readFileJSON'
 import convertBufferToImage from './player/convertBufferToImage'
 import convertBufferToSong from './player/convertBufferToSong'
 import readMusicDialog from './player/readMusicDialog'
@@ -9,7 +10,8 @@ export {
   convertBufferToSong,
   convertBufferToImage,
   secondsToMusicTime,
-  loadDataFile,
   readMusicDialog,
-  readMusicPath
+  readMusicPath,
+  readFileJSON,
+  writeFileJSON
 }
