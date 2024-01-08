@@ -6,20 +6,20 @@ import { Box, Typography } from '@mui/material'
 import { MusicNote as MusicNoteIcon } from '@mui/icons-material'
 
 interface Props {
-  tags?: NodeID3.Tags
+  songTags?: NodeID3.Tags
   duration: null | number
   filePath?: string
 }
 
-const SongInfo = ({ tags, duration, filePath }: Props) => {
+const SongInfo = ({ songTags, duration, filePath }: Props) => {
   const img =
-    tags &&
-    (tags.image as INodeID3Image) &&
-    (tags.image as INodeID3Image).imageBuffer &&
-    (tags.image as INodeID3Image).mime
+    songTags &&
+    (songTags.image as INodeID3Image) &&
+    (songTags.image as INodeID3Image).imageBuffer &&
+    (songTags.image as INodeID3Image).mime
       ? convertBufferToImage(
-          (tags.image as INodeID3Image).imageBuffer,
-          (tags.image as INodeID3Image).mime
+          (songTags.image as INodeID3Image).imageBuffer,
+          (songTags.image as INodeID3Image).mime
         )
       : null
   return (
@@ -47,9 +47,13 @@ const SongInfo = ({ tags, duration, filePath }: Props) => {
       )}
       <Box sx={{ pl: 2 }}>
         <Typography variant="h5">{`Nazwa: ${filePath ? getFileName(filePath) : '-'}`}</Typography>
-        <Typography variant="h5">{`Tytuł: ${tags!.title ? tags!.title : '-'}`}</Typography>
-        <Typography variant="h5">{`Autor: ${tags!.artist ? tags!.artist : '-'}`}</Typography>
-        <Typography variant="h5">{`Gatunek: ${tags!.genre ? tags!.genre : '-'}`}</Typography>
+        <Typography variant="h5">{`Tytuł: ${songTags!.title ? songTags!.title : '-'}`}</Typography>
+        <Typography variant="h5">{`Autor: ${
+          songTags!.artist ? songTags!.artist : '-'
+        }`}</Typography>
+        <Typography variant="h5">{`Gatunek: ${
+          songTags!.genre ? songTags!.genre : '-'
+        }`}</Typography>
         <Typography variant="h5">{`Długość: ${
           duration ? secondsToMusicTime(duration) : '-'
         }`}</Typography>

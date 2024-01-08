@@ -71,7 +71,14 @@ const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
           </Stack>
         </Box>
 
-        <Box sx={{ width: '70%', backgroundColor: '#333' }}>
+        <Box
+          sx={{
+            width: '70%',
+            backgroundColor: '#333',
+            overflow: 'scroll',
+            '&::-webkit-scrollbar': { display: 'none' }
+          }}
+        >
           {library && library.length > 0 ? (
             library.map(({ path }, index) => (
               <Button

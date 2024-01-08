@@ -1,4 +1,7 @@
+import checkDataFileExists from './checkDataFileExists'
 import readAudioTags from './readAudioTags'
+import readFileJSON from './readFileJSON'
 import readMusicFile from './readMusicFile'
+import readSongLibraryData from './readSongLibraryData'
 
-export { readAudioTags, readMusicFile }
+export { readAudioTags, readMusicFile, readFileJSON, readSongLibraryData, checkDataFileExists }

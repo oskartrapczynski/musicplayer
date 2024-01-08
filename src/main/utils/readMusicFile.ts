@@ -5,7 +5,7 @@ const readMusicFile = async (path: string) => {
     if (!existsSync(path)) return reject('File do not exists')
     readFile(path, (err, data) => {
       if (err) {
-        reject(err)
+        reject('Can not open file')
       }
       resolve(data)
     })

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
-import { IMusicResponse, ILibrary } from '@global/interfaces'
+import { IMusicResponse, ILibrary, IResponseFileJSON } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
@@ -23,9 +23,10 @@ const App = () => {
 
   const handleLoadDb = async () => {
     try {
-      const library: ILibrary[] = await readFileJSON(DATA_FILE.LIBRARY)
-      if (library) setLibrary(library)
-      console.log(library)
+      const { data, info }: IResponseFileJSON<ILibrary[]> = await readFileJSON(DATA_FILE.LIBRARY)
+      console.log('info', info)
+      setLibrary(data ? (data as ILibrary[]) : null)
+      console.log('data', data)
     } catch (err) {
       console.log((err as Error).message)
     }
@@ -42,7 +43,7 @@ const App = () => {
 
   const [player, setPlayer] = useState<IMusicResponse>({
     song: undefined,
-    tags: undefined,
+    songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
     filePath: ''
   })
@@ -65,7 +66,7 @@ const App = () => {
     }
     setPlayer({
       song: data?.song,
-      tags: data?.tags,
+      songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
       filePath: data.filePath
     })
@@ -84,19 +85,19 @@ const App = () => {
 
   const handleReadMusicPath = async (path: string) => {
     const data = await readMusicPath(path)
-    if (data?.info === READ_MUSIC_STATE.CANCELLED) {
-      enqueueSnackbar('Anulowano', { variant: 'warning' })
-      return
-    }
-    if (data?.info === READ_MUSIC_STATE.ERROR) {
-      enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
-      return
-    }
+    // if (data?.info === READ_MUSIC_STATE.CANCELLED) {
+    //   enqueueSnackbar('Anulowano', { variant: 'warning' })
+    //   return
+    // }
+    // if (data?.info === READ_MUSIC_STATE.ERROR) {
+    //   enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
+    //   return
+    // }
     setPlayer({
       song: data?.song,
-      tags: data?.tags,
+      songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
-      filePath: data.filePath
+      filePath: data?.filePath
     })
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
@@ -135,7 +136,7 @@ const App = () => {
                 appMode === APP_MODE.NORMAL ? (
                   <PlayerBasicPage
                     handleReadMusicDialog={handleReadMusicDialog}
-                    tags={player.tags}
+                    songTags={player.songTags}
                     duration={duration}
                     filePath={player.filePath}
                   />
