@@ -8,6 +8,7 @@ const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, filePath:
     songTags: NodeID3.Tags | undefined = undefined,
     userTags: ISongLibraryData | undefined = undefined
   try {
+    if (!filePath) throw new Error(READ_MUSIC_STATE.ERROR)
     song = await readMusicFile(filePath)
     if (!song.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
     songTags = await readAudioTags(song)
@@ -22,9 +23,9 @@ const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, filePath:
     } as IMusicResponse
   } catch (err) {
     return {
-      song,
-      filePath,
-      songTags,
+      song: undefined,
+      filePath: undefined,
+      songTags: undefined,
       info: (err as Error).message,
       userTags: undefined
     } as IMusicResponse

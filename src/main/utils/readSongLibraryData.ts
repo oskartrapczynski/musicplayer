@@ -4,12 +4,12 @@ import { readFile } from 'fs'
 import { checkDataFileExists } from '.'
 
 const readSongLibraryData = async (path: string) => {
-  const dataFile = DATA_FILE.LIBRARY
   return new Promise<ISongLibraryData | undefined>((resolve, reject) => {
+    const dataFile = DATA_FILE.LIBRARY
     checkDataFileExists(dataFile, reject)
-    readFile(dataFile, 'utf8', (err, data) => {
+    readFile(`./${dataFile}.json`, 'utf8', (err, data) => {
       if (err) return reject('Can not open!')
-      if (!data) return reject('File is empty!')
+      if (!data) return resolve(undefined)
       const songsInfo = JSON.parse(data) as ISongLibraryData[]
       if (!songsInfo || songsInfo?.length === 0) resolve(undefined)
       const songInfo = songsInfo.filter((item) => item.path === path)

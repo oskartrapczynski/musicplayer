@@ -7,7 +7,7 @@ const readFileJSON = async (dataFile: DATA_FILE) => {
     checkDataFileExists(dataFile, reject)
     readFile(`./${dataFile}.json`, 'utf8', (err, data) => {
       if (err) return reject('Can not open!')
-      if (!data) return reject('File is empty!')
+      if (!data) return resolve(undefined)
       resolve(JSON.parse(data))
     })
   })

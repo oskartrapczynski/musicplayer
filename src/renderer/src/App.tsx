@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
-import { IMusicResponse, ILibrary, IResponseFileJSON } from '@global/interfaces'
+import { IMusicResponse, ILibrary, IResponseFileJSON, ISongLibraryData } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
@@ -55,27 +55,28 @@ const App = () => {
   })
 
   const handleReadMusicDialog = async () => {
-    const data = await readMusicDialog()
-    if (data?.info === READ_MUSIC_STATE.CANCELLED) {
-      enqueueSnackbar('Anulowano', { variant: 'warning' })
-      return
-    }
-    if (data?.info === READ_MUSIC_STATE.ERROR) {
-      enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
-      return
-    }
+    const { song, songTags, info, filePath } = await readMusicDialog()
+
+    // if (data?.info === READ_MUSIC_STATE.CANCELLED) {
+    //   enqueueSnackbar('Anulowano', { variant: 'warning' })
+    //   return
+    // }
+    // if (data?.info === READ_MUSIC_STATE.ERROR) {
+    //   enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
+    //   return
+    // }
     setPlayer({
-      song: data?.song,
-      songTags: data?.songTags,
-      info: data?.info as READ_MUSIC_STATE,
-      filePath: data.filePath
+      song,
+      songTags,
+      info,
+      filePath
     })
-    const isMusicSaved = library?.some((item) => item.path === data.filePath)
+    const isMusicSaved = library?.some((item) => item.path === filePath)
     console.log(isMusicSaved)
     if (!isMusicSaved) {
-      const newLibrary = library
-        ? [...library, { path: data.filePath! }]
-        : [{ path: data.filePath! }]
+      const newLibrary: ISongLibraryData[] = library
+        ? [...library, { path: filePath! }]
+        : [{ path: filePath! }]
       await writeFileJSON(DATA_FILE.LIBRARY, newLibrary)
       setLibrary(newLibrary)
     }
@@ -83,8 +84,8 @@ const App = () => {
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
-  const handleReadMusicPath = async (path: string) => {
-    const data = await readMusicPath(path)
+  const handleReadMusicPath = async (filePath: string) => {
+    const data = await readMusicPath(filePath)
     // if (data?.info === READ_MUSIC_STATE.CANCELLED) {
     //   enqueueSnackbar('Anulowano', { variant: 'warning' })
     //   return
@@ -99,7 +100,6 @@ const App = () => {
       info: data?.info as READ_MUSIC_STATE,
       filePath: data?.filePath
     })
-    enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
   return (

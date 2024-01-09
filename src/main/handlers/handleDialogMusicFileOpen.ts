@@ -14,6 +14,7 @@ const handleDialogMusicFileOpen = async () => {
       filters: [{ name: 'Music files', extensions: ['mp3', 'wav'] }]
     })
     if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
+    if (!filePaths[0]) throw new Error(READ_MUSIC_STATE.ERROR)
     song = await readMusicFile(filePaths[0])
     if (!song.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
     songTags = await readAudioTags(song)
