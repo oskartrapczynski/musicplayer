@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
 import { IMusicResponse, ILibrary, IResponseFileJSON, ISongLibraryData } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
@@ -112,7 +112,7 @@ const App = () => {
         }}
         action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
       />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route
             path="/"
@@ -160,7 +160,7 @@ const App = () => {
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   )
 }
