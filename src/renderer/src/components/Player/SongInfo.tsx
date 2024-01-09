@@ -2,16 +2,18 @@ import NodeID3 from 'node-id3'
 import { getFileName } from '@global/utils'
 import { convertBufferToImage, secondsToMusicTime } from '@renderer/utils'
 import { INodeID3Image } from '@renderer/interfaces'
-import { Box, Typography } from '@mui/material'
+import { Box, Chip, Typography } from '@mui/material'
 import { MusicNote as MusicNoteIcon } from '@mui/icons-material'
 
 interface Props {
   songTags?: NodeID3.Tags
   duration: null | number
   filePath?: string
+  userTags?: string[]
 }
 
-const SongInfo = ({ songTags, duration, filePath }: Props) => {
+const SongInfo = ({ songTags, duration, filePath, userTags }: Props) => {
+  console.log(userTags)
   const img =
     songTags &&
     (songTags.image as INodeID3Image) &&
@@ -46,17 +48,29 @@ const SongInfo = ({ songTags, duration, filePath }: Props) => {
         </Box>
       )}
       <Box sx={{ pl: 2 }}>
-        <Typography variant="h5">{`Nazwa: ${filePath ? getFileName(filePath) : '-'}`}</Typography>
-        <Typography variant="h5">{`Tytuł: ${songTags!.title ? songTags!.title : '-'}`}</Typography>
-        <Typography variant="h5">{`Autor: ${
+        <Typography variant="h6">{`Nazwa: ${filePath ? getFileName(filePath) : '-'}`}</Typography>
+        <Typography variant="h6">{`Tytuł: ${songTags!.title ? songTags!.title : '-'}`}</Typography>
+        <Typography variant="h6">{`Autor: ${
           songTags!.artist ? songTags!.artist : '-'
         }`}</Typography>
-        <Typography variant="h5">{`Gatunek: ${
+        <Typography variant="h6">{`Gatunek: ${
           songTags!.genre ? songTags!.genre : '-'
         }`}</Typography>
-        <Typography variant="h5">{`Długość: ${
+        <Typography variant="h6">{`Długość: ${
           duration ? secondsToMusicTime(duration) : '-'
         }`}</Typography>
+        <Box display="flex">
+          <Typography variant="h6">{'Tagi:'}</Typography>
+          {userTags && userTags.length > 0 ? (
+            userTags.map((tag, index) => (
+              <Chip key={index} label={tag} variant="outlined" sx={{ ml: '5px' }} />
+            ))
+          ) : (
+            <Typography variant="h6" sx={{ ml: '5px' }}>
+              {'-'}
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   )

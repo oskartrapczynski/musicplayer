@@ -98,7 +98,8 @@ const App = () => {
       song: data?.song,
       songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
-      filePath: data?.filePath
+      filePath: data?.filePath,
+      userTags: data?.userTags
     })
   }
 
@@ -139,6 +140,7 @@ const App = () => {
                     songTags={player.songTags}
                     duration={duration}
                     filePath={player.filePath}
+                    userTags={player.userTags}
                   />
                 ) : (
                   <PlayerProPage />

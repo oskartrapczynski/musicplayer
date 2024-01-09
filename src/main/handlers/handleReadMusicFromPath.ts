@@ -1,12 +1,12 @@
 import { READ_MUSIC_STATE } from '@global/constants'
-import { IMusicResponse, ISongLibraryData } from '@global/interfaces'
+import { IMusicResponse } from '@global/interfaces'
 import { readAudioTags, readMusicFile, readSongLibraryData } from '@main/utils'
 import NodeID3 from 'node-id3'
 
 const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, filePath: string) => {
   let song: undefined | Buffer = undefined,
     songTags: NodeID3.Tags | undefined = undefined,
-    userTags: ISongLibraryData | undefined = undefined
+    userTags: string[] | undefined = undefined
   try {
     if (!filePath) throw new Error(READ_MUSIC_STATE.ERROR)
     song = await readMusicFile(filePath)
