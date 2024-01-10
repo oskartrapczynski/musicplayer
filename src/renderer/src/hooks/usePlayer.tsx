@@ -11,12 +11,14 @@ const usePlayer = ({ audioObj, src }: Props) => {
   const [duration, setDuration] = useState<null | number>(null)
   const [songPos, setSongPos] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [volume, setVolume] = useState(100)
 
   const toggle = (play: boolean) => {
     if (play === false) setIsPlaying(false)
     if (play === true) setIsPlaying(true)
   }
   const changeSongPos = (seek: number) => setSongPos(seek)
+  const changeSongVolume = (volume: number) => setVolume(volume)
 
   if (src && audio.src !== src) {
     setIsPlaying(false)
@@ -24,6 +26,8 @@ const usePlayer = ({ audioObj, src }: Props) => {
     URL.revokeObjectURL(audio.src)
     audio.src = src
   }
+
+  audio.volume = Number(volume / 100)
 
   audio.preload = 'metadata'
   audio.onloadedmetadata = () => {
@@ -52,7 +56,16 @@ const usePlayer = ({ audioObj, src }: Props) => {
     audio.currentTime = songPos
   }, [songPos])
 
-  return { isPlaying, toggle, duration, changeSongPos, songPos, currentTime } as const
+  return {
+    isPlaying,
+    toggle,
+    duration,
+    changeSongPos,
+    songPos,
+    currentTime,
+    volume,
+    changeSongVolume
+  } as const
 }
 
 export default usePlayer

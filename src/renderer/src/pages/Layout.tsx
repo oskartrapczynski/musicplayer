@@ -13,6 +13,8 @@ interface Props {
   currentTime: number
   isDisabled: boolean
   setAppMode: React.Dispatch<React.SetStateAction<APP_MODE>>
+  volume: number
+  changeSongVolume: (volume: number) => void
 }
 
 const Layout = ({
@@ -24,7 +26,9 @@ const Layout = ({
   songPos,
   currentTime,
   isDisabled,
-  setAppMode
+  setAppMode,
+  volume,
+  changeSongVolume
 }: Props) => {
   return (
     <>
@@ -51,6 +55,8 @@ const Layout = ({
               songPos={songPos}
               currentTime={currentTime}
               isDisabled={isDisabled}
+              volume={volume}
+              changeSongVolume={changeSongVolume}
             />
           )}
         </Box>

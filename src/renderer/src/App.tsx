@@ -49,7 +49,16 @@ const App = () => {
   })
   // aliasy
   // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
-  const { isPlaying, toggle, duration, changeSongPos, songPos, currentTime } = usePlayer({
+  const {
+    isPlaying,
+    toggle,
+    duration,
+    changeSongPos,
+    songPos,
+    currentTime,
+    volume,
+    changeSongVolume
+  } = usePlayer({
     audioObj: audioObj1,
     src: player.song as string
   })
@@ -128,6 +137,8 @@ const App = () => {
                 currentTime={currentTime}
                 isDisabled={!player.song}
                 setAppMode={setAppMode}
+                volume={volume}
+                changeSongVolume={changeSongVolume}
               />
             }
           >

@@ -1,4 +1,4 @@
-import { Prev, Play, Stop, Next, Pause, SliderSongPos } from '@renderer/components'
+import { Prev, Play, Stop, Next, Pause, SliderSongPos, SliderVolume } from '@renderer/components'
 import { secondsToMusicTime } from '@renderer/utils'
 import { Box, Typography } from '@mui/material'
 
@@ -10,6 +10,8 @@ interface Props {
   duration: number | null
   currentTime: number
   isDisabled: boolean
+  volume: number
+  changeSongVolume: (volume: number) => void
 }
 
 const MenuControlBottom = ({
@@ -18,7 +20,9 @@ const MenuControlBottom = ({
   changeSongPos,
   duration,
   currentTime,
-  isDisabled
+  isDisabled,
+  volume,
+  changeSongVolume
 }: Props) => {
   return (
     <Box sx={{ width: '100%', height: '150px', backgroundColor: 'green' }}>
@@ -45,6 +49,7 @@ const MenuControlBottom = ({
           currentTime={currentTime}
           isDisabled={isDisabled}
         />
+        <SliderVolume volume={volume} changeSongVolume={changeSongVolume} />
       </Box>
     </Box>
   )

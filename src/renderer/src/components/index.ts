@@ -12,6 +12,7 @@ import ContentSection from './player/ContentSection'
 import Queue from './player/Queue'
 import SnackbarCloseButton from './notistack/SnackbarCloseButton'
 import Library from './player/Library'
+import SliderVolume from './player/SliderVolume'
 
 export {
   MenuControlBottom,
@@ -27,5 +28,6 @@ export {
   ContentSection,
   Queue,
   SnackbarCloseButton,
-  Library
+  Library,
+  SliderVolume
 }
