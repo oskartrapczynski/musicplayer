@@ -15,6 +15,7 @@ import Library from './player/Library'
 import SliderVolume from './player/SliderVolume'
 import LibraryAllSongs from './player/LibraryAllSongs'
 import LibraryPlaylistSongs from './player/LibraryPlaylistSongs'
+import InputSearch from './player/InputSearch'
 
 export {
   MenuControlBottom,
@@ -33,5 +34,6 @@ export {
   Library,
   SliderVolume,
   LibraryAllSongs,
-  LibraryPlaylistSongs
+  LibraryPlaylistSongs,
+  InputSearch
 }
