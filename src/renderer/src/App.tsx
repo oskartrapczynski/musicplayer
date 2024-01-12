@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
-import { IMusicResponse, ILibrary, IResponseFileJSON, ISongLibraryData } from '@global/interfaces'
+import { IMusicResponse, ILibrary, IResponseFileJSON, IDB, IPlaylist } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   GenresPage,
@@ -16,17 +16,20 @@ import { APP_MODE } from '@renderer/constants'
 import { writeFileJSON, readFileJSON, readMusicDialog, readMusicPath } from '@renderer/utils'
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
+import { v4 as uuidv4 } from 'uuid'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
-  const [library, setLibrary] = useState<ILibrary[] | null>(null)
+  const [library, setLibrary] = useState<ILibrary[]>([])
+  const [playlists, setPlaylists] = useState<IPlaylist[]>([])
 
   const handleLoadDb = async () => {
     try {
-      const { data, info }: IResponseFileJSON<ILibrary[]> = await readFileJSON(DATA_FILE.LIBRARY)
+      const { data, info }: IResponseFileJSON<IDB> = await readFileJSON(DATA_FILE.DB)
       console.log('info', info)
-      setLibrary(data ? (data as ILibrary[]) : null)
-      console.log('data', data)
+      // console.log('data', data)
+      setLibrary(data && data?.library?.length > 0 ? (data.library as ILibrary[]) : [])
+      setPlaylists(data && data?.playlists?.length > 0 ? (data.playlists as IPlaylist[]) : [])
     } catch (err) {
       console.log((err as Error).message)
     }
@@ -45,7 +48,7 @@ const App = () => {
     song: undefined,
     songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
-    filePath: ''
+    filePath: undefined
   })
   // aliasy
   // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
@@ -65,28 +68,20 @@ const App = () => {
 
   const handleReadMusicDialog = async () => {
     const { song, songTags, info, filePath } = await readMusicDialog()
-
-    // if (data?.info === READ_MUSIC_STATE.CANCELLED) {
-    //   enqueueSnackbar('Anulowano', { variant: 'warning' })
-    //   return
-    // }
-    // if (data?.info === READ_MUSIC_STATE.ERROR) {
-    //   enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
-    //   return
-    // }
     setPlayer({
       song,
       songTags,
       info,
       filePath
     })
+    if (!song || !filePath) return
     const isMusicSaved = library?.some((item) => item.path === filePath)
     console.log(isMusicSaved)
     if (!isMusicSaved) {
-      const newLibrary: ISongLibraryData[] = library
-        ? [...library, { path: filePath! }]
-        : [{ path: filePath! }]
-      await writeFileJSON(DATA_FILE.LIBRARY, newLibrary)
+      const newSong = { songId: uuidv4(), path: filePath! } as ILibrary
+      const newLibrary: ILibrary[] = library ? [...library, newSong] : [newSong]
+      const updatedDB = { [DATA_FILE.LIBRARY]: newLibrary, [DATA_FILE.PLAYLISTS]: playlists }
+      await writeFileJSON(DATA_FILE.DB, updatedDB)
       setLibrary(newLibrary)
     }
     // if (!isMusicSaved) console.log(data.filePath!)
@@ -95,14 +90,7 @@ const App = () => {
 
   const handleReadMusicPath = async (filePath: string) => {
     const data = await readMusicPath(filePath)
-    // if (data?.info === READ_MUSIC_STATE.CANCELLED) {
-    //   enqueueSnackbar('Anulowano', { variant: 'warning' })
-    //   return
-    // }
-    // if (data?.info === READ_MUSIC_STATE.ERROR) {
-    //   enqueueSnackbar('Błąd podczas otwierania', { variant: 'error' })
-    //   return
-    // }
+    console.log(data?.userTags)
     setPlayer({
       song: data?.song,
       songTags: data?.songTags,
@@ -163,6 +151,7 @@ const App = () => {
               element={
                 <LibraryPage
                   library={library}
+                  playlists={playlists}
                   filePath={player.filePath}
                   handleReadMusicPath={handleReadMusicPath}
                 />

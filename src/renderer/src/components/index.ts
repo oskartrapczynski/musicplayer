@@ -13,6 +13,8 @@ import Queue from './player/Queue'
 import SnackbarCloseButton from './notistack/SnackbarCloseButton'
 import Library from './player/Library'
 import SliderVolume from './player/SliderVolume'
+import LibraryAllSongs from './player/LibraryAllSongs'
+import LibraryPlaylistSongs from './player/LibraryPlaylistSongs'
 
 export {
   MenuControlBottom,
@@ -29,5 +31,7 @@ export {
   Queue,
   SnackbarCloseButton,
   Library,
-  SliderVolume
+  SliderVolume,
+  LibraryAllSongs,
+  LibraryPlaylistSongs
 }

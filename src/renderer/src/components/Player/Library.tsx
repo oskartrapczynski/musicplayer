@@ -1,26 +1,31 @@
 import { useState } from 'react'
-import { getFileName } from '@global/utils'
-import { ILibrary } from '@global/interfaces'
-import { Alert, Box, Button, Stack } from '@mui/material'
+import { ILibrary, IPlaylist } from '@global/interfaces'
+import { Box, Button, Stack } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon } from '@mui/icons-material'
 import { enqueueSnackbar } from 'notistack'
+import { DATA_FILE } from '@global/constants'
+import { LibraryAllSongs, LibraryPlaylistSongs } from '..'
 
 interface Props {
-  library: ILibrary[] | null
+  library: ILibrary[]
   filePath?: string
   handleReadMusicPath: (path: string) => Promise<void>
+  playlists: IPlaylist[]
 }
 
 // filePath is current playing song
-const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
-  const [selected, setSelected] = useState('')
+const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) => {
+  const [selected, setSelected] = useState({ playlist: `${DATA_FILE.LIBRARY}`, path: '' })
 
   const handleLoad = async (path: string) => {
-    if (!path) return enqueueSnackbar('Wybierz utwór aby załadować', { variant: 'warning' })
+    if (!path) {
+      enqueueSnackbar('Wybierz utwór aby załadować', { variant: 'warning' })
+      return
+    }
     return await handleReadMusicPath(path)
   }
 
-  const handleSelect = (path: string) => setSelected(path)
+  const handleSelect = (data: { playlist: string; path: string }) => setSelected(data)
 
   const setVariant = (path: string) => {
     if (path !== filePath) return 'text'
@@ -28,10 +33,12 @@ const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
   }
 
   const setColor = (path: string) => {
-    if (path === selected) return 'warning'
+    if (path === selected.path) return 'warning'
     if (path === filePath) return 'success'
     return 'primary'
   }
+
+  console.log(selected)
 
   return (
     <>
@@ -55,19 +62,24 @@ const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
           }}
         >
           <Stack gap={2}>
-            <Button variant="contained" startIcon={<AppsIcon />}>
+            <Button
+              variant="contained"
+              startIcon={<AppsIcon />}
+              onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: '' })}
+            >
               Wszystkie
             </Button>
-            {/* add implementation of playlists.json */}
-            <Button variant="contained" startIcon={<ListIcon />}>
-              Playlista2
-            </Button>
-            <Button variant="contained" startIcon={<ListIcon />}>
-              Playlista3
-            </Button>
-            <Button variant="contained" startIcon={<ListIcon />}>
-              Playlista4
-            </Button>
+            {playlists?.length > 0 &&
+              playlists.map(({ playlistId, name }, index) => (
+                <Button
+                  key={index}
+                  variant="contained"
+                  startIcon={<ListIcon />}
+                  onClick={() => handleSelect({ playlist: playlistId, path: '' })}
+                >
+                  {name}
+                </Button>
+              ))}
           </Stack>
         </Box>
 
@@ -79,22 +91,56 @@ const Library = ({ library, filePath, handleReadMusicPath }: Props) => {
             '&::-webkit-scrollbar': { display: 'none' }
           }}
         >
-          {library && library.length > 0 ? (
+          {selected.playlist === DATA_FILE.LIBRARY && (
+            <LibraryAllSongs
+              library={library}
+              setVariant={setVariant}
+              setColor={setColor}
+              handleSelect={handleSelect}
+              handleLoad={handleLoad}
+            />
+          )}
+
+          {selected.playlist !== DATA_FILE.LIBRARY && (
+            <LibraryPlaylistSongs
+              playlistSongs={
+                playlists.filter(({ playlistId }) => selected.playlist === playlistId)[0].songs
+              }
+              selectedPlaylist={selected.playlist}
+              playlists={playlists}
+              library={library}
+              setVariant={setVariant}
+              setColor={setColor}
+              handleSelect={handleSelect}
+              handleLoad={handleLoad}
+            />
+          )}
+
+          {/* {playlists.some(({ playlistId }) => selected.playlist === playlistId) && (
+            <LibraryPlaylistSongs
+              playlists={playlists}
+              setVariant={setVariant}
+              setColor={setColor}
+              handleSelect={handleSelect}
+              handleLoad={handleLoad}
+            />
+          )} */}
+
+          {/* {library && library.length > 0 ? (
             library.map(({ path }, index) => (
               <Button
                 key={index}
                 variant={setVariant(path)}
                 color={setColor(path)}
-                onClick={() => handleSelect(path)}
+                onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: path })}
                 onDoubleClick={() => handleLoad(path)}
               >
                 {getFileName(path)}
-                {/* {path} */}
               </Button>
             ))
           ) : (
             <Alert severity="warning">Biblioteka jest pusta</Alert>
-          )}
+          )} */}
         </Box>
       </Box>
     </>
