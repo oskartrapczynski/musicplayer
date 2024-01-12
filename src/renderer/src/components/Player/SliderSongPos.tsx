@@ -2,7 +2,6 @@ import { Box, Slider } from '@mui/material'
 
 interface Props {
   width: string | number
-  initPos?: number
   orientation?: 'horizontal' | 'vertical' | undefined
   changeSongPos: (seek: number) => void
   duration: number | null
@@ -12,7 +11,6 @@ interface Props {
 
 const SliderSongPos = ({
   width,
-  initPos = 100,
   orientation = 'horizontal',
   changeSongPos,
   duration,
@@ -30,7 +28,6 @@ const SliderSongPos = ({
       }}
     >
       <Slider
-        defaultValue={initPos}
         orientation={orientation}
         value={currentTime}
         onChange={handleChange}

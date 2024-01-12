@@ -40,16 +40,15 @@ const MenuControlBottom = ({
             duration
           )}`}</Typography>
         )}
+        <SliderVolume volume={volume} changeSongVolume={changeSongVolume} isDisabled={isDisabled} />
 
         <SliderSongPos
           width="100%"
-          initPos={0}
           changeSongPos={changeSongPos}
           duration={duration}
           currentTime={currentTime}
           isDisabled={isDisabled}
         />
-        <SliderVolume volume={volume} changeSongVolume={changeSongVolume} />
       </Box>
     </Box>
   )
