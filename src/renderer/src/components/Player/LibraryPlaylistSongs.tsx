@@ -1,14 +1,15 @@
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, Button } from '@mui/material'
-import { InputSearch } from '..'
+import { Alert, alpha, Button } from '@mui/material'
+import { BackgroundIcon, InputSearch } from '..'
+import { List as ListIcon } from '@mui/icons-material'
 
 interface Props {
   playlists: IPlaylist[]
   selectedPlaylist: string
   library: ILibrary[]
-  setVariant: (path: string) => 'text' | 'contained'
   setColor: (path: string) => 'success' | 'warning' | 'primary'
+  setBoxShadow: (path: string) => string | null
   handleSelect: (data: { playlist: string; path: string }) => void
   handleLoad: (path: string) => Promise<void>
   searchSong: string
@@ -19,8 +20,8 @@ const LibraryPlaylistSongs = ({
   playlists,
   selectedPlaylist,
   library,
-  setVariant,
   setColor,
+  setBoxShadow,
   handleSelect,
   handleLoad,
   searchSong,
@@ -46,13 +47,19 @@ const LibraryPlaylistSongs = ({
     console.log(filteredLibrary)
 
     return (
-      <>
+      <BackgroundIcon
+        Icon={ListIcon}
+        iconColor={alpha('#000', 0.1)}
+        alignItems={'flex-start'}
+        iconSize="100vh"
+      >
         <InputSearch value={searchSong} setValue={setSearchSong} />
         {filteredLibrary.map((path, index) => {
           return (
             <Button
               key={index}
-              variant={setVariant(path)}
+              sx={{ boxShadow: setBoxShadow(path) }}
+              variant="contained"
               color={setColor(path)}
               onClick={() => handleSelect({ playlist: playlistId, path: path })}
               onDoubleClick={() => handleLoad(path)}
@@ -61,10 +68,19 @@ const LibraryPlaylistSongs = ({
             </Button>
           )
         })}
-      </>
+      </BackgroundIcon>
     )
   } catch (err) {
-    return <Alert severity="warning">{(err as Error).message}</Alert>
+    return (
+      <BackgroundIcon
+        Icon={ListIcon}
+        iconColor={alpha('#000', 0.1)}
+        alignItems={'flex-start'}
+        iconSize="100vh"
+      >
+        <Alert severity="warning">{(err as Error).message}</Alert>
+      </BackgroundIcon>
+    )
   }
 }
 

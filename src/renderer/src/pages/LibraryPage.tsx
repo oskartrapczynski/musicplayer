@@ -7,9 +7,18 @@ interface Props {
   filePath?: string
   handleReadMusicPath: (path: string) => Promise<void>
   playlists: IPlaylist[]
+  setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
+  setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
 }
 
-const LibraryPage = ({ library, filePath, handleReadMusicPath, playlists }: Props) => {
+const LibraryPage = ({
+  library,
+  filePath,
+  handleReadMusicPath,
+  playlists,
+  setLibrary,
+  setPlaylists
+}: Props) => {
   return (
     <ContentSection>
       <Library
@@ -17,6 +26,8 @@ const LibraryPage = ({ library, filePath, handleReadMusicPath, playlists }: Prop
         filePath={filePath}
         handleReadMusicPath={handleReadMusicPath}
         playlists={playlists}
+        setLibrary={setLibrary}
+        setPlaylists={setPlaylists}
       />
     </ContentSection>
   )

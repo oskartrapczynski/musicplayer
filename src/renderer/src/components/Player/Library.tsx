@@ -1,21 +1,33 @@
 import { useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
-import { InputSearch, LibraryAllSongs, LibraryPlaylistSongs } from '..'
+import { AddPlaylist, InputSearch, LibraryAllSongs, LibraryPlaylistSongs } from '..'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
-import { Box, Button, Stack } from '@mui/material'
-import { Apps as AppsIcon, List as ListIcon } from '@mui/icons-material'
-
+import { Box, Button, Stack, useTheme } from '@mui/material'
+import { Apps as AppsIcon, List as ListIcon, Add as AddIcon } from '@mui/icons-material'
 interface Props {
   library: ILibrary[]
   filePath?: string
   handleReadMusicPath: (path: string) => Promise<void>
   playlists: IPlaylist[]
+  setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
+  setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
 }
 
 // filePath is current playing song
-const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) => {
+const Library = ({
+  library,
+  filePath,
+  handleReadMusicPath,
+  playlists,
+  setLibrary,
+  setPlaylists
+}: Props) => {
   const [selected, setSelected] = useState({ playlist: `${DATA_FILE.LIBRARY}`, path: '' })
+
+  const { palette } = useTheme()
+
+  const ADD_PLAYLIST = 'add'
 
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
@@ -30,17 +42,15 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
 
   const handleSelect = (data: { playlist: string; path: string }) => setSelected(data)
 
-  const setVariant = (path: string) => {
-    if (path !== filePath) return 'text'
-    return 'contained'
+  const setBoxShadow = (path: string) => {
+    if (path === filePath) return `${palette.success.main} 0px 0px 25px 0px`
+    return null
   }
-
   const setColor = (path: string) => {
     if (path === selected.path) return 'warning'
     if (path === filePath) return 'success'
     return 'primary'
   }
-
   console.log(searchPlaylist)
 
   return (
@@ -64,8 +74,17 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
             '&::-webkit-scrollbar': { display: 'none' }
           }}
         >
-          <Stack gap={2}>
+          <Stack gap={1}>
             <InputSearch value={searchPlaylist} setValue={setSearchPlaylist} />
+            <Button
+              sx={{ justifyContent: 'flex-start' }}
+              variant="contained"
+              color="success"
+              startIcon={<AddIcon />}
+              onClick={() => setSelected({ playlist: ADD_PLAYLIST, path: '' })}
+            >
+              Dodaj
+            </Button>
             {searchPlaylist ? (
               <>
                 {playlists
@@ -73,6 +92,7 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
                   .map(({ playlistId, name }, index) => (
                     <Button
                       key={index}
+                      sx={{ justifyContent: 'flex-start' }}
                       variant="contained"
                       startIcon={<ListIcon />}
                       onClick={() => {
@@ -88,6 +108,7 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
               <>
                 <Button
                   variant="contained"
+                  sx={{ justifyContent: 'flex-start' }}
                   startIcon={<AppsIcon />}
                   onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: '' })}
                 >
@@ -97,6 +118,7 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
                   playlists.map(({ playlistId, name }, index) => (
                     <Button
                       key={index}
+                      sx={{ justifyContent: 'flex-start' }}
                       variant="contained"
                       startIcon={<ListIcon />}
                       onClick={() => {
@@ -119,11 +141,19 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
             '&::-webkit-scrollbar': { display: 'none' }
           }}
         >
+          {selected.playlist === ADD_PLAYLIST && (
+            <AddPlaylist
+              library={library}
+              playlists={playlists}
+              setLibrary={setLibrary}
+              setPlaylists={setPlaylists}
+            />
+          )}
           {selected.playlist === DATA_FILE.LIBRARY && (
             <LibraryAllSongs
               library={library}
-              setVariant={setVariant}
               setColor={setColor}
+              setBoxShadow={setBoxShadow}
               handleSelect={handleSelect}
               handleLoad={handleLoad}
               searchSong={searchSong}
@@ -131,13 +161,15 @@ const Library = ({ library, filePath, handleReadMusicPath, playlists }: Props) =
             />
           )}
 
-          {selected.playlist !== DATA_FILE.LIBRARY && (
+          {selected.playlist.match(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+          ) && (
             <LibraryPlaylistSongs
               selectedPlaylist={selected.playlist}
               playlists={playlists}
               library={library}
-              setVariant={setVariant}
               setColor={setColor}
+              setBoxShadow={setBoxShadow}
               handleSelect={handleSelect}
               handleLoad={handleLoad}
               searchSong={searchSong}

@@ -17,11 +17,12 @@ import { writeFileJSON, readFileJSON, readMusicDialog, readMusicPath } from '@re
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { v4 as uuidv4 } from 'uuid'
+import { Box, CircularProgress } from '@mui/material'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
-  const [library, setLibrary] = useState<ILibrary[]>([])
-  const [playlists, setPlaylists] = useState<IPlaylist[]>([])
+  const [library, setLibrary] = useState<ILibrary[] | null>(null)
+  const [playlists, setPlaylists] = useState<IPlaylist[] | null>(null)
 
   const handleLoadDb = async () => {
     try {
@@ -38,6 +39,11 @@ const App = () => {
   useEffect(() => {
     handleLoadDb()
   }, [])
+
+  useEffect(() => {
+    if (!library || !playlists) return
+    writeFileJSON(DATA_FILE.DB, { library, playlists })
+  }, [library, playlists])
 
   // const db = useMemo(() => audioObj, [])
 
@@ -80,7 +86,10 @@ const App = () => {
     if (!isMusicSaved) {
       const newSong = { songId: uuidv4(), path: filePath! } as ILibrary
       const newLibrary: ILibrary[] = library ? [...library, newSong] : [newSong]
-      const updatedDB = { [DATA_FILE.LIBRARY]: newLibrary, [DATA_FILE.PLAYLISTS]: playlists }
+      const updatedDB = {
+        [DATA_FILE.LIBRARY]: newLibrary,
+        [DATA_FILE.PLAYLISTS]: playlists as IPlaylist[]
+      }
       await writeFileJSON(DATA_FILE.DB, updatedDB)
       setLibrary(newLibrary)
     }
@@ -102,67 +111,86 @@ const App = () => {
 
   return (
     <>
-      <SnackbarProvider
-        autoHideDuration={1000}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}
-        action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
-      />
-      <HashRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout
-                appMode={appMode}
-                isPlaying={isPlaying}
-                toggle={toggle}
-                changeSongPos={changeSongPos}
-                duration={duration}
-                songPos={songPos}
-                currentTime={currentTime}
-                isDisabled={!player.song}
-                setAppMode={setAppMode}
-                volume={volume}
-                changeSongVolume={changeSongVolume}
-              />
-            }
-          >
-            <Route
-              index
-              element={
-                appMode === APP_MODE.NORMAL ? (
-                  <PlayerBasicPage
-                    handleReadMusicDialog={handleReadMusicDialog}
-                    songTags={player.songTags}
+      {!playlists && !library ? (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CircularProgress size={'50vh'} />
+        </Box>
+      ) : (
+        <SnackbarProvider
+          autoHideDuration={1000}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
+        >
+          <HashRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Layout
+                    appMode={appMode}
+                    isPlaying={isPlaying}
+                    toggle={toggle}
+                    changeSongPos={changeSongPos}
                     duration={duration}
-                    filePath={player.filePath}
-                    userTags={player.userTags}
+                    songPos={songPos}
+                    currentTime={currentTime}
+                    isDisabled={!player.song}
+                    setAppMode={setAppMode}
+                    volume={volume}
+                    changeSongVolume={changeSongVolume}
                   />
-                ) : (
-                  <PlayerProPage />
-                )
-              }
-            />
-            <Route
-              path="/library"
-              element={
-                <LibraryPage
-                  library={library}
-                  playlists={playlists}
-                  filePath={player.filePath}
-                  handleReadMusicPath={handleReadMusicPath}
+                }
+              >
+                <Route
+                  index
+                  element={
+                    appMode === APP_MODE.NORMAL ? (
+                      <PlayerBasicPage
+                        handleReadMusicDialog={handleReadMusicDialog}
+                        songTags={player.songTags}
+                        duration={duration}
+                        filePath={player.filePath}
+                        userTags={player.userTags}
+                      />
+                    ) : (
+                      <PlayerProPage />
+                    )
+                  }
                 />
-              }
-            />
-            <Route path="/queue" element={<QueuePage />} />
-            <Route path="/genres" element={<GenresPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Route>
-        </Routes>
-      </HashRouter>
+                <Route
+                  path="/library"
+                  element={
+                    <LibraryPage
+                      library={library as ILibrary[]}
+                      setLibrary={setLibrary as React.Dispatch<React.SetStateAction<ILibrary[]>>}
+                      playlists={playlists as IPlaylist[]}
+                      setPlaylists={
+                        setPlaylists as React.Dispatch<React.SetStateAction<IPlaylist[]>>
+                      }
+                      filePath={player.filePath}
+                      handleReadMusicPath={handleReadMusicPath}
+                    />
+                  }
+                />
+                <Route path="/queue" element={<QueuePage />} />
+                <Route path="/genres" element={<GenresPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Route>
+            </Routes>
+          </HashRouter>
+        </SnackbarProvider>
+      )}
     </>
   )
 }

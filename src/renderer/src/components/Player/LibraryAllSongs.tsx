@@ -1,13 +1,14 @@
 import { DATA_FILE } from '@global/constants'
 import { ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, Button } from '@mui/material'
-import InputSearch from './InputSearch'
+import { InputSearch, BackgroundIcon } from '..'
+import { Alert, alpha, Button } from '@mui/material'
+import { Apps as AppsIcon } from '@mui/icons-material'
 
 interface Props {
   library: ILibrary[]
-  setVariant: (path: string) => 'text' | 'contained'
   setColor: (path: string) => 'success' | 'warning' | 'primary'
+  setBoxShadow: (path: string) => string | null
   handleSelect: (data: { playlist: string; path: string }) => void
   handleLoad: (path: string) => Promise<void>
   searchSong: string
@@ -16,8 +17,8 @@ interface Props {
 
 const LibraryAllSongs = ({
   library,
-  setVariant,
   setColor,
+  setBoxShadow,
   handleSelect,
   handleLoad,
   searchSong,
@@ -28,14 +29,16 @@ const LibraryAllSongs = ({
         getFileName(path).toLowerCase().includes(searchSong.toLowerCase())
       )
     : library
+  // const theme = useTheme()
   return (
-    <>
+    <BackgroundIcon Icon={AppsIcon} iconColor={alpha('#000', 0.1)} alignItems={'flex-start'}>
       <InputSearch value={searchSong} setValue={setSearchSong} />
       {filteredLibrary && filteredLibrary.length > 0 ? (
         filteredLibrary.map(({ path }, index) => (
           <Button
             key={index}
-            variant={setVariant(path)}
+            sx={{ boxShadow: setBoxShadow(path) }}
+            variant="contained"
             color={setColor(path)}
             onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: path })}
             onDoubleClick={() => handleLoad(path)}
@@ -46,7 +49,7 @@ const LibraryAllSongs = ({
       ) : (
         <Alert severity="warning">Biblioteka jest pusta</Alert>
       )}
-    </>
+    </BackgroundIcon>
   )
 }
 
