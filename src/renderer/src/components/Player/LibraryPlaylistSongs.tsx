@@ -3,6 +3,7 @@ import { getFileName } from '@global/utils'
 import { Alert, alpha, Button } from '@mui/material'
 import { BackgroundIcon, InputSearch } from '..'
 import { List as ListIcon } from '@mui/icons-material'
+import { searchPathFromWords } from '@renderer/utils'
 
 interface Props {
   playlists: IPlaylist[]
@@ -39,12 +40,10 @@ const LibraryPlaylistSongs = ({
     })
 
     const filteredLibrary = searchSong
-      ? songPaths.filter((path) =>
-          getFileName(path).toLowerCase().includes(searchSong.toLowerCase())
-        )
+      ? searchPathFromWords(songPaths, searchSong, 'playlist')
       : songPaths
 
-    console.log(filteredLibrary)
+    if (filteredLibrary.length === 0) throw new Error('Lista odtwarzania jest pusta')
 
     return (
       <BackgroundIcon
@@ -54,7 +53,7 @@ const LibraryPlaylistSongs = ({
         iconSize="100vh"
       >
         <InputSearch value={searchSong} setValue={setSearchSong} />
-        {filteredLibrary.map((path, index) => {
+        {(filteredLibrary as string[]).map((path, index) => {
           return (
             <Button
               key={index}

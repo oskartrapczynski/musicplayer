@@ -88,7 +88,11 @@ const Library = ({
             {searchPlaylist ? (
               <>
                 {playlists
-                  .filter(({ name }) => name.toLowerCase().includes(searchPlaylist.toLowerCase()))
+                  .filter(({ name }) => {
+                    const searchWords = searchPlaylist.split(' ').map((word) => word.toLowerCase())
+                    const matchWords = searchWords.map((word) => name.toLowerCase().includes(word))
+                    return matchWords.filter((item) => item).length === searchWords.length
+                  })
                   .map(({ playlistId, name }, index) => (
                     <Button
                       key={index}

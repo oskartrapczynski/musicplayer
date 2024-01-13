@@ -5,6 +5,7 @@ import convertBufferToSong from './player/convertBufferToSong'
 import readMusicDialog from './player/readMusicDialog'
 import readMusicPath from './player/readMusicPath'
 import secondsToMusicTime from './player/secondsToMusicTime'
+import searchPathFromWords from './library/searchPathFromWords'
 
 export {
   convertBufferToSong,
@@ -13,5 +14,6 @@ export {
   readMusicDialog,
   readMusicPath,
   readFileJSON,
-  writeFileJSON
+  writeFileJSON,
+  searchPathFromWords
 }
