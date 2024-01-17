@@ -1,86 +1,105 @@
-import { ILibrary, IPlaylist } from '@global/interfaces'
+import { useState, useEffect } from 'react'
+import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, alpha, Button } from '@mui/material'
-import { BackgroundIcon, InputSearch } from '..'
-import { List as ListIcon } from '@mui/icons-material'
-import { searchPathFromWords } from '@renderer/utils'
+import { Alert, Button } from '@mui/material'
+import { LibraryContent, InputSearch } from '..'
+import {
+  getSongsById,
+  searchPathFromWords,
+  setLibraryContentBoxShadow,
+  setLibraryContentColor
+} from '@renderer/utils'
+import { IReadMusicPath, ISongPath } from '@renderer/interfaces'
 
 interface Props {
   playlists: IPlaylist[]
   selectedPlaylist: string
   library: ILibrary[]
-  setColor: (path: string) => 'success' | 'warning' | 'primary'
-  setBoxShadow: (path: string) => string | null
   handleSelect: (data: { playlist: string; path: string }) => void
-  handleLoad: (path: string) => Promise<void>
+  handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
+  player: IMusicResponse & {
+    locationSong: string | undefined
+  }
+  selected: {
+    playlist: string
+    path: string
+  }
 }
 
 const LibraryPlaylistSongs = ({
   playlists,
   selectedPlaylist,
   library,
-  setColor,
-  setBoxShadow,
   handleSelect,
   handleLoad,
   searchSong,
-  setSearchSong
+  setSearchSong,
+  player,
+  selected
 }: Props) => {
-  try {
+  const [filteredLibrary, setFilteredLibrary] = useState<ISongPath[] | null>(null)
+
+  const [playlistId, setPlaylistId] = useState<string | null>(null)
+
+  const loadSongs = async () => {
     const playlistArrayId = playlists.findIndex(({ playlistId }) => selectedPlaylist === playlistId)
-    if (playlistArrayId === -1) throw new Error('Lista odtwarzania jest pusta')
+    if (playlistArrayId === -1) return setFilteredLibrary([])
     const { playlistId, songs } = playlists[playlistArrayId]
-    if (songs.length === 0) throw new Error('Lista odtwarzania jest pusta')
+    if (songs.length === 0) return setFilteredLibrary([])
 
-    const songPaths = songs.map(({ songId }) => {
-      const { path } = library.filter(({ songId: librarySongId }) => librarySongId === songId)[0]
-      return path
-    })
+    const librarySongs = await getSongsById({ library, songIds: songs })
+    const librarySongsPaths = librarySongs.map(({ path }) => ({
+      path
+    }))
 
-    const filteredLibrary = searchSong
-      ? searchPathFromWords(songPaths, searchSong, 'playlist')
-      : songPaths
+    const filteredLibraryPaths = searchSong
+      ? searchPathFromWords({ paths: librarySongsPaths, searchSong })
+      : librarySongsPaths
 
-    if (filteredLibrary.length === 0) throw new Error('Lista odtwarzania jest pusta')
-
-    return (
-      <BackgroundIcon
-        Icon={ListIcon}
-        iconColor={alpha('#000', 0.1)}
-        alignItems={'flex-start'}
-        iconSize="100vh"
-      >
-        <InputSearch value={searchSong} setValue={setSearchSong} />
-        {(filteredLibrary as string[]).map((path, index) => {
-          return (
-            <Button
-              key={index}
-              sx={{ boxShadow: setBoxShadow(path) }}
-              variant="contained"
-              color={setColor(path)}
-              onClick={() => handleSelect({ playlist: playlistId, path: path })}
-              onDoubleClick={() => handleLoad(path)}
-            >
-              {getFileName(path)}
-            </Button>
-          )
-        })}
-      </BackgroundIcon>
-    )
-  } catch (err) {
-    return (
-      <BackgroundIcon
-        Icon={ListIcon}
-        iconColor={alpha('#000', 0.1)}
-        alignItems={'flex-start'}
-        iconSize="100vh"
-      >
-        <Alert severity="warning">{(err as Error).message}</Alert>
-      </BackgroundIcon>
-    )
+    if (filteredLibraryPaths.length === 0) return setFilteredLibrary([])
+    setFilteredLibrary(filteredLibraryPaths)
+    setPlaylistId(playlistId)
   }
+
+  useEffect(() => {
+    loadSongs()
+  }, [searchSong, selectedPlaylist])
+
+  return (
+    <>
+      {!filteredLibrary ? (
+        <div>Loading</div>
+      ) : (
+        <LibraryContent alignItems={'flex-start'}>
+          <InputSearch value={searchSong} setValue={setSearchSong} />
+          {filteredLibrary.length > 0 ? (
+            <>
+              {filteredLibrary.map(({ path }, index) => (
+                <Button
+                  key={index}
+                  sx={{
+                    boxShadow: setLibraryContentBoxShadow({ path, player, selected })
+                  }}
+                  variant="contained"
+                  color={setLibraryContentColor({ path, player, selected })}
+                  onClick={() => handleSelect({ playlist: playlistId as string, path })}
+                  onDoubleClick={() =>
+                    handleLoad({ filePath: path, locationSong: playlistId as string })
+                  }
+                >
+                  {getFileName(path)}
+                </Button>
+              ))}
+            </>
+          ) : (
+            <Alert severity="warning">Lista odtwarzania jest pusta</Alert>
+          )}
+        </LibraryContent>
+      )}
+    </>
+  )
 }
 
 export default LibraryPlaylistSongs

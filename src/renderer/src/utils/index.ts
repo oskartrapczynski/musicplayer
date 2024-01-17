@@ -6,6 +6,14 @@ import readMusicDialog from './player/readMusicDialog'
 import readMusicPath from './player/readMusicPath'
 import secondsToMusicTime from './player/secondsToMusicTime'
 import searchPathFromWords from './library/searchPathFromWords'
+import getSongsById from './library/getSongsById'
+import getCurrentPlayingId from './library/getCurrentPlayingId'
+import nextSongLibrary from './library/nextSongLibrary'
+import nextSongPlaylist from './library/nextSongPlaylist'
+import prevSongLibrary from './library/prevSongLibrary'
+import prevSongPlaylist from './library/prevSongPlaylist'
+import setLibraryContentColor from './library/setLibraryContentColor'
+import setLibraryContentBoxShadow from './library/setLibraryContentBoxShadow'
 
 export {
   convertBufferToSong,
@@ -15,5 +23,13 @@ export {
   readMusicPath,
   readFileJSON,
   writeFileJSON,
-  searchPathFromWords
+  searchPathFromWords,
+  getSongsById,
+  getCurrentPlayingId,
+  nextSongLibrary,
+  nextSongPlaylist,
+  prevSongLibrary,
+  prevSongPlaylist,
+  setLibraryContentColor,
+  setLibraryContentBoxShadow
 }

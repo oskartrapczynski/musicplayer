@@ -1,44 +1,54 @@
 import { DATA_FILE } from '@global/constants'
-import { ILibrary } from '@global/interfaces'
+import { ILibrary, IMusicResponse } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { InputSearch, BackgroundIcon } from '..'
-import { Alert, alpha, Button } from '@mui/material'
-import { Apps as AppsIcon } from '@mui/icons-material'
-import { searchPathFromWords } from '@renderer/utils'
+import { InputSearch, LibraryContent } from '..'
+import { Alert, Button } from '@mui/material'
+import {
+  searchPathFromWords,
+  setLibraryContentColor,
+  setLibraryContentBoxShadow
+} from '@renderer/utils'
+import { IReadMusicPath } from '@renderer/interfaces'
 
 interface Props {
   library: ILibrary[]
-  setColor: (path: string) => 'success' | 'warning' | 'primary'
-  setBoxShadow: (path: string) => string | null
   handleSelect: (data: { playlist: string; path: string }) => void
-  handleLoad: (path: string) => Promise<void>
+  handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
+  player: IMusicResponse & {
+    locationSong: string | undefined
+  }
+  selected: {
+    playlist: string
+    path: string
+  }
 }
 
 const LibraryAllSongs = ({
   library,
-  setColor,
-  setBoxShadow,
   handleSelect,
   handleLoad,
   searchSong,
-  setSearchSong
+  setSearchSong,
+  player,
+  selected
 }: Props) => {
-  const filteredLibrary = searchSong ? searchPathFromWords(library, searchSong, 'library') : library
+  const paths = library.map((path) => path)
+  const filteredLibrary = searchSong ? searchPathFromWords({ paths, searchSong }) : library
 
   return (
-    <BackgroundIcon Icon={AppsIcon} iconColor={alpha('#000', 0.1)} alignItems={'flex-start'}>
+    <LibraryContent alignItems={'flex-start'}>
       <InputSearch value={searchSong} setValue={setSearchSong} />
       {filteredLibrary && filteredLibrary.length > 0 ? (
         (filteredLibrary as ILibrary[]).map(({ path }, index) => (
           <Button
             key={index}
-            sx={{ boxShadow: setBoxShadow(path) }}
+            sx={{ boxShadow: setLibraryContentBoxShadow({ path, player, selected }) }}
             variant="contained"
-            color={setColor(path)}
-            onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: path })}
-            onDoubleClick={() => handleLoad(path)}
+            color={setLibraryContentColor({ path, player, selected })}
+            onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path })}
+            onDoubleClick={() => handleLoad({ filePath: path, locationSong: DATA_FILE.LIBRARY })}
           >
             {getFileName(path)}
           </Button>
@@ -46,7 +56,7 @@ const LibraryAllSongs = ({
       ) : (
         <Alert severity="warning">Biblioteka jest pusta</Alert>
       )}
-    </BackgroundIcon>
+    </LibraryContent>
   )
 }
 

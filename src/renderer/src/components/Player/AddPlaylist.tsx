@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { TextField, IconButton, useTheme, Box } from '@mui/material'
 import { AddCircle as AddCircleIcon, Add as AddIcon } from '@mui/icons-material'
-import { BackgroundIcon } from '..'
+import { LibraryContent } from '..'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -25,7 +25,7 @@ const AddPlaylist = ({ library, playlists, setLibrary, setPlaylists }: Props) =>
   }
 
   return (
-    <BackgroundIcon Icon={AddIcon} iconColor={palette.success.light} iconSize="100vw">
+    <LibraryContent>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <TextField
           placeholder="Dodaj nową"
@@ -39,7 +39,7 @@ const AddPlaylist = ({ library, playlists, setLibrary, setPlaylists }: Props) =>
           <AddCircleIcon sx={{ fontSize: '50px' }} color="success" />
         </IconButton>
       </Box>
-    </BackgroundIcon>
+    </LibraryContent>
   )
 }
 

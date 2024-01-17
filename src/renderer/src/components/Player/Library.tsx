@@ -1,57 +1,47 @@
 import { useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { AddPlaylist, InputSearch, LibraryAllSongs, LibraryPlaylistSongs } from '..'
-import { ILibrary, IPlaylist } from '@global/interfaces'
+import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
-import { Box, Button, Stack, useTheme } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon, Add as AddIcon } from '@mui/icons-material'
+import { IReadMusicPath } from '@renderer/interfaces'
 interface Props {
   library: ILibrary[]
-  filePath?: string
-  handleReadMusicPath: (path: string) => Promise<void>
+  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
+  player: IMusicResponse & {
+    locationSong: string | undefined
+  }
 }
 
 // filePath is current playing song
 const Library = ({
   library,
-  filePath,
   handleReadMusicPath,
   playlists,
   setLibrary,
-  setPlaylists
+  setPlaylists,
+  player
 }: Props) => {
   const [selected, setSelected] = useState({ playlist: `${DATA_FILE.LIBRARY}`, path: '' })
-
-  const { palette } = useTheme()
 
   const ADD_PLAYLIST = 'add'
 
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
 
-  const handleLoad = async (path: string) => {
-    if (!path) {
+  const handleLoad = async ({ filePath, locationSong }: IReadMusicPath) => {
+    if (!filePath) {
       enqueueSnackbar('Wybierz utwór aby załadować', { variant: 'warning' })
       return
     }
-    return await handleReadMusicPath(path)
+    return await handleReadMusicPath({ filePath, locationSong })
   }
 
   const handleSelect = (data: { playlist: string; path: string }) => setSelected(data)
-
-  const setBoxShadow = (path: string) => {
-    if (path === filePath) return `${palette.success.main} 0px 0px 25px 0px`
-    return null
-  }
-  const setColor = (path: string) => {
-    if (path === selected.path) return 'warning'
-    if (path === filePath) return 'success'
-    return 'primary'
-  }
-  console.log(searchPlaylist)
 
   return (
     <>
@@ -156,12 +146,12 @@ const Library = ({
           {selected.playlist === DATA_FILE.LIBRARY && (
             <LibraryAllSongs
               library={library}
-              setColor={setColor}
-              setBoxShadow={setBoxShadow}
               handleSelect={handleSelect}
               handleLoad={handleLoad}
               searchSong={searchSong}
               setSearchSong={setSearchSong}
+              player={player}
+              selected={selected}
             />
           )}
 
@@ -172,12 +162,12 @@ const Library = ({
               selectedPlaylist={selected.playlist}
               playlists={playlists}
               library={library}
-              setColor={setColor}
-              setBoxShadow={setBoxShadow}
               handleSelect={handleSelect}
               handleLoad={handleLoad}
               searchSong={searchSong}
               setSearchSong={setSearchSong}
+              player={player}
+              selected={selected}
             />
           )}
         </Box>

@@ -18,6 +18,7 @@ import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { v4 as uuidv4 } from 'uuid'
 import { Box, CircularProgress } from '@mui/material'
+import { IReadMusicPath } from './interfaces'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
@@ -50,11 +51,12 @@ const App = () => {
   const audioObj1 = new Audio(undefined)
   // const audioObj2 = new Audio(undefined)
 
-  const [player, setPlayer] = useState<IMusicResponse>({
+  const [player, setPlayer] = useState<IMusicResponse & { locationSong: string | undefined }>({
     song: undefined,
     songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
-    filePath: undefined
+    filePath: undefined,
+    locationSong: undefined
   })
   // aliasy
   // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
@@ -78,9 +80,13 @@ const App = () => {
       song,
       songTags,
       info,
-      filePath
+      filePath,
+      locationSong: DATA_FILE.LIBRARY
     })
-    if (!song || !filePath) return
+    if (!song || !filePath) {
+      enqueueSnackbar('Nie załadowano utwóru', { variant: 'warning' })
+      return
+    }
     const isMusicSaved = library?.some((item) => item.path === filePath)
     console.log(isMusicSaved)
     if (!isMusicSaved) {
@@ -97,15 +103,16 @@ const App = () => {
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
-  const handleReadMusicPath = async (filePath: string) => {
+  const handleReadMusicPath = async ({ filePath, locationSong }: IReadMusicPath) => {
     const data = await readMusicPath(filePath)
-    console.log(data?.userTags)
+    // console.log(data?.userTags)
     setPlayer({
       song: data?.song,
       songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
       filePath: data?.filePath,
-      userTags: data?.userTags
+      userTags: data?.userTags,
+      locationSong
     })
   }
 
@@ -149,6 +156,10 @@ const App = () => {
                     setAppMode={setAppMode}
                     volume={volume}
                     changeSongVolume={changeSongVolume}
+                    library={library}
+                    playlists={playlists}
+                    player={player}
+                    handleReadMusicPath={handleReadMusicPath}
                   />
                 }
               >
@@ -178,8 +189,8 @@ const App = () => {
                       setPlaylists={
                         setPlaylists as React.Dispatch<React.SetStateAction<IPlaylist[]>>
                       }
-                      filePath={player.filePath}
                       handleReadMusicPath={handleReadMusicPath}
+                      player={player}
                     />
                   }
                 />

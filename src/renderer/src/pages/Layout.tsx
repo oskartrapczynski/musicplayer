@@ -2,6 +2,8 @@ import { Outlet } from 'react-router-dom'
 import { Box, CssBaseline } from '@mui/material'
 import { MenuApp, MenuControlBottom } from '@renderer/components'
 import { APP_MODE } from '@renderer/constants'
+import { ILibrary, IPlaylist, IMusicResponse } from '@global/interfaces'
+import { IReadMusicPath } from '@renderer/interfaces'
 
 interface Props {
   appMode: APP_MODE
@@ -15,6 +17,12 @@ interface Props {
   setAppMode: React.Dispatch<React.SetStateAction<APP_MODE>>
   volume: number
   changeSongVolume: (volume: number) => void
+  library: ILibrary[] | null
+  playlists: IPlaylist[] | null
+  player: IMusicResponse & {
+    locationSong: string | undefined
+  }
+  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
 }
 
 const Layout = ({
@@ -28,7 +36,11 @@ const Layout = ({
   isDisabled,
   setAppMode,
   volume,
-  changeSongVolume
+  changeSongVolume,
+  library,
+  playlists,
+  player,
+  handleReadMusicPath
 }: Props) => {
   return (
     <>
@@ -57,6 +69,10 @@ const Layout = ({
               isDisabled={isDisabled}
               volume={volume}
               changeSongVolume={changeSongVolume}
+              library={library}
+              playlists={playlists}
+              player={player}
+              handleReadMusicPath={handleReadMusicPath}
             />
           )}
         </Box>

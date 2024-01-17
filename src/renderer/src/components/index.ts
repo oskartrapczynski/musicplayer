@@ -17,7 +17,7 @@ import LibraryAllSongs from './player/LibraryAllSongs'
 import LibraryPlaylistSongs from './player/LibraryPlaylistSongs'
 import InputSearch from './player/InputSearch'
 import AddPlaylist from './player/AddPlaylist'
-import BackgroundIcon from './player/BackgroundIcon'
+import LibraryContent from './player/LibraryContent'
 
 export {
   MenuControlBottom,
@@ -39,5 +39,5 @@ export {
   LibraryPlaylistSongs,
   InputSearch,
   AddPlaylist,
-  BackgroundIcon
+  LibraryContent
 }
