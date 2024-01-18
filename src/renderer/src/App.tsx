@@ -4,12 +4,11 @@ import { enqueueSnackbar, SnackbarProvider } from 'notistack'
 import { IMusicResponse, ILibrary, IResponseFileJSON, IDB, IPlaylist } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
-  GenresPage,
+  TagsPage,
   Layout,
   LibraryPage,
   PlayerBasicPage,
   PlayerProPage,
-  QueuePage,
   SettingsPage
 } from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
@@ -180,7 +179,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/library"
+                  path="/library/*"
                   element={
                     <LibraryPage
                       library={library as ILibrary[]}
@@ -194,8 +193,7 @@ const App = () => {
                     />
                   }
                 />
-                <Route path="/queue" element={<QueuePage />} />
-                <Route path="/genres" element={<GenresPage />} />
+                <Route path="/tags" element={<TagsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>
             </Routes>

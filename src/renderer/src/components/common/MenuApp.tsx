@@ -1,7 +1,6 @@
 import {
   Album as AlbumIcon,
   LibraryMusic as LibraryMusicIcon,
-  QueueMusic as QueueMusicIcon,
   Nightlife as NightlifeIcon,
   Settings as SettingsIcon
 } from '@mui/icons-material'
@@ -29,12 +28,7 @@ const MenuApp = ({ appMode, setAppMode }: Props) => {
             <LibraryMusicIcon fontSize="large" />
           </IconButton>
         </Link>
-        <Link to="/queue">
-          <IconButton>
-            <QueueMusicIcon fontSize="large" />
-          </IconButton>
-        </Link>
-        <Link to="/genres">
+        <Link to="/tags">
           <IconButton>
             <NightlifeIcon fontSize="large" />
           </IconButton>

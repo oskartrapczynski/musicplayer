@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
-import { AddPlaylist, InputSearch, LibraryAllSongs, LibraryPlaylistSongs } from '..'
+import {
+  AddPlaylist,
+  InputSearch,
+  LibraryAllSongs,
+  LibraryPlaylistButton,
+  LibraryPlaylistSongs
+} from '..'
 import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
-import { Box, Button, Stack } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon, Add as AddIcon } from '@mui/icons-material'
 import { IReadMusicPath } from '@renderer/interfaces'
+import { Route, Routes } from 'react-router-dom'
+import { ROUTE } from '@renderer/constants'
 interface Props {
   library: ILibrary[]
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
@@ -26,10 +34,12 @@ const Library = ({
   setPlaylists,
   player
 }: Props) => {
-  const [selected, setSelected] = useState({ playlist: `${DATA_FILE.LIBRARY}`, path: '' })
+  const [selected, setSelected] = useState({
+    playlist: `${DATA_FILE.LIBRARY}`,
+    path: ''
+  })
 
   const ADD_PLAYLIST = 'add'
-
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
 
@@ -41,8 +51,9 @@ const Library = ({
     return await handleReadMusicPath({ filePath, locationSong })
   }
 
-  const handleSelect = (data: { playlist: string; path: string }) => setSelected(data)
+  // const filterPlaylists = () => {}
 
+  console.log(selected)
   return (
     <>
       <Box
@@ -66,15 +77,14 @@ const Library = ({
         >
           <Stack gap={1}>
             <InputSearch value={searchPlaylist} setValue={setSearchPlaylist} />
-            <Button
-              sx={{ justifyContent: 'flex-start' }}
-              variant="contained"
+            <LibraryPlaylistButton
               color="success"
-              startIcon={<AddIcon />}
+              icon={<AddIcon />}
               onClick={() => setSelected({ playlist: ADD_PLAYLIST, path: '' })}
-            >
-              Dodaj
-            </Button>
+              text="Dodaj"
+              linkPath={`/${ROUTE.LIBRARY}/${ADD_PLAYLIST}`}
+              selectedPlaylist={selected.playlist}
+            />
             {searchPlaylist ? (
               <>
                 {playlists
@@ -84,43 +94,39 @@ const Library = ({
                     return matchWords.filter((item) => item).length === searchWords.length
                   })
                   .map(({ playlistId, name }, index) => (
-                    <Button
+                    <LibraryPlaylistButton
                       key={index}
-                      sx={{ justifyContent: 'flex-start' }}
-                      variant="contained"
-                      startIcon={<ListIcon />}
+                      icon={<ListIcon />}
                       onClick={() => {
-                        handleSelect({ playlist: playlistId, path: '' })
+                        setSelected({ playlist: playlistId, path: '' })
                         setSearchPlaylist('')
                       }}
-                    >
-                      {name}
-                    </Button>
+                      text={name}
+                      linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
+                      selectedPlaylist={selected.playlist}
+                    />
                   ))}
               </>
             ) : (
               <>
-                <Button
-                  variant="contained"
-                  sx={{ justifyContent: 'flex-start' }}
-                  startIcon={<AppsIcon />}
-                  onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path: '' })}
-                >
-                  Wszystkie
-                </Button>
+                <LibraryPlaylistButton
+                  color="error"
+                  icon={<AppsIcon />}
+                  onClick={() => setSelected({ playlist: DATA_FILE.LIBRARY, path: '' })}
+                  text="Wszystkie"
+                  linkPath={`/${ROUTE.LIBRARY}`}
+                  selectedPlaylist={selected.playlist}
+                />
                 {playlists?.length > 0 &&
                   playlists.map(({ playlistId, name }, index) => (
-                    <Button
+                    <LibraryPlaylistButton
                       key={index}
-                      sx={{ justifyContent: 'flex-start' }}
-                      variant="contained"
-                      startIcon={<ListIcon />}
-                      onClick={() => {
-                        handleSelect({ playlist: playlistId, path: '' })
-                      }}
-                    >
-                      {name}
-                    </Button>
+                      icon={<ListIcon />}
+                      onClick={() => setSelected({ playlist: playlistId, path: '' })}
+                      text={name}
+                      linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
+                      selectedPlaylist={selected.playlist}
+                    />
                   ))}
               </>
             )}
@@ -135,7 +141,49 @@ const Library = ({
             '&::-webkit-scrollbar': { display: 'none' }
           }}
         >
-          {selected.playlist === ADD_PLAYLIST && (
+          <Routes>
+            <Route
+              path={`/${ADD_PLAYLIST}`}
+              element={
+                <AddPlaylist
+                  library={library}
+                  playlists={playlists}
+                  setLibrary={setLibrary}
+                  setPlaylists={setPlaylists}
+                />
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <LibraryAllSongs
+                  library={library}
+                  setSelected={setSelected}
+                  handleLoad={handleLoad}
+                  searchSong={searchSong}
+                  setSearchSong={setSearchSong}
+                  player={player}
+                  selected={selected}
+                />
+              }
+            />
+            <Route
+              path="/:id"
+              element={
+                <LibraryPlaylistSongs
+                  playlists={playlists}
+                  library={library}
+                  setSelected={setSelected}
+                  handleLoad={handleLoad}
+                  searchSong={searchSong}
+                  setSearchSong={setSearchSong}
+                  player={player}
+                  selected={selected}
+                />
+              }
+            />
+          </Routes>
+          {/* {selected.playlist === ADD_PLAYLIST && (
             <AddPlaylist
               library={library}
               playlists={playlists}
@@ -146,7 +194,7 @@ const Library = ({
           {selected.playlist === DATA_FILE.LIBRARY && (
             <LibraryAllSongs
               library={library}
-              handleSelect={handleSelect}
+              setSelected={setSelected}
               handleLoad={handleLoad}
               searchSong={searchSong}
               setSearchSong={setSearchSong}
@@ -161,14 +209,14 @@ const Library = ({
             <LibraryPlaylistSongs
               playlists={playlists}
               library={library}
-              handleSelect={handleSelect}
+              setSelected={setSelected}
               handleLoad={handleLoad}
               searchSong={searchSong}
               setSearchSong={setSearchSong}
               player={player}
               selected={selected}
             />
-          )}
+          )} */}
         </Box>
       </Box>
     </>

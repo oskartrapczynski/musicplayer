@@ -9,7 +9,6 @@ import SliderSongPos from './player/SliderSongPos'
 import MenuApp from './common/MenuApp'
 import SwitchAppMode from './common/SwitchAppMode'
 import ContentSection from './player/ContentSection'
-import Queue from './player/Queue'
 import SnackbarCloseButton from './notistack/SnackbarCloseButton'
 import Library from './player/Library'
 import SliderVolume from './player/SliderVolume'
@@ -18,6 +17,7 @@ import LibraryPlaylistSongs from './player/LibraryPlaylistSongs'
 import InputSearch from './player/InputSearch'
 import AddPlaylist from './player/AddPlaylist'
 import LibraryContent from './player/LibraryContent'
+import LibraryPlaylistButton from './player/LibraryPlaylistButton'
 
 export {
   MenuControlBottom,
@@ -31,7 +31,6 @@ export {
   MenuApp,
   SwitchAppMode,
   ContentSection,
-  Queue,
   SnackbarCloseButton,
   Library,
   SliderVolume,
@@ -39,5 +38,6 @@ export {
   LibraryPlaylistSongs,
   InputSearch,
   AddPlaylist,
-  LibraryContent
+  LibraryContent,
+  LibraryPlaylistButton
 }

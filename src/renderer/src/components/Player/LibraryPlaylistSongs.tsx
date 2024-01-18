@@ -14,7 +14,12 @@ import { IReadMusicPath, ISongPath } from '@renderer/interfaces'
 interface Props {
   playlists: IPlaylist[]
   library: ILibrary[]
-  handleSelect: (data: { playlist: string; path: string }) => void
+  setSelected: React.Dispatch<
+    React.SetStateAction<{
+      playlist: string
+      path: string
+    }>
+  >
   handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
@@ -30,7 +35,7 @@ interface Props {
 const LibraryPlaylistSongs = ({
   playlists,
   library,
-  handleSelect,
+  setSelected,
   handleLoad,
   searchSong,
   setSearchSong,
@@ -84,7 +89,7 @@ const LibraryPlaylistSongs = ({
                   }}
                   variant="contained"
                   color={setLibraryContentColor({ path, player, selected })}
-                  onClick={() => handleSelect({ playlist: playlistId as string, path })}
+                  onClick={() => setSelected({ playlist: playlistId as string, path })}
                   onDoubleClick={() =>
                     handleLoad({ filePath: path, locationSong: playlistId as string })
                   }

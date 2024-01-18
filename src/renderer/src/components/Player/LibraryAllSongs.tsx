@@ -12,7 +12,12 @@ import { IReadMusicPath } from '@renderer/interfaces'
 
 interface Props {
   library: ILibrary[]
-  handleSelect: (data: { playlist: string; path: string }) => void
+  setSelected: React.Dispatch<
+    React.SetStateAction<{
+      playlist: string
+      path: string
+    }>
+  >
   handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
@@ -27,12 +32,12 @@ interface Props {
 
 const LibraryAllSongs = ({
   library,
-  handleSelect,
+  setSelected,
+  selected,
   handleLoad,
   searchSong,
   setSearchSong,
-  player,
-  selected
+  player
 }: Props) => {
   const paths = library.map((path) => path)
   const filteredLibrary = searchSong ? searchPathFromWords({ paths, searchSong }) : library
@@ -48,7 +53,7 @@ const LibraryAllSongs = ({
             sx={{ boxShadow: setLibraryContentBoxShadow({ path, player, selected, palette }) }}
             variant="contained"
             color={setLibraryContentColor({ path, player, selected })}
-            onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path })}
+            onClick={() => setSelected({ playlist: DATA_FILE.LIBRARY, path })}
             onDoubleClick={() => handleLoad({ filePath: path, locationSong: DATA_FILE.LIBRARY })}
           >
             {getFileName(path)}

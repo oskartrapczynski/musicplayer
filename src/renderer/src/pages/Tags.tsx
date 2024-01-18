@@ -1,11 +1,11 @@
 import { ContentSection } from '@renderer/components'
 
-const GenresPage = () => {
+const TagsPage = () => {
   return (
     <ContentSection>
-      <div>Genres</div>
+      <div>Tags</div>
     </ContentSection>
   )
 }
 
-export default GenresPage
+export default TagsPage
