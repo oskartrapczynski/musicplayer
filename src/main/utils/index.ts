@@ -1,5 +1,5 @@
 import checkDataFileExists from './checkDataFileExists'
-import getResolveAppPath from './getResolveAppPath'
+import getAppFilePath from './getAppFilePath'
 import readAudioTags from './readAudioTags'
 import readFileJSON from './readFileJSON'
 import readMusicFile from './readMusicFile'
@@ -11,5 +11,5 @@ export {
   readFileJSON,
   readSongLibraryData,
   checkDataFileExists,
-  getResolveAppPath
+  getAppFilePath
 }

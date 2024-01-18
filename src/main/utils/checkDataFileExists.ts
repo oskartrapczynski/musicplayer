@@ -1,11 +1,11 @@
 import { DATA_FILE } from '@global/constants'
 import { existsSync, writeFile } from 'fs'
-import { getResolveAppPath } from '.'
+import { getAppFilePath } from '.'
 
 const checkDataFileExists = (dataFile: DATA_FILE, reject: (reason?: string) => void) => {
-  if (!existsSync(`${getResolveAppPath()}/${dataFile}.json`)) {
+  if (!existsSync(`${getAppFilePath()}/${dataFile}.json`)) {
     writeFile(
-      `${getResolveAppPath()}/${dataFile}.json`,
+      `${getAppFilePath()}/${dataFile}.json`,
       JSON.stringify({ library: null, playlist: null }),
       'utf8',
       (err) => {

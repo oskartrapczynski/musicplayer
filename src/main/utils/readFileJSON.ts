@@ -1,11 +1,11 @@
 import { DATA_FILE } from '@global/constants'
 import { readFile } from 'fs'
-import { checkDataFileExists, getResolveAppPath } from '.'
+import { checkDataFileExists, getAppFilePath } from '.'
 
 const readFileJSON = async (dataFile: DATA_FILE) => {
   return new Promise<unknown>((resolve, reject) => {
     checkDataFileExists(dataFile, reject)
-    readFile(`${getResolveAppPath()}/${dataFile}.json`, 'utf8', (err, data) => {
+    readFile(`${getAppFilePath()}/${dataFile}.json`, 'utf8', (err, data) => {
       if (err) return reject('Can not open!')
       if (!data) return resolve(undefined)
       resolve(JSON.parse(data))
