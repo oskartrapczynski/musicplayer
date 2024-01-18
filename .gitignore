@@ -8,3 +8,4 @@ settings.json
 userTags.json
 playlists.json
 db.json
+.DS_Store

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TextField, IconButton, useTheme, Box } from '@mui/material'
-import { AddCircle as AddCircleIcon, Add as AddIcon } from '@mui/icons-material'
+import { AddCircle as AddCircleIcon } from '@mui/icons-material'
 import { LibraryContent } from '..'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,7 +12,7 @@ interface Props {
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
 }
 
-const AddPlaylist = ({ library, playlists, setLibrary, setPlaylists }: Props) => {
+const AddPlaylist = ({ setPlaylists }: Props) => {
   const [input, setInput] = useState('')
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setInput(e.target.value)

@@ -16,8 +16,8 @@ const setLibraryContentColor = ({
   player: { filePath, locationSong },
   selected: { playlist, path }
 }: Params) => {
-  if (songPath === path) return 'warning'
   if (songPath === filePath && locationSong === playlist) return 'success'
+  if (songPath === path) return 'warning'
   return 'primary'
 }
 export default setLibraryContentColor

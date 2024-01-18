@@ -13,7 +13,6 @@ import { IReadMusicPath, ISongPath } from '@renderer/interfaces'
 
 interface Props {
   playlists: IPlaylist[]
-  selectedPlaylist: string
   library: ILibrary[]
   handleSelect: (data: { playlist: string; path: string }) => void
   handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
@@ -30,7 +29,6 @@ interface Props {
 
 const LibraryPlaylistSongs = ({
   playlists,
-  selectedPlaylist,
   library,
   handleSelect,
   handleLoad,
@@ -44,7 +42,9 @@ const LibraryPlaylistSongs = ({
   const [playlistId, setPlaylistId] = useState<string | null>(null)
 
   const loadSongs = async () => {
-    const playlistArrayId = playlists.findIndex(({ playlistId }) => selectedPlaylist === playlistId)
+    const playlistArrayId = playlists.findIndex(
+      ({ playlistId }) => selected.playlist === playlistId
+    )
     if (playlistArrayId === -1) return setFilteredLibrary([])
     const { playlistId, songs } = playlists[playlistArrayId]
     if (songs.length === 0) return setFilteredLibrary([])
@@ -65,7 +65,7 @@ const LibraryPlaylistSongs = ({
 
   useEffect(() => {
     loadSongs()
-  }, [searchSong, selectedPlaylist])
+  }, [searchSong, selected.playlist])
 
   return (
     <>
