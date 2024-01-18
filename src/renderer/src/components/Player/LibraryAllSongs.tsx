@@ -2,7 +2,7 @@ import { DATA_FILE } from '@global/constants'
 import { ILibrary, IMusicResponse } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { InputSearch, LibraryContent } from '..'
-import { Alert, Button } from '@mui/material'
+import { Alert, Button, useTheme } from '@mui/material'
 import {
   searchPathFromWords,
   setLibraryContentColor,
@@ -36,6 +36,7 @@ const LibraryAllSongs = ({
 }: Props) => {
   const paths = library.map((path) => path)
   const filteredLibrary = searchSong ? searchPathFromWords({ paths, searchSong }) : library
+  const { palette } = useTheme()
 
   return (
     <LibraryContent alignItems={'flex-start'}>
@@ -44,7 +45,7 @@ const LibraryAllSongs = ({
         (filteredLibrary as ILibrary[]).map(({ path }, index) => (
           <Button
             key={index}
-            sx={{ boxShadow: setLibraryContentBoxShadow({ path, player, selected }) }}
+            sx={{ boxShadow: setLibraryContentBoxShadow({ path, player, selected, palette }) }}
             variant="contained"
             color={setLibraryContentColor({ path, player, selected })}
             onClick={() => handleSelect({ playlist: DATA_FILE.LIBRARY, path })}

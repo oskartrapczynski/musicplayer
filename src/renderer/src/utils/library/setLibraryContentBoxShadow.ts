@@ -1,5 +1,5 @@
 import { IMusicResponse } from '@global/interfaces'
-import { useTheme } from '@mui/material'
+import { Palette } from '@mui/material'
 
 interface Params {
   path: string
@@ -10,14 +10,15 @@ interface Params {
     playlist: string
     path: string
   }
+  palette: Palette
 }
 
 const setLibraryContentBoxShadow = ({
   path,
   player: { filePath, locationSong },
-  selected: { playlist }
+  selected: { playlist },
+  palette
 }: Params) => {
-  const { palette } = useTheme()
   if (path === filePath && locationSong === playlist)
     return `${palette.success.main} 0px 0px 25px 0px`
   if (path === filePath && locationSong !== playlist)

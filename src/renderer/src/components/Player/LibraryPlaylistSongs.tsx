@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, Button } from '@mui/material'
+import { Alert, Button, useTheme } from '@mui/material'
 import { LibraryContent, InputSearch } from '..'
 import {
   getSongsById,
@@ -38,8 +38,8 @@ const LibraryPlaylistSongs = ({
   selected
 }: Props) => {
   const [filteredLibrary, setFilteredLibrary] = useState<ISongPath[] | null>(null)
-
   const [playlistId, setPlaylistId] = useState<string | null>(null)
+  const { palette } = useTheme()
 
   const loadSongs = async () => {
     const playlistArrayId = playlists.findIndex(
@@ -80,7 +80,7 @@ const LibraryPlaylistSongs = ({
                 <Button
                   key={index}
                   sx={{
-                    boxShadow: setLibraryContentBoxShadow({ path, player, selected })
+                    boxShadow: setLibraryContentBoxShadow({ path, player, selected, palette })
                   }}
                   variant="contained"
                   color={setLibraryContentColor({ path, player, selected })}
