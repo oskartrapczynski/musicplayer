@@ -6,6 +6,7 @@ import { IReadMusicPath } from '@renderer/interfaces'
 interface Props {
   library: ILibrary[]
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
@@ -17,6 +18,7 @@ interface Props {
 const LibraryPage = ({
   library,
   handleReadMusicPath,
+  handleReadMusicDialog,
   playlists,
   setLibrary,
   setPlaylists,
@@ -27,6 +29,7 @@ const LibraryPage = ({
       <Library
         library={library}
         handleReadMusicPath={handleReadMusicPath}
+        handleReadMusicDialog={handleReadMusicDialog}
         playlists={playlists}
         setLibrary={setLibrary}
         setPlaylists={setPlaylists}

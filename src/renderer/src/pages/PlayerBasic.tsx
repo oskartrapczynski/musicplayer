@@ -4,7 +4,7 @@ import { Alert, Button } from '@mui/material'
 import { LibraryAdd as LibraryAddIcon } from '@mui/icons-material'
 
 interface Props {
-  handleReadMusicDialog: () => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   songTags?: NodeID3.Tags | undefined
   duration: number | null
   filePath?: string

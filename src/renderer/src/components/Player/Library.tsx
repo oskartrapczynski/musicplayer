@@ -17,6 +17,7 @@ import { ROUTE } from '@renderer/constants'
 interface Props {
   library: ILibrary[]
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
@@ -24,11 +25,10 @@ interface Props {
     locationSong: string | undefined
   }
 }
-
-// filePath is current playing song
 const Library = ({
   library,
   handleReadMusicPath,
+  handleReadMusicDialog,
   playlists,
   setLibrary,
   setPlaylists,
@@ -51,7 +51,11 @@ const Library = ({
     return await handleReadMusicPath({ filePath, locationSong })
   }
 
-  // const filterPlaylists = () => {}
+  const filterPlaylists = ({ name }: IPlaylist) => {
+    const searchWords = searchPlaylist.split(' ').map((word) => word.toLowerCase())
+    const matchWords = searchWords.map((word) => name.toLowerCase().includes(word))
+    return matchWords.filter((item) => item).length === searchWords.length
+  }
 
   console.log(selected)
   return (
@@ -87,25 +91,19 @@ const Library = ({
             />
             {searchPlaylist ? (
               <>
-                {playlists
-                  .filter(({ name }) => {
-                    const searchWords = searchPlaylist.split(' ').map((word) => word.toLowerCase())
-                    const matchWords = searchWords.map((word) => name.toLowerCase().includes(word))
-                    return matchWords.filter((item) => item).length === searchWords.length
-                  })
-                  .map(({ playlistId, name }, index) => (
-                    <LibraryPlaylistButton
-                      key={index}
-                      icon={<ListIcon />}
-                      onClick={() => {
-                        setSelected({ playlist: playlistId, path: '' })
-                        setSearchPlaylist('')
-                      }}
-                      text={name}
-                      linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
-                      selectedPlaylist={selected.playlist}
-                    />
-                  ))}
+                {playlists.filter(filterPlaylists).map(({ playlistId, name }, index) => (
+                  <LibraryPlaylistButton
+                    key={index}
+                    icon={<ListIcon />}
+                    onClick={() => {
+                      setSelected({ playlist: playlistId, path: '' })
+                      setSearchPlaylist('')
+                    }}
+                    text={name}
+                    linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
+                    selectedPlaylist={selected.playlist}
+                  />
+                ))}
               </>
             ) : (
               <>
@@ -160,6 +158,7 @@ const Library = ({
                   library={library}
                   setSelected={setSelected}
                   handleLoad={handleLoad}
+                  handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
                   player={player}
@@ -175,6 +174,7 @@ const Library = ({
                   library={library}
                   setSelected={setSelected}
                   handleLoad={handleLoad}
+                  handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
                   player={player}
@@ -183,40 +183,6 @@ const Library = ({
               }
             />
           </Routes>
-          {/* {selected.playlist === ADD_PLAYLIST && (
-            <AddPlaylist
-              library={library}
-              playlists={playlists}
-              setLibrary={setLibrary}
-              setPlaylists={setPlaylists}
-            />
-          )}
-          {selected.playlist === DATA_FILE.LIBRARY && (
-            <LibraryAllSongs
-              library={library}
-              setSelected={setSelected}
-              handleLoad={handleLoad}
-              searchSong={searchSong}
-              setSearchSong={setSearchSong}
-              player={player}
-              selected={selected}
-            />
-          )}
-
-          {selected.playlist.match(
-            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-          ) && (
-            <LibraryPlaylistSongs
-              playlists={playlists}
-              library={library}
-              setSelected={setSelected}
-              handleLoad={handleLoad}
-              searchSong={searchSong}
-              setSearchSong={setSearchSong}
-              player={player}
-              selected={selected}
-            />
-          )} */}
         </Box>
       </Box>
     </>

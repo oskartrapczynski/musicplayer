@@ -28,8 +28,8 @@ const LibraryPlaylistButton = ({
         variant="contained"
         startIcon={icon}
         onClick={onClick}
-        color={color}
-        sx={{ boxShadow }}
+        color={thisPlaylist === selectedPlaylist ? 'warning' : color}
+        sx={{ justifyContent: 'flex-start', boxShadow }}
         fullWidth
       >
         {text}

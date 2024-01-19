@@ -12,7 +12,13 @@ import {
   SettingsPage
 } from '@renderer/pages'
 import { APP_MODE } from '@renderer/constants'
-import { writeFileJSON, readFileJSON, readMusicDialog, readMusicPath } from '@renderer/utils'
+import {
+  writeFileJSON,
+  readFileJSON,
+  readMusicDialog,
+  readMusicPath,
+  addSongToPlaylist
+} from '@renderer/utils'
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { v4 as uuidv4 } from 'uuid'
@@ -73,33 +79,47 @@ const App = () => {
     src: player.song as string
   })
 
-  const handleReadMusicDialog = async () => {
+  const handleReadMusicDialog = async (playlistId?: string) => {
     const { song, songTags, info, filePath } = await readMusicDialog()
     setPlayer({
       song,
       songTags,
       info,
       filePath,
-      locationSong: DATA_FILE.LIBRARY
+      locationSong: playlistId ? playlistId : DATA_FILE.LIBRARY
     })
-    if (!song || !filePath) {
+    if (
+      !song ||
+      !filePath ||
+      info === READ_MUSIC_STATE.ERROR ||
+      info === READ_MUSIC_STATE.NOT_LOADED
+    ) {
       enqueueSnackbar('Nie załadowano utwóru', { variant: 'warning' })
       return
     }
-    const isMusicSaved = library?.some((item) => item.path === filePath)
-    console.log(isMusicSaved)
-    if (!isMusicSaved) {
+    const isMusicSavedInLibrary = library?.some(({ path }) => path === filePath)
+    console.log('isMusicSavedInLibrary', isMusicSavedInLibrary)
+    if (!isMusicSavedInLibrary) {
       const newSong = { songId: uuidv4(), path: filePath! } as ILibrary
       const newLibrary: ILibrary[] = library ? [...library, newSong] : [newSong]
+
+      const newPlaylist = addSongToPlaylist({
+        playlistId,
+        playlists: playlists!,
+        songId: newSong.songId
+      })
+
+      // console.log('newPlaylist', newPlaylist)
+
       const updatedDB = {
         [DATA_FILE.LIBRARY]: newLibrary,
-        [DATA_FILE.PLAYLISTS]: playlists as IPlaylist[]
+        [DATA_FILE.PLAYLISTS]: newPlaylist as IPlaylist[]
       }
       await writeFileJSON(DATA_FILE.DB, updatedDB)
       setLibrary(newLibrary)
+      setPlaylists(newPlaylist)
+      enqueueSnackbar('Załadowano utwór', { variant: 'success' })
     }
-    // if (!isMusicSaved) console.log(data.filePath!)
-    enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
   const handleReadMusicPath = async ({ filePath, locationSong }: IReadMusicPath) => {
@@ -189,6 +209,7 @@ const App = () => {
                         setPlaylists as React.Dispatch<React.SetStateAction<IPlaylist[]>>
                       }
                       handleReadMusicPath={handleReadMusicPath}
+                      handleReadMusicDialog={handleReadMusicDialog}
                       player={player}
                     />
                   }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, Button, useTheme } from '@mui/material'
+import { Alert, Box, Button, CircularProgress, useTheme } from '@mui/material'
 import { LibraryContent, InputSearch } from '..'
 import {
   getSongsById,
@@ -10,6 +10,8 @@ import {
   setLibraryContentColor
 } from '@renderer/utils'
 import { IReadMusicPath, ISongPath } from '@renderer/interfaces'
+import { LibraryAdd as LibraryAddIcon } from '@mui/icons-material'
+import { useParams } from 'react-router-dom'
 
 interface Props {
   playlists: IPlaylist[]
@@ -21,6 +23,7 @@ interface Props {
     }>
   >
   handleLoad: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
   player: IMusicResponse & {
@@ -37,13 +40,14 @@ const LibraryPlaylistSongs = ({
   library,
   setSelected,
   handleLoad,
+  handleReadMusicDialog,
   searchSong,
   setSearchSong,
   player,
   selected
 }: Props) => {
   const [filteredLibrary, setFilteredLibrary] = useState<ISongPath[] | null>(null)
-  const [playlistId, setPlaylistId] = useState<string | null>(null)
+  const { id: currentPlaylistId } = useParams()
   const { palette } = useTheme()
 
   const loadSongs = async () => {
@@ -51,7 +55,7 @@ const LibraryPlaylistSongs = ({
       ({ playlistId }) => selected.playlist === playlistId
     )
     if (playlistArrayId === -1) return setFilteredLibrary([])
-    const { playlistId, songs } = playlists[playlistArrayId]
+    const { songs } = playlists[playlistArrayId]
     if (songs.length === 0) return setFilteredLibrary([])
 
     const librarySongs = await getSongsById({ library, songIds: songs })
@@ -59,26 +63,41 @@ const LibraryPlaylistSongs = ({
       path
     }))
 
-    const filteredLibraryPaths = searchSong
-      ? searchPathFromWords({ paths: librarySongsPaths, searchSong })
-      : librarySongsPaths
-
-    if (filteredLibraryPaths.length === 0) return setFilteredLibrary([])
-    setFilteredLibrary(filteredLibraryPaths)
-    setPlaylistId(playlistId)
+    setFilteredLibrary(
+      searchSong ? searchPathFromWords({ paths: librarySongsPaths, searchSong }) : librarySongsPaths
+    )
   }
+
+  const handleClickAddSongPlaylist = async () => await handleReadMusicDialog(currentPlaylistId)
 
   useEffect(() => {
     loadSongs()
-  }, [searchSong, selected.playlist])
+  }, [searchSong, selected.playlist, library])
 
   return (
     <>
       {!filteredLibrary ? (
-        <div>Loading</div>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CircularProgress />
+        </Box>
       ) : (
         <LibraryContent alignItems={'flex-start'}>
-          <InputSearch value={searchSong} setValue={setSearchSong} />
+          {playlists &&
+            playlists.filter(({ playlistId }) => selected.playlist === playlistId)[0]?.songs
+              ?.length > 0 && <InputSearch value={searchSong} setValue={setSearchSong} />}
+          {!searchSong && (
+            <Button onClick={handleClickAddSongPlaylist} startIcon={<LibraryAddIcon />}>
+              Dodaj utwór
+            </Button>
+          )}
           {filteredLibrary.length > 0 ? (
             <>
               {filteredLibrary.map(({ path }, index) => (
@@ -89,9 +108,9 @@ const LibraryPlaylistSongs = ({
                   }}
                   variant="contained"
                   color={setLibraryContentColor({ path, player, selected })}
-                  onClick={() => setSelected({ playlist: playlistId as string, path })}
+                  onClick={() => setSelected({ playlist: currentPlaylistId as string, path })}
                   onDoubleClick={() =>
-                    handleLoad({ filePath: path, locationSong: playlistId as string })
+                    handleLoad({ filePath: path, locationSong: currentPlaylistId as string })
                   }
                 >
                   {getFileName(path)}

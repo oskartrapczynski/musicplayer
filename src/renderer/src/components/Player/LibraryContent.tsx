@@ -37,7 +37,7 @@ const LibraryContent = ({
         '&::-webkit-scrollbar': { display: 'none' }
       }}
     >
-      <Stack gap={1} padding={2} zIndex={1}>
+      <Stack gap={1} padding={2} sx={{ zIndex, width: '100%' }}>
         {children}
       </Stack>
     </Box>

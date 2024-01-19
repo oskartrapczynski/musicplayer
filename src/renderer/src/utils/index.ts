@@ -15,6 +15,7 @@ import prevSongPlaylist from './library/prevSongPlaylist'
 import setLibraryContentColor from './library/setLibraryContentColor'
 import setLibraryContentBoxShadow from './library/setLibraryContentBoxShadow'
 import setLibraryPlaylistBoxShadow from './library/setLibraryPlaylistBoxShadow'
+import addSongToPlaylist from './library/addSongToPlaylist'
 
 export {
   convertBufferToSong,
@@ -33,5 +34,6 @@ export {
   prevSongPlaylist,
   setLibraryContentColor,
   setLibraryContentBoxShadow,
-  setLibraryPlaylistBoxShadow
+  setLibraryPlaylistBoxShadow,
+  addSongToPlaylist
 }
