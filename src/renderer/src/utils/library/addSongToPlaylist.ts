@@ -1,4 +1,5 @@
 import { IPlaylist } from '@global/interfaces'
+import { checkIsMusicSavedInPlaylist } from '..'
 
 interface Params {
   playlists: IPlaylist[]
@@ -8,7 +9,7 @@ interface Params {
 
 const addSongToPlaylist = async ({ playlists, playlistId, songId }: Params) => {
   if (playlistId === undefined) return playlists
-  const isMusicSavedInPlaylist = playlists?.some(({ songs }) => songs.includes(songId))
+  const isMusicSavedInPlaylist = checkIsMusicSavedInPlaylist({ playlists, songId })
   if (isMusicSavedInPlaylist) return playlists
   const playlistArrayId = playlists.findIndex(
     ({ playlistId: playlistIdCb }) => playlistIdCb === playlistId
