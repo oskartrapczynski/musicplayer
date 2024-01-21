@@ -103,13 +103,11 @@ const App = () => {
       const newSong = { songId: uuidv4(), path: filePath! } as ILibrary
       const newLibrary: ILibrary[] = library ? [...library, newSong] : [newSong]
 
-      const newPlaylist = addSongToPlaylist({
+      const newPlaylist = await addSongToPlaylist({
         playlistId,
         playlists: playlists!,
         songId: newSong.songId
       })
-
-      // console.log('newPlaylist', newPlaylist)
 
       const updatedDB = {
         [DATA_FILE.LIBRARY]: newLibrary,
@@ -124,7 +122,6 @@ const App = () => {
 
   const handleReadMusicPath = async ({ filePath, locationSong }: IReadMusicPath) => {
     const data = await readMusicPath(filePath)
-    // console.log(data?.userTags)
     setPlayer({
       song: data?.song,
       songTags: data?.songTags,

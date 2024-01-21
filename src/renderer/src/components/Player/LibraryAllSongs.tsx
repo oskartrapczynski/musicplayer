@@ -1,5 +1,5 @@
 import { DATA_FILE } from '@global/constants'
-import { ILibrary, IMusicResponse } from '@global/interfaces'
+import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { InputSearch, LibraryContent } from '..'
 import { Alert, Box, Button, CircularProgress, useTheme } from '@mui/material'
@@ -8,12 +8,17 @@ import {
   setLibraryContentColor,
   setLibraryContentBoxShadow
 } from '@renderer/utils'
-import { IReadMusicPath, ISongPath } from '@renderer/interfaces'
+import { IReadMusicPath } from '@renderer/interfaces'
 import { useEffect, useState } from 'react'
-import { LibraryAdd as LibraryAddIcon } from '@mui/icons-material'
+import { LibraryAdd as LibraryAddIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { enqueueSnackbar } from 'notistack'
+import removeSongFromDb from '@renderer/utils/library/removeSongFromDb'
 
 interface Props {
   library: ILibrary[]
+  setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
+  playlists: IPlaylist[]
+  setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
   setSelected: React.Dispatch<
     React.SetStateAction<{
       playlist: string
@@ -35,6 +40,9 @@ interface Props {
 
 const LibraryAllSongs = ({
   library,
+  setLibrary,
+  playlists,
+  setPlaylists,
   setSelected,
   selected,
   handleLoad,
@@ -43,15 +51,38 @@ const LibraryAllSongs = ({
   setSearchSong,
   player
 }: Props) => {
-  const [filteredLibrary, setFilteredLibrary] = useState<ISongPath[] | null>(null)
+  const [filteredLibrary, setFilteredLibrary] = useState<ILibrary[] | null>(null)
+  const [deleteSongId, setDeleteSongId] = useState('')
   const { palette } = useTheme()
 
   const loadSongs = async () => {
-    const paths = library.map((path) => path)
-    setFilteredLibrary(searchSong ? searchPathFromWords({ paths, searchSong }) : library)
+    setFilteredLibrary(searchSong ? searchPathFromWords({ library, searchSong }) : library)
   }
 
   const handleClickAddSongLibrary = async () => await handleReadMusicDialog()
+
+  const handleDelete = async () => {
+    if (selected.playlist === DATA_FILE.LIBRARY && selected.path === player.filePath) {
+      enqueueSnackbar('Nie można usunąć odtwarzanego utworu!', { variant: 'warning' })
+      return
+    }
+    setSelected({ playlist: DATA_FILE.LIBRARY, path: '' })
+    if (!deleteSongId) {
+      enqueueSnackbar('Nie wybrano utworu!', { variant: 'warning' })
+      return
+    }
+    const data = await removeSongFromDb({ songId: deleteSongId, library, playlists })
+    setDeleteSongId('')
+    console.log(data)
+    if (!data) {
+      enqueueSnackbar('Nie usunięto utworu!', { variant: 'warning' })
+      return
+    }
+    console.log(data)
+    setLibrary(data.newLibrary)
+    setPlaylists(data.newPlaylists)
+    enqueueSnackbar('Utwór pomyślnie usunięty!', { variant: 'success' })
+  }
 
   useEffect(() => {
     loadSongs()
@@ -76,15 +107,30 @@ const LibraryAllSongs = ({
           {library && library.length > 0 && (
             <InputSearch value={searchSong} setValue={setSearchSong} />
           )}
-          {!searchSong && (
-            <Button onClick={handleClickAddSongLibrary} startIcon={<LibraryAddIcon />}>
+          <Box display="flex" justifyContent="space-between" gap={2}>
+            <Button
+              color="success"
+              variant="outlined"
+              onClick={handleClickAddSongLibrary}
+              startIcon={<LibraryAddIcon />}
+            >
               Dodaj utwór
             </Button>
-          )}
+            {filteredLibrary && filteredLibrary.length > 0 && (
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={handleDelete}
+                startIcon={<DeleteIcon />}
+              >
+                Usuń utwór
+              </Button>
+            )}
+          </Box>
 
           {filteredLibrary && filteredLibrary.length > 0 ? (
             <>
-              {(filteredLibrary as ILibrary[]).map(({ path }, index) => (
+              {filteredLibrary.map(({ path, songId }, index) => (
                 <Button
                   key={index}
                   sx={{
@@ -93,7 +139,10 @@ const LibraryAllSongs = ({
                   variant="contained"
                   fullWidth
                   color={setLibraryContentColor({ path, player, selected })}
-                  onClick={() => setSelected({ playlist: DATA_FILE.LIBRARY, path })}
+                  onClick={() => {
+                    setDeleteSongId(songId)
+                    setSelected({ playlist: DATA_FILE.LIBRARY, path })
+                  }}
                   onDoubleClick={() =>
                     handleLoad({ filePath: path, locationSong: DATA_FILE.LIBRARY })
                   }

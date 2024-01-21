@@ -119,6 +119,8 @@ const Library = ({
                   playlists.map(({ playlistId, name }, index) => (
                     <LibraryPlaylistButton
                       key={index}
+                      playlists={playlists}
+                      setPlaylists={setPlaylists}
                       icon={<ListIcon />}
                       onClick={() => setSelected({ playlist: playlistId, path: '' })}
                       text={name}
@@ -156,6 +158,9 @@ const Library = ({
               element={
                 <LibraryAllSongs
                   library={library}
+                  setLibrary={setLibrary}
+                  playlists={playlists}
+                  setPlaylists={setPlaylists}
                   setSelected={setSelected}
                   handleLoad={handleLoad}
                   handleReadMusicDialog={handleReadMusicDialog}
@@ -170,8 +175,9 @@ const Library = ({
               path="/:id"
               element={
                 <LibraryPlaylistSongs
-                  playlists={playlists}
                   library={library}
+                  playlists={playlists}
+                  setPlaylists={setPlaylists}
                   setSelected={setSelected}
                   handleLoad={handleLoad}
                   handleReadMusicDialog={handleReadMusicDialog}
