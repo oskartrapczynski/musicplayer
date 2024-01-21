@@ -3,7 +3,7 @@ import { removePlaylist, setLibraryPlaylistBoxShadow } from '@renderer/utils'
 import { enqueueSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Menu, MenuItem, useTheme } from '@mui/material'
+import { Button, Menu, useTheme } from '@mui/material'
 import { Delete as DeleteIcon } from '@mui/icons-material'
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   text: string
   color?: 'warning' | 'error' | 'success' | 'info' | 'inherit' | 'primary' | 'secondary' | undefined
   selectedPlaylist: string
+  locationSong?: string
 }
 
 const LibraryPlaylistButton = ({
@@ -25,11 +26,18 @@ const LibraryPlaylistButton = ({
   linkPath,
   text,
   color,
-  selectedPlaylist
+  selectedPlaylist,
+  locationSong
 }: Props) => {
   const { palette } = useTheme()
   const thisPlaylist = linkPath.split('/').pop()!
-  const boxShadow = setLibraryPlaylistBoxShadow(thisPlaylist, selectedPlaylist, color, palette)
+  const boxShadow = setLibraryPlaylistBoxShadow(
+    thisPlaylist,
+    selectedPlaylist,
+    color,
+    palette,
+    locationSong
+  )
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -41,6 +49,10 @@ const LibraryPlaylistButton = ({
   }
 
   const handleDeletePlaylist = async () => {
+    if (locationSong === thisPlaylist) {
+      enqueueSnackbar('Nie można usunąć odtwarzanej listy!', { variant: 'warning' })
+      return
+    }
     const data = await removePlaylist({ playlists: playlists!, playlistId: thisPlaylist })
     if (!data) {
       enqueueSnackbar('Nie usunięto listy odtwarzania!', { variant: 'warning' })

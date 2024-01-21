@@ -94,6 +94,8 @@ const Library = ({
                 {playlists.filter(filterPlaylists).map(({ playlistId, name }, index) => (
                   <LibraryPlaylistButton
                     key={index}
+                    playlists={playlists}
+                    setPlaylists={setPlaylists}
                     icon={<ListIcon />}
                     onClick={() => {
                       setSelected({ playlist: playlistId, path: '' })
@@ -102,6 +104,7 @@ const Library = ({
                     text={name}
                     linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                     selectedPlaylist={selected.playlist}
+                    locationSong={player.locationSong}
                   />
                 ))}
               </>
@@ -122,10 +125,14 @@ const Library = ({
                       playlists={playlists}
                       setPlaylists={setPlaylists}
                       icon={<ListIcon />}
-                      onClick={() => setSelected({ playlist: playlistId, path: '' })}
+                      onClick={() => {
+                        setSelected({ playlist: playlistId, path: '' })
+                        setSearchPlaylist('')
+                      }}
                       text={name}
                       linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                       selectedPlaylist={selected.playlist}
+                      locationSong={player.locationSong}
                     />
                   ))}
               </>
