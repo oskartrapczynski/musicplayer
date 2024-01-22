@@ -1,10 +1,15 @@
 import { IPlaylist } from '@global/interfaces'
 import { removePlaylist, setLibraryPlaylistBoxShadow } from '@renderer/utils'
 import { enqueueSnackbar } from 'notistack'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Menu, useTheme } from '@mui/material'
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { Button, IconButton, Menu, Stack, TextField, useTheme } from '@mui/material'
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  CheckCircleSharp as CheckCircleSharpIcon,
+  CancelSharp as CancelSharpIcon
+} from '@mui/icons-material'
 
 interface Props {
   icon: React.ReactNode
@@ -16,6 +21,9 @@ interface Props {
   color?: 'warning' | 'error' | 'success' | 'info' | 'inherit' | 'primary' | 'secondary' | undefined
   selectedPlaylist: string
   locationSong?: string
+  editPlaylistId?: string
+  setEditPlaylistId?: React.Dispatch<React.SetStateAction<string>>
+  playlistArrayId?: number
 }
 
 const LibraryPlaylistButton = ({
@@ -27,10 +35,17 @@ const LibraryPlaylistButton = ({
   text,
   color,
   selectedPlaylist,
-  locationSong
+  locationSong,
+  editPlaylistId,
+  setEditPlaylistId,
+  playlistArrayId
 }: Props) => {
-  const { palette } = useTheme()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [isEditName, setIsEditName] = useState(false)
   const thisPlaylist = linkPath.split('/').pop()!
+  const [playlistName, setPlaylistName] = useState(text)
+  const open = Boolean(anchorEl)
+  const { palette } = useTheme()
   const boxShadow = setLibraryPlaylistBoxShadow(
     thisPlaylist,
     selectedPlaylist,
@@ -39,8 +54,50 @@ const LibraryPlaylistButton = ({
     locationSong
   )
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
+  useEffect(() => {
+    if (editPlaylistId !== thisPlaylist && isEditName) setIsEditName(false)
+  }, [editPlaylistId])
+
+  const handleChangePlaylistName = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPlaylistName(e.target.value)
+  }
+
+  const handleEditMenu = () => {
+    setEditPlaylistId!(thisPlaylist!)
+    setIsEditName(true)
+    handleCloseMenu()
+  }
+
+  const updatePlaylistName = () => {
+    if (!playlists || !playlistArrayId) return
+    const newPlaylists: IPlaylist[] = JSON.parse(JSON.stringify(playlists))
+    newPlaylists[playlistArrayId].name = playlistName
+    setPlaylists!(newPlaylists)
+  }
+
+  const restoreEditToDefaults = () => {
+    setEditPlaylistId!('')
+    setIsEditName(false)
+  }
+
+  const handleEditNameSave = () => {
+    if (playlistName === text) {
+      enqueueSnackbar('Nie wprowadzono zmian!', { variant: 'warning' })
+      restoreEditToDefaults()
+      return
+    }
+    updatePlaylistName()
+    restoreEditToDefaults()
+    enqueueSnackbar('Pomyślnie zmieniono nazwę!', { variant: 'success' })
+  }
+
+  const handleEditNameCancel = () => {
+    enqueueSnackbar('Anulowano edycję nazwy!', { variant: 'warning' })
+    restoreEditToDefaults()
+  }
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -79,24 +136,39 @@ const LibraryPlaylistButton = ({
             horizontal: 'left'
           }}
         >
+          <Button color="warning" startIcon={<EditIcon />} onClick={handleEditMenu}>
+            Edytuj
+          </Button>
           <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeletePlaylist}>
             Usuń
           </Button>
         </Menu>
       )}
-      <Link to={linkPath}>
-        <Button
-          variant="contained"
-          startIcon={icon}
-          onClick={onClick}
-          onContextMenu={handleOpenMenu}
-          color={thisPlaylist === selectedPlaylist ? 'warning' : color}
-          sx={{ justifyContent: 'flex-start', boxShadow }}
-          fullWidth
-        >
-          {text}
-        </Button>
-      </Link>
+      {isEditName ? (
+        <Stack direction="row">
+          <TextField value={playlistName} onChange={handleChangePlaylistName} />
+          <IconButton color="success" onClick={handleEditNameSave}>
+            <CheckCircleSharpIcon />
+          </IconButton>
+          <IconButton color="error" onClick={handleEditNameCancel}>
+            <CancelSharpIcon />
+          </IconButton>
+        </Stack>
+      ) : (
+        <Link to={linkPath}>
+          <Button
+            variant="contained"
+            startIcon={icon}
+            onClick={onClick}
+            onContextMenu={handleOpenMenu}
+            color={thisPlaylist === selectedPlaylist ? 'warning' : color}
+            sx={{ justifyContent: 'flex-start', boxShadow }}
+            fullWidth
+          >
+            {text}
+          </Button>
+        </Link>
+      )}
     </>
   )
 }

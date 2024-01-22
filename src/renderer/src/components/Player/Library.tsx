@@ -38,6 +38,7 @@ const Library = ({
     playlist: `${DATA_FILE.LIBRARY}`,
     path: ''
   })
+  const [editPlaylistId, setEditPlaylistId] = useState('')
 
   const ADD_PLAYLIST = 'add'
   const [searchPlaylist, setSearchPlaylist] = useState('')
@@ -105,6 +106,8 @@ const Library = ({
                     linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                     selectedPlaylist={selected.playlist}
                     locationSong={player.locationSong}
+                    editPlaylistId={editPlaylistId}
+                    setEditPlaylistId={setEditPlaylistId}
                   />
                 ))}
               </>
@@ -133,6 +136,9 @@ const Library = ({
                       linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                       selectedPlaylist={selected.playlist}
                       locationSong={player.locationSong}
+                      editPlaylistId={editPlaylistId}
+                      setEditPlaylistId={setEditPlaylistId}
+                      playlistArrayId={index}
                     />
                   ))}
               </>
