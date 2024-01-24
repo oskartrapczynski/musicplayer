@@ -1,13 +1,12 @@
 import {
   Album as AlbumIcon,
   LibraryMusic as LibraryMusicIcon,
-  Nightlife as NightlifeIcon,
   Settings as SettingsIcon
 } from '@mui/icons-material'
 import { Box, IconButton, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { SwitchAppMode } from '@renderer/components'
-import { APP_MODE } from '@renderer/constants'
+import { APP_MODE, ROUTE } from '@renderer/constants'
 
 interface Props {
   appMode: APP_MODE
@@ -23,17 +22,12 @@ const MenuApp = ({ appMode, setAppMode }: Props) => {
             <AlbumIcon fontSize="large" />
           </IconButton>
         </Link>
-        <Link to="/library">
+        <Link to={`/${ROUTE.LIBRARY}`}>
           <IconButton>
             <LibraryMusicIcon fontSize="large" />
           </IconButton>
         </Link>
-        <Link to="/tags">
-          <IconButton>
-            <NightlifeIcon fontSize="large" />
-          </IconButton>
-        </Link>
-        <Link to="/settings">
+        <Link to={`/${ROUTE.SETTINGS}`}>
           <IconButton>
             <SettingsIcon fontSize="large" />
           </IconButton>

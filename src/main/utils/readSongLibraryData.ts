@@ -4,7 +4,7 @@ import { readFile } from 'fs'
 import { checkDataFileExists, getAppFilePath } from '.'
 
 const readSongLibraryData = async (path: string) => {
-  return new Promise<string[] | undefined>((resolve, reject) => {
+  return new Promise<(number | null)[] | undefined>((resolve, reject) => {
     const dataFile = DATA_FILE.DB
     checkDataFileExists(dataFile, reject)
     readFile(`${getAppFilePath()}/${dataFile}.json`, 'utf8', (err, data) => {
@@ -12,8 +12,8 @@ const readSongLibraryData = async (path: string) => {
       if (!data || Object.keys(data).length === 0) return resolve(undefined)
       const db = JSON.parse(data) as IDB
       if (db.library.length === 0) resolve(undefined)
-      const songInfo = db.library.filter((item) => item.path === path)
-      resolve(songInfo.length === 0 ? undefined : songInfo[0].userTags)
+      const songData = db.library.filter((item) => item.path === path)
+      resolve(songData.length === 0 ? undefined : songData[0].hotCues)
     })
   })
 }

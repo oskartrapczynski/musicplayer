@@ -3,7 +3,7 @@ import Next from './player/Next'
 import Pause from './player/Pause'
 import Play from './player/Play'
 import Prev from './player/Prev'
-import SongInfo from './player/SongInfo'
+import PlayerBasic from './player/PlayerBasic'
 import Stop from './player/Stop'
 import SliderSongPos from './player/SliderSongPos'
 import MenuApp from './common/MenuApp'
@@ -31,7 +31,7 @@ export {
   Play,
   Pause,
   Stop,
-  SongInfo,
+  PlayerBasic,
   MenuApp,
   SwitchAppMode,
   ContentSection,

@@ -72,7 +72,7 @@ const Layout = ({
               changeSongVolume={changeSongVolume1}
               library={library}
               playlists={playlists}
-              player1={player1}
+              player={player1}
               handleReadMusicPath={handleReadMusicPath}
               menuWidth="100%"
             />
@@ -92,7 +92,7 @@ const Layout = ({
                 changeSongVolume={changeSongVolume1}
                 library={library}
                 playlists={playlists}
-                player1={player1}
+                player={player1}
                 handleReadMusicPath={handleReadMusicPath}
                 menuWidth="50%"
                 marks
@@ -110,7 +110,7 @@ const Layout = ({
                 changeSongVolume={changeSongVolume1}
                 library={library}
                 playlists={playlists}
-                player1={player1}
+                player={player1}
                 handleReadMusicPath={handleReadMusicPath}
                 menuWidth="50%"
                 marks

@@ -1,6 +1,6 @@
 import { Prev, Play, Stop, Next, Pause, SliderSongPos, SliderVolume } from '@renderer/components'
 import { secondsToMusicTime } from '@renderer/utils'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { ILibrary, IPlaylist, IMusicResponse } from '@global/interfaces'
 import { IReadMusicPath } from '@renderer/interfaces'
 import { useLocation } from 'react-router-dom'
@@ -20,7 +20,7 @@ interface Props {
   locationSong?: string
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player1: IMusicResponse & {
+  player: IMusicResponse & {
     locationSong: string | undefined
   }
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
@@ -40,7 +40,7 @@ const MenuControlBottom = ({
   changeSongVolume,
   library,
   playlists,
-  player1,
+  player,
   handleReadMusicPath,
   menuWidth = '100%',
   marks
@@ -63,7 +63,7 @@ const MenuControlBottom = ({
           isDisabled={isDisabled}
           library={library}
           playlists={playlists}
-          player1={player1}
+          player={player}
           handleReadMusicPath={handleReadMusicPath}
         />
         {isPlaying ? (
@@ -76,7 +76,7 @@ const MenuControlBottom = ({
           isDisabled={isDisabled}
           library={library}
           playlists={playlists}
-          player1={player1}
+          player1={player}
           handleReadMusicPath={handleReadMusicPath}
         />
         {pathname === '/' && appMode === APP_MODE.PRO ? (
@@ -98,6 +98,7 @@ const MenuControlBottom = ({
           currentTime={currentTime}
           isDisabled={isDisabled}
           marks={marks}
+          player={player}
         />
       </Box>
     </Box>

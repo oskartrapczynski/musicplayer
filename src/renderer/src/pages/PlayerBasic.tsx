@@ -1,17 +1,16 @@
 import NodeID3 from 'node-id3'
-import { ContentSection, SongInfo } from '@renderer/components'
+import { ContentSection, PlayerBasic } from '@renderer/components'
 
 interface Props {
   songTags?: NodeID3.Tags | undefined
   duration: number | null
   filePath?: string
-  userTags?: string[]
 }
 
-const PlayerBasicPage = ({ songTags, duration, filePath, userTags }: Props) => {
+const PlayerBasicPage = ({ songTags, duration, filePath }: Props) => {
   return (
     <ContentSection>
-      <SongInfo songTags={songTags} duration={duration} filePath={filePath} userTags={userTags} />
+      <PlayerBasic songTags={songTags} duration={duration} filePath={filePath} />
     </ContentSection>
   )
 }

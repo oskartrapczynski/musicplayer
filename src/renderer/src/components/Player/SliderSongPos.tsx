@@ -1,5 +1,6 @@
+import { IMusicResponse } from '@global/interfaces'
 import { Box, Slider } from '@mui/material'
-import { createSliderMarks, secondsToMusicTime } from '@renderer/utils'
+import { createSliderMarks } from '@renderer/utils'
 import { SliderSongPosTooltipLabel } from '..'
 
 interface Props {
@@ -10,6 +11,9 @@ interface Props {
   currentTime: number
   isDisabled: boolean
   marks?: boolean
+  player: IMusicResponse & {
+    locationSong: string | undefined
+  }
 }
 
 const SliderSongPos = ({
@@ -19,12 +23,12 @@ const SliderSongPos = ({
   duration,
   currentTime,
   isDisabled,
-  marks
+  marks,
+  player: { hotCues }
 }: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongPos(newValue as number)
   }
-  const hotCues = [null, 50, 100, 200]
   const markCues = marks ? createSliderMarks(hotCues) : undefined
 
   return (

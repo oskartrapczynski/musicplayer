@@ -6,20 +6,21 @@ import NodeID3 from 'node-id3'
 const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, filePath: string) => {
   let song: undefined | Buffer = undefined,
     songTags: NodeID3.Tags | undefined = undefined,
-    userTags: string[] | undefined = undefined
+    hotCues: (number | null)[] | undefined = undefined
   try {
     if (!filePath) throw new Error(READ_MUSIC_STATE.ERROR)
     song = await readMusicFile(filePath)
     if (!song.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
     songTags = await readAudioTags(song)
-    userTags = await readSongLibraryData(filePath)
+    hotCues = await readSongLibraryData(filePath)
+    hotCues = hotCues ? hotCues : [null, null, null, null]
 
     return {
       song: song,
       filePath,
       songTags,
       info: READ_MUSIC_STATE.SUCCESS,
-      userTags
+      hotCues
     } as IMusicResponse
   } catch (err) {
     return {
@@ -27,7 +28,7 @@ const handleReadMusicFromPath = async (_: Electron.IpcMainInvokeEvent, filePath:
       filePath: undefined,
       songTags: undefined,
       info: (err as Error).message,
-      userTags: undefined
+      hotCues
     } as IMusicResponse
   }
 }

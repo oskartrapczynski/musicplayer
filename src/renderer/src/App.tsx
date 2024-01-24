@@ -33,6 +33,7 @@ const App = () => {
   const handleLoadDb = async () => {
     try {
       const { data, info }: IResponseFileJSON<IDB> = await readFileJSON(DATA_FILE.DB)
+      console.log(info)
       setLibrary(data && data?.library?.length > 0 ? (data.library as ILibrary[]) : [])
       setPlaylists(data && data?.playlists?.length > 0 ? (data.playlists as IPlaylist[]) : [])
     } catch (err) {
@@ -59,7 +60,8 @@ const App = () => {
     songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
     filePath: undefined,
-    locationSong: undefined
+    locationSong: undefined,
+    hotCues: [null, null, null, null]
   })
   // aliasy
   // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
@@ -78,7 +80,7 @@ const App = () => {
   })
 
   const handleReadMusicDialog = async (playlistId?: string) => {
-    const { song, songTags, info, filePath } = await readMusicDialog()
+    const { song, songTags, info, filePath, hotCues } = await readMusicDialog()
     if (
       !song ||
       !filePath ||
@@ -93,12 +95,13 @@ const App = () => {
       songTags,
       info,
       filePath,
-      locationSong: playlistId ? playlistId : DATA_FILE.LIBRARY
+      locationSong: playlistId ? playlistId : DATA_FILE.LIBRARY,
+      hotCues
     })
     const savedSongInLibrary = library?.filter(({ path }) => path === filePath)
     const newSong = savedSongInLibrary?.length
       ? { ...savedSongInLibrary[0] }
-      : { songId: uuidv4(), path: filePath! }
+      : { songId: uuidv4(), path: filePath!, hotCues: [null, null, null, null] }
 
     const newPlaylist = await addSongToPlaylist({
       playlistId,
@@ -126,7 +129,7 @@ const App = () => {
       songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
       filePath: data?.filePath,
-      userTags: data?.userTags,
+      hotCues: data?.hotCues ? data.hotCues : [null, null, null, null],
       locationSong
     })
   }
@@ -186,10 +189,11 @@ const App = () => {
                         songTags={player1.songTags}
                         duration={duration1}
                         filePath={player1.filePath}
-                        userTags={player1.userTags}
                       />
                     ) : (
                       <PlayerProPage
+                        library={library}
+                        setLibrary={setLibrary}
                         player1={player1}
                         duration1={duration1}
                         volume1={volume1}
@@ -199,6 +203,7 @@ const App = () => {
                         currentTime1={currentTime1}
                         changeSongPos1={changeSongPos1}
                         toggle1={toggle1}
+                        hotCues1={player1.hotCues}
                       />
                     )
                   }

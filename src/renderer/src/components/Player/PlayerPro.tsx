@@ -1,13 +1,15 @@
-import { IMusicResponse } from '@global/interfaces'
+import { ILibrary, IMusicResponse } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { Box, Typography, Button, Slider } from '@mui/material'
 import { HOT_CUE_LABELS } from '@renderer/constants'
-import { IMusicLoop } from '@renderer/interfaces'
+import { HotCue, IMusicLoop } from '@renderer/interfaces'
 import { useEffect, useState } from 'react'
 import SliderVolumeTooltipLabel from './SliderVolumeTooltipLabel'
 import SongImage from './SongImage'
 
 interface Props {
+  library: ILibrary[] | null
+  setLibrary: React.Dispatch<React.SetStateAction<ILibrary[] | null>>
   player: IMusicResponse & {
     locationSong: string | undefined
   }
@@ -20,9 +22,12 @@ interface Props {
   currentTime: number
   changeSongPos: (seek: number) => void
   toggle: (play: boolean) => void
+  hotCues: HotCue
 }
 
 const PlayerPro = ({
+  library,
+  setLibrary,
   player: { filePath, songTags },
   duration,
   text,
@@ -32,11 +37,15 @@ const PlayerPro = ({
   isPlaying,
   currentTime,
   changeSongPos,
-  toggle
+  toggle,
+  hotCues: hotCuesProps
 }: Props) => {
-  const hotCuesProps = [null, 50, 100, 200]
-  const [hotCues, setHotCues] = useState(hotCuesProps)
+  const [hotCues, setHotCues] = useState<HotCue>(hotCuesProps)
   const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
+
+  useEffect(() => {
+    setHotCues(hotCuesProps)
+  }, [hotCuesProps])
 
   useEffect(() => {
     if (!loop.in || !loop.out) return
@@ -61,6 +70,11 @@ const PlayerPro = ({
       thisIndex === index ? currentTime : thisHotCue
     )
     setHotCues(newHoutCues)
+    const newLibrary: ILibrary[] = JSON.parse(JSON.stringify(library))
+    const libraryArrayId = newLibrary.findIndex(({ path }) => path === filePath)
+    if (libraryArrayId === -1) return
+    newLibrary[libraryArrayId].hotCues = newHoutCues
+    setLibrary(newLibrary)
   }
 
   const handleLoopIn = () => {

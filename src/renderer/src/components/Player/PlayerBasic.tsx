@@ -1,6 +1,6 @@
 import NodeID3 from 'node-id3'
 import { getFileName } from '@global/utils'
-import { Alert, Box, Button, Chip, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { ROUTE } from '@renderer/constants'
 import { LibraryMusic as LibraryMusicIcon } from '@mui/icons-material'
@@ -11,10 +11,9 @@ interface Props {
   songTags?: NodeID3.Tags
   duration: null | number
   filePath?: string
-  userTags?: string[]
 }
 
-const SongInfo = ({ songTags, duration, filePath, userTags }: Props) => {
+const PlayerBasic = ({ songTags, duration, filePath }: Props) => {
   return (
     <Box sx={{ display: 'flex', p: 5, width: '100%', height: '100%', backgroundColor: 'yellow' }}>
       {!filePath ? (
@@ -48,18 +47,6 @@ const SongInfo = ({ songTags, duration, filePath, userTags }: Props) => {
             <Typography variant="h6">{`Długość: ${
               duration ? secondsToMusicTime(duration) : '-'
             }`}</Typography>
-            <Box display="flex">
-              <Typography variant="h6">{'Tagi:'}</Typography>
-              {userTags && userTags.length > 0 ? (
-                userTags.map((tag, index) => (
-                  <Chip key={index} label={tag} variant="outlined" sx={{ ml: '5px' }} />
-                ))
-              ) : (
-                <Typography variant="h6" sx={{ ml: '5px' }}>
-                  {'-'}
-                </Typography>
-              )}
-            </Box>
           </Box>
         </>
       )}
@@ -67,4 +54,4 @@ const SongInfo = ({ songTags, duration, filePath, userTags }: Props) => {
   )
 }
 
-export default SongInfo
+export default PlayerBasic
