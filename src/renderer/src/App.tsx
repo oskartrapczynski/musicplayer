@@ -33,8 +33,6 @@ const App = () => {
   const handleLoadDb = async () => {
     try {
       const { data, info }: IResponseFileJSON<IDB> = await readFileJSON(DATA_FILE.DB)
-      console.log('info', info)
-      // console.log('data', data)
       setLibrary(data && data?.library?.length > 0 ? (data.library as ILibrary[]) : [])
       setPlaylists(data && data?.playlists?.length > 0 ? (data.playlists as IPlaylist[]) : [])
     } catch (err) {
@@ -101,8 +99,6 @@ const App = () => {
     const newSong = savedSongInLibrary?.length
       ? { ...savedSongInLibrary[0] }
       : { songId: uuidv4(), path: filePath! }
-
-    console.log(newSong)
 
     const newPlaylist = await addSongToPlaylist({
       playlistId,
@@ -198,7 +194,11 @@ const App = () => {
                         duration1={duration1}
                         volume1={volume1}
                         changeSongVolume1={changeSongVolume1}
+                        isPlaying1={isPlaying1}
                         isDisabled1={!player1.song}
+                        currentTime1={currentTime1}
+                        changeSongPos1={changeSongPos1}
+                        toggle1={toggle1}
                       />
                     )
                   }

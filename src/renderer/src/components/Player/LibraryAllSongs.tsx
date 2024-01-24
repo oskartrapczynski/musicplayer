@@ -73,12 +73,10 @@ const LibraryAllSongs = ({
     }
     const data = await removeSongFromDb({ songId: deleteSongId, library, playlists })
     setDeleteSongId('')
-    console.log(data)
     if (!data) {
       enqueueSnackbar('Nie usunięto utworu!', { variant: 'warning' })
       return
     }
-    console.log(data)
     setLibrary(data.newLibrary)
     setPlaylists(data.newPlaylists)
     enqueueSnackbar('Utwór pomyślnie usunięty!', { variant: 'success' })

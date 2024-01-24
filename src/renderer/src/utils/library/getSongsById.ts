@@ -8,7 +8,6 @@ interface Params {
 const getSongsById = async ({ library, songIds }: Params) => {
   if (!library || library.length === 0) return []
   const librarySongs = library.filter(({ songId }) => {
-    // console.log('songId', songId, 'songIds', songIds)
     return songIds?.includes(songId)
   })
 

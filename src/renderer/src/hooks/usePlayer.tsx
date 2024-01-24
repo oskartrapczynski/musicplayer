@@ -12,12 +12,16 @@ const usePlayer = ({ audioObj, src }: Props) => {
   const [songPos, setSongPos] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [volume, setVolume] = useState(100)
+  const [reloadSongPos, setReloadSongPos] = useState(false)
 
   const toggle = (play: boolean) => {
     if (play === false) setIsPlaying(false)
     if (play === true) setIsPlaying(true)
   }
-  const changeSongPos = (seek: number) => setSongPos(seek)
+  const changeSongPos = (seek: number) => {
+    setSongPos(seek)
+    setReloadSongPos((prev) => !prev)
+  }
   const changeSongVolume = (volume: number) => setVolume(volume)
 
   if (src && audio.src !== src) {
@@ -54,7 +58,7 @@ const usePlayer = ({ audioObj, src }: Props) => {
 
   useEffect(() => {
     audio.currentTime = songPos
-  }, [songPos])
+  }, [songPos, reloadSongPos])
 
   return {
     isPlaying,

@@ -1,6 +1,9 @@
 import { IMusicResponse } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { Box, Typography, Button, Slider } from '@mui/material'
+import { HOT_CUE_LABELS } from '@renderer/constants'
+import { IMusicLoop } from '@renderer/interfaces'
+import { useEffect, useState } from 'react'
 import SliderVolumeTooltipLabel from './SliderVolumeTooltipLabel'
 import SongImage from './SongImage'
 
@@ -13,6 +16,10 @@ interface Props {
   volume: number
   changeSongVolume: (volume: number) => void
   isDisabled: boolean
+  isPlaying: boolean
+  currentTime: number
+  changeSongPos: (seek: number) => void
+  toggle: (play: boolean) => void
 }
 
 const PlayerPro = ({
@@ -21,11 +28,54 @@ const PlayerPro = ({
   text,
   volume,
   changeSongVolume,
-  isDisabled
+  isDisabled,
+  isPlaying,
+  currentTime,
+  changeSongPos,
+  toggle
 }: Props) => {
+  const hotCuesProps = [null, 50, 100, 200]
+  const [hotCues, setHotCues] = useState(hotCuesProps)
+  const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
+
+  useEffect(() => {
+    if (!loop.in || !loop.out) return
+    if (Math.round(currentTime) === Math.round(loop.out)) changeSongPos(loop.in)
+  }, [currentTime])
+
+  const resetLoop = () => setLoop({ in: null, out: null })
+
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongVolume(newValue as number)
   }
+  const handleHotCueClick = (hotCue: number | null) => {
+    if (!hotCue || hotCue > duration!) return
+    resetLoop()
+    changeSongPos(hotCue)
+    if (!isPlaying) toggle(true)
+  }
+
+  const handleSetHotCue = (hotCue: number | null, index: number) => {
+    if (!duration || isPlaying || currentTime > duration! || hotCue) return
+    const newHoutCues = hotCues.map((thisHotCue, thisIndex) =>
+      thisIndex === index ? currentTime : thisHotCue
+    )
+    setHotCues(newHoutCues)
+  }
+
+  const handleLoopIn = () => {
+    setLoop((prev) => ({ ...prev, in: currentTime }))
+  }
+  const handleLoopOut = () => {
+    if (!loop.in) return
+    setLoop((prev) => ({ ...prev, out: currentTime }))
+    changeSongPos(loop.in)
+  }
+
+  const handleLoopExit = () => {
+    resetLoop()
+  }
+
   return (
     <Box
       sx={{
@@ -47,22 +97,36 @@ const PlayerPro = ({
         <Typography>{`Tytuł: ${songTags?.title ? songTags?.title : '-'}`}</Typography>
         <Typography>{`Autor: ${songTags?.artist ? songTags?.artist : '-'}`}</Typography>
       </Box>
-      <Box width="100%">
-        <Button variant="contained" color="warning">
+      <Box display="flex" gap={1} width="100%">
+        <Button variant={loop.in ? 'contained' : 'outlined'} color="warning" onClick={handleLoopIn}>
           IN
         </Button>
-        <Button variant="contained" color="warning">
+        <Button
+          variant={loop.out ? 'contained' : 'outlined'}
+          color="warning"
+          onClick={handleLoopOut}
+        >
           OUT
         </Button>
-        <Button variant="contained" color="warning">
+        <Button
+          variant={loop.in && loop.out ? 'contained' : 'outlined'}
+          color="warning"
+          onClick={handleLoopExit}
+        >
           X
         </Button>
       </Box>
-      <Box width="100%">
-        <Button variant="outlined">A</Button>
-        <Button variant="outlined">B</Button>
-        <Button variant="outlined">C</Button>
-        <Button variant="outlined">D</Button>
+      <Box display="flex" gap={1} width="100%">
+        {hotCues.map((hotCue, index) => (
+          <Button
+            key={index}
+            variant={hotCue ? 'contained' : 'outlined'}
+            color="error"
+            onClick={() => (hotCue ? handleHotCueClick(hotCue) : handleSetHotCue(hotCue, index))}
+          >
+            {HOT_CUE_LABELS[index]}
+          </Button>
+        ))}
       </Box>
       <Box>
         <Slider

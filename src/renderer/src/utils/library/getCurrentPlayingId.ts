@@ -25,7 +25,6 @@ const getCurrentPlayingId = async ({ library, playlists, player1 }: Params) => {
   if (songs.length === 0) return -1
 
   const librarySongs = await getSongsById({ library, songIds: songs })
-  console.log('librarySongs', librarySongs)
 
   const currentPlayingId = librarySongs.findIndex(({ path }) => path === player1.filePath)
 

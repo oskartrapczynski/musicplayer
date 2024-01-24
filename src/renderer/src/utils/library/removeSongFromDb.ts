@@ -10,7 +10,6 @@ const removeSongFromDb = async ({ songId: deletedSongId, library, playlists }: P
   const copyLibrary: ILibrary[] = JSON.parse(JSON.stringify(library))
   const copyPlaylists: IPlaylist[] = JSON.parse(JSON.stringify(playlists))
   const newLibrary = copyLibrary?.filter(({ songId }) => songId !== deletedSongId)
-  console.log(library, newLibrary)
   if (newLibrary.length === library.length) return null
   const newPlaylists = copyPlaylists.map((playlist) => {
     if (!playlist.songs.includes(deletedSongId)) return playlist

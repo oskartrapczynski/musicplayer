@@ -57,8 +57,6 @@ const Library = ({
     const matchWords = searchWords.map((word) => name.toLowerCase().includes(word))
     return matchWords.filter((item) => item).length === searchWords.length
   }
-
-  console.log(selected)
   return (
     <>
       <Box

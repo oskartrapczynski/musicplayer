@@ -91,12 +91,10 @@ const LibraryPlaylistSongs = ({
       playlists
     })
     setDeleteSongId('')
-    console.log(data)
     if (!data) {
       enqueueSnackbar('Nie usunięto utworu', { variant: 'warning' })
       return
     }
-    console.log(data)
     setPlaylists(data.newPlaylists)
     enqueueSnackbar('Utwór pomyślnie usunięty', { variant: 'success' })
   }
