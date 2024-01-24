@@ -66,14 +66,14 @@ const App = () => {
   // aliasy
   // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
   const {
-    isPlaying,
-    toggle,
-    duration,
-    changeSongPos,
-    songPos,
-    currentTime,
-    volume,
-    changeSongVolume
+    isPlaying: isPlaying1,
+    toggle: toggle1,
+    duration: duration1,
+    changeSongPos: changeSongPos1,
+    songPos: songPos1,
+    currentTime: currentTime1,
+    volume: volume1,
+    changeSongVolume: changeSongVolume1
   } = usePlayer({
     audioObj: audioObj1,
     src: player1.song as string
@@ -165,20 +165,20 @@ const App = () => {
                 element={
                   <Layout
                     appMode={appMode}
-                    isPlaying={isPlaying}
-                    toggle={toggle}
-                    changeSongPos={changeSongPos}
-                    duration={duration}
-                    songPos={songPos}
-                    currentTime={currentTime}
-                    isDisabled={!player1.song}
                     setAppMode={setAppMode}
-                    volume={volume}
-                    changeSongVolume={changeSongVolume}
                     library={library}
                     playlists={playlists}
-                    player1={player1}
                     handleReadMusicPath={handleReadMusicPath}
+                    player1={player1}
+                    isPlaying1={isPlaying1}
+                    toggle1={toggle1}
+                    changeSongPos1={changeSongPos1}
+                    duration1={duration1}
+                    songPos1={songPos1}
+                    currentTime1={currentTime1}
+                    isDisabled1={!player1.song}
+                    volume1={volume1}
+                    changeSongVolume1={changeSongVolume1}
                   />
                 }
               >
@@ -188,12 +188,18 @@ const App = () => {
                     appMode === APP_MODE.NORMAL ? (
                       <PlayerBasicPage
                         songTags={player1.songTags}
-                        duration={duration}
+                        duration={duration1}
                         filePath={player1.filePath}
                         userTags={player1.userTags}
                       />
                     ) : (
-                      <PlayerProPage player1={player1} />
+                      <PlayerProPage
+                        player1={player1}
+                        duration1={duration1}
+                        volume1={volume1}
+                        changeSongVolume1={changeSongVolume1}
+                        isDisabled1={!player1.song}
+                      />
                     )
                   }
                 />

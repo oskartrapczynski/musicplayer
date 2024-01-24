@@ -7,40 +7,40 @@ import { IReadMusicPath } from '@renderer/interfaces'
 
 interface Props {
   appMode: APP_MODE
-  isPlaying: boolean
-  toggle: (play: boolean) => void
-  changeSongPos: (seek: number) => void
-  duration: number | null
-  songPos: number
-  currentTime: number
-  isDisabled: boolean
   setAppMode: React.Dispatch<React.SetStateAction<APP_MODE>>
-  volume: number
-  changeSongVolume: (volume: number) => void
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
+  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   player1: IMusicResponse & {
     locationSong: string | undefined
   }
-  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  isPlaying1: boolean
+  toggle1: (play: boolean) => void
+  changeSongPos1: (seek: number) => void
+  duration1: number | null
+  songPos1: number
+  currentTime1: number
+  isDisabled1: boolean
+  volume1: number
+  changeSongVolume1: (volume: number) => void
 }
 
 const Layout = ({
   appMode,
-  isPlaying,
-  toggle,
-  changeSongPos,
-  duration,
-  songPos,
-  currentTime,
-  isDisabled,
   setAppMode,
-  volume,
-  changeSongVolume,
   library,
   playlists,
+  handleReadMusicPath,
   player1,
-  handleReadMusicPath
+  isPlaying1,
+  toggle1,
+  changeSongPos1,
+  duration1,
+  songPos1,
+  currentTime1,
+  isDisabled1,
+  volume1,
+  changeSongVolume1
 }: Props) => {
   return (
     <>
@@ -60,56 +60,60 @@ const Layout = ({
           <Outlet />
           {appMode === APP_MODE.NORMAL && (
             <MenuControlBottom
-              isPlaying={isPlaying}
-              toggle={toggle}
-              changeSongPos={changeSongPos}
-              duration={duration}
-              songPos={songPos}
-              currentTime={currentTime}
-              isDisabled={isDisabled}
-              volume={volume}
-              changeSongVolume={changeSongVolume}
+              appMode={appMode}
+              isPlaying={isPlaying1}
+              toggle={toggle1}
+              changeSongPos={changeSongPos1}
+              duration={duration1}
+              songPos={songPos1}
+              currentTime={currentTime1}
+              isDisabled={isDisabled1}
+              volume={volume1}
+              changeSongVolume={changeSongVolume1}
               library={library}
               playlists={playlists}
               player1={player1}
               handleReadMusicPath={handleReadMusicPath}
               menuWidth="100%"
-              showTimer
             />
           )}
           {appMode === APP_MODE.PRO && (
             <Box display="flex">
               <MenuControlBottom
-                isPlaying={isPlaying}
-                toggle={toggle}
-                changeSongPos={changeSongPos}
-                duration={duration}
-                songPos={songPos}
-                currentTime={currentTime}
-                isDisabled={isDisabled}
-                volume={volume}
-                changeSongVolume={changeSongVolume}
+                appMode={appMode}
+                isPlaying={isPlaying1}
+                toggle={toggle1}
+                changeSongPos={changeSongPos1}
+                duration={duration1}
+                songPos={songPos1}
+                currentTime={currentTime1}
+                isDisabled={isDisabled1}
+                volume={volume1}
+                changeSongVolume={changeSongVolume1}
                 library={library}
                 playlists={playlists}
                 player1={player1}
                 handleReadMusicPath={handleReadMusicPath}
                 menuWidth="50%"
+                marks
               />
               <MenuControlBottom
-                isPlaying={isPlaying}
-                toggle={toggle}
-                changeSongPos={changeSongPos}
-                duration={duration}
-                songPos={songPos}
-                currentTime={currentTime}
-                isDisabled={isDisabled}
-                volume={volume}
-                changeSongVolume={changeSongVolume}
+                appMode={appMode}
+                isPlaying={isPlaying1}
+                toggle={toggle1}
+                changeSongPos={changeSongPos1}
+                duration={duration1}
+                songPos={songPos1}
+                currentTime={currentTime1}
+                isDisabled={isDisabled1}
+                volume={volume1}
+                changeSongVolume={changeSongVolume1}
                 library={library}
                 playlists={playlists}
                 player1={player1}
                 handleReadMusicPath={handleReadMusicPath}
                 menuWidth="50%"
+                marks
               />
             </Box>
           )}

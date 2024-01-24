@@ -19,6 +19,9 @@ import AddPlaylist from './player/AddPlaylist'
 import LibraryContent from './player/LibraryContent'
 import LibraryPlaylistButton from './player/LibraryPlaylistButton'
 import SongImage from './player/SongImage'
+import SliderSongPosTooltipLabel from './player/SliderSongPosTooltipLabel'
+import SliderVolumeTooltipLabel from './player/SliderVolumeTooltipLabel'
+import PlayerPro from './player/PlayerPro'
 
 export {
   MenuControlBottom,
@@ -41,5 +44,8 @@ export {
   AddPlaylist,
   LibraryContent,
   LibraryPlaylistButton,
-  SongImage
+  SongImage,
+  SliderSongPosTooltipLabel,
+  SliderVolumeTooltipLabel,
+  PlayerPro
 }

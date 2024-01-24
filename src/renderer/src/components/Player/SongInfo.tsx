@@ -1,12 +1,11 @@
 import NodeID3 from 'node-id3'
 import { getFileName } from '@global/utils'
-import { convertBufferToImage, createMusicCover, secondsToMusicTime } from '@renderer/utils'
-import { INodeID3Image } from '@renderer/interfaces'
 import { Alert, Box, Button, Chip, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { ROUTE } from '@renderer/constants'
 import { LibraryMusic as LibraryMusicIcon } from '@mui/icons-material'
 import { SongImage } from '..'
+import { secondsToMusicTime } from '@renderer/utils'
 
 interface Props {
   songTags?: NodeID3.Tags

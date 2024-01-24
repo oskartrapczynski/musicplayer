@@ -1,4 +1,6 @@
 import { Box, Slider } from '@mui/material'
+import { createSliderMarks, secondsToMusicTime } from '@renderer/utils'
+import { SliderSongPosTooltipLabel } from '..'
 
 interface Props {
   width: string | number
@@ -7,6 +9,7 @@ interface Props {
   duration: number | null
   currentTime: number
   isDisabled: boolean
+  marks?: boolean
 }
 
 const SliderSongPos = ({
@@ -15,12 +18,15 @@ const SliderSongPos = ({
   changeSongPos,
   duration,
   currentTime,
-  isDisabled
+  isDisabled,
+  marks
 }: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
-    // console.log(newValue)
     changeSongPos(newValue as number)
   }
+  const hotCues = [null, 50, 100, 200]
+  const markCues = marks ? createSliderMarks(hotCues) : undefined
+
   return (
     <Box
       sx={{
@@ -33,6 +39,11 @@ const SliderSongPos = ({
         onChange={handleChange}
         max={duration ? duration : 0}
         disabled={isDisabled}
+        valueLabelDisplay="auto"
+        slots={{
+          valueLabel: SliderSongPosTooltipLabel
+        }}
+        marks={markCues}
       />
     </Box>
   )

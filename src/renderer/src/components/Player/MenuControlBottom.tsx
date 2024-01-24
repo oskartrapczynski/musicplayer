@@ -1,10 +1,13 @@
 import { Prev, Play, Stop, Next, Pause, SliderSongPos, SliderVolume } from '@renderer/components'
 import { secondsToMusicTime } from '@renderer/utils'
-import { Box, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import { ILibrary, IPlaylist, IMusicResponse } from '@global/interfaces'
 import { IReadMusicPath } from '@renderer/interfaces'
+import { useLocation } from 'react-router-dom'
+import { APP_MODE } from '@renderer/constants'
 
 interface Props {
+  appMode: APP_MODE
   isPlaying: boolean
   toggle: (play: boolean) => void
   songPos: number
@@ -22,10 +25,11 @@ interface Props {
   }
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
   menuWidth?: string
-  showTimer?: boolean
+  marks?: boolean
 }
 
 const MenuControlBottom = ({
+  appMode,
   isPlaying,
   toggle,
   changeSongPos,
@@ -39,11 +43,22 @@ const MenuControlBottom = ({
   player1,
   handleReadMusicPath,
   menuWidth = '100%',
-  showTimer
+  marks
 }: Props) => {
+  const { pathname } = useLocation()
   return (
     <Box sx={{ width: menuWidth, height: '150px', backgroundColor: 'green' }}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', height: '100%', padding: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          padding: 3
+        }}
+      >
         <Prev
           isDisabled={isDisabled}
           library={library}
@@ -64,12 +79,17 @@ const MenuControlBottom = ({
           player1={player1}
           handleReadMusicPath={handleReadMusicPath}
         />
-        {showTimer && (
-          <Typography sx={{ color: isDisabled ? '#005f00' : 'black' }}>{`${secondsToMusicTime(
-            currentTime
-          )}/${secondsToMusicTime(duration)}`}</Typography>
+        {pathname === '/' && appMode === APP_MODE.PRO ? (
+          <Typography>{`${secondsToMusicTime(currentTime)}/${secondsToMusicTime(
+            duration
+          )}`}</Typography>
+        ) : (
+          <SliderVolume
+            volume={volume}
+            changeSongVolume={changeSongVolume}
+            isDisabled={isDisabled}
+          />
         )}
-        <SliderVolume volume={volume} changeSongVolume={changeSongVolume} isDisabled={isDisabled} />
 
         <SliderSongPos
           width="100%"
@@ -77,6 +97,7 @@ const MenuControlBottom = ({
           duration={duration}
           currentTime={currentTime}
           isDisabled={isDisabled}
+          marks={marks}
         />
       </Box>
     </Box>
