@@ -4,7 +4,7 @@ import { IReadMusicPath } from '../../interfaces'
 
 interface Params {
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   currentPlayingId: number
@@ -14,13 +14,13 @@ interface Params {
 
 const nextSongPlaylist = async ({
   playlists,
-  player,
+  player1,
   currentPlayingId,
   library,
   handleReadMusicPath
 }: Params) => {
   const playlistArrayId = playlists!.findIndex(
-    ({ playlistId }) => playlistId === player.locationSong
+    ({ playlistId }) => playlistId === player1.locationSong
   )
   const playlistLength = playlists![playlistArrayId].songs.length - 1
   const nextPlaylistSongId = currentPlayingId < playlistLength ? currentPlayingId + 1 : 0

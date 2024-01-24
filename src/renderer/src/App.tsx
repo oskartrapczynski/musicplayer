@@ -56,7 +56,7 @@ const App = () => {
   const audioObj1 = new Audio(undefined)
   // const audioObj2 = new Audio(undefined)
 
-  const [player, setPlayer] = useState<IMusicResponse & { locationSong: string | undefined }>({
+  const [player1, setPlayer1] = useState<IMusicResponse & { locationSong: string | undefined }>({
     song: undefined,
     songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
@@ -76,7 +76,7 @@ const App = () => {
     changeSongVolume
   } = usePlayer({
     audioObj: audioObj1,
-    src: player.song as string
+    src: player1.song as string
   })
 
   const handleReadMusicDialog = async (playlistId?: string) => {
@@ -90,7 +90,7 @@ const App = () => {
       enqueueSnackbar('Nie załadowano utwóru', { variant: 'warning' })
       return
     }
-    setPlayer({
+    setPlayer1({
       song,
       songTags,
       info,
@@ -125,7 +125,7 @@ const App = () => {
 
   const handleReadMusicPath = async ({ filePath, locationSong }: IReadMusicPath) => {
     const data = await readMusicPath(filePath)
-    setPlayer({
+    setPlayer1({
       song: data?.song,
       songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
@@ -171,13 +171,13 @@ const App = () => {
                     duration={duration}
                     songPos={songPos}
                     currentTime={currentTime}
-                    isDisabled={!player.song}
+                    isDisabled={!player1.song}
                     setAppMode={setAppMode}
                     volume={volume}
                     changeSongVolume={changeSongVolume}
                     library={library}
                     playlists={playlists}
-                    player={player}
+                    player1={player1}
                     handleReadMusicPath={handleReadMusicPath}
                   />
                 }
@@ -187,14 +187,13 @@ const App = () => {
                   element={
                     appMode === APP_MODE.NORMAL ? (
                       <PlayerBasicPage
-                        handleReadMusicDialog={handleReadMusicDialog}
-                        songTags={player.songTags}
+                        songTags={player1.songTags}
                         duration={duration}
-                        filePath={player.filePath}
-                        userTags={player.userTags}
+                        filePath={player1.filePath}
+                        userTags={player1.userTags}
                       />
                     ) : (
-                      <PlayerProPage />
+                      <PlayerProPage player1={player1} />
                     )
                   }
                 />
@@ -210,7 +209,7 @@ const App = () => {
                       }
                       handleReadMusicPath={handleReadMusicPath}
                       handleReadMusicDialog={handleReadMusicDialog}
-                      player={player}
+                      player1={player1}
                     />
                   }
                 />

@@ -2,7 +2,7 @@ import { IMusicResponse } from '@global/interfaces'
 
 interface Params {
   path: string
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   selected: {
@@ -13,7 +13,7 @@ interface Params {
 
 const setLibraryContentColor = ({
   path: songPath,
-  player: { filePath, locationSong },
+  player1: { filePath, locationSong },
   selected: { playlist, path }
 }: Params) => {
   if (songPath === path) return 'warning'

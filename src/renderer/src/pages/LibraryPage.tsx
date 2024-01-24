@@ -10,7 +10,7 @@ interface Props {
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
 }
@@ -22,7 +22,7 @@ const LibraryPage = ({
   playlists,
   setLibrary,
   setPlaylists,
-  player
+  player1
 }: Props) => {
   return (
     <ContentSection>
@@ -33,7 +33,7 @@ const LibraryPage = ({
         playlists={playlists}
         setLibrary={setLibrary}
         setPlaylists={setPlaylists}
-        player={player}
+        player1={player1}
       />
     </ContentSection>
   )

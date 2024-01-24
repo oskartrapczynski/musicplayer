@@ -18,6 +18,7 @@ import InputSearch from './player/InputSearch'
 import AddPlaylist from './player/AddPlaylist'
 import LibraryContent from './player/LibraryContent'
 import LibraryPlaylistButton from './player/LibraryPlaylistButton'
+import SongImage from './player/SongImage'
 
 export {
   MenuControlBottom,
@@ -39,5 +40,6 @@ export {
   InputSearch,
   AddPlaylist,
   LibraryContent,
-  LibraryPlaylistButton
+  LibraryPlaylistButton,
+  SongImage
 }

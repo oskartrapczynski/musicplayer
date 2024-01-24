@@ -18,6 +18,7 @@ import setLibraryPlaylistBoxShadow from './library/setLibraryPlaylistBoxShadow'
 import addSongToPlaylist from './library/addSongToPlaylist'
 import removePlaylist from './library/removePlaylist'
 import checkIsMusicSavedInPlaylist from './library/checlIsMusicSavedInPlaylist'
+import createMusicCover from './library/createMusicCover'
 
 export {
   convertBufferToSong,
@@ -39,5 +40,6 @@ export {
   setLibraryPlaylistBoxShadow,
   addSongToPlaylist,
   removePlaylist,
-  checkIsMusicSavedInPlaylist
+  checkIsMusicSavedInPlaylist,
+  createMusicCover
 }

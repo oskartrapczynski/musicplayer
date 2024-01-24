@@ -29,7 +29,7 @@ interface Props {
   handleReadMusicDialog: (playlistId?: string) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   selected: {
@@ -49,7 +49,7 @@ const LibraryAllSongs = ({
   handleReadMusicDialog,
   searchSong,
   setSearchSong,
-  player
+  player1
 }: Props) => {
   const [filteredLibrary, setFilteredLibrary] = useState<ILibrary[] | null>(null)
   const [deleteSongId, setDeleteSongId] = useState('')
@@ -62,7 +62,7 @@ const LibraryAllSongs = ({
   const handleClickAddSongLibrary = async () => await handleReadMusicDialog()
 
   const handleDelete = async () => {
-    if (selected.playlist === DATA_FILE.LIBRARY && selected.path === player.filePath) {
+    if (selected.playlist === DATA_FILE.LIBRARY && selected.path === player1.filePath) {
       enqueueSnackbar('Nie można usunąć odtwarzanego utworu!', { variant: 'warning' })
       return
     }
@@ -134,11 +134,11 @@ const LibraryAllSongs = ({
                 <Button
                   key={index}
                   sx={{
-                    boxShadow: setLibraryContentBoxShadow({ path, player, selected, palette })
+                    boxShadow: setLibraryContentBoxShadow({ path, player1, selected, palette })
                   }}
                   variant="contained"
                   fullWidth
-                  color={setLibraryContentColor({ path, player, selected })}
+                  color={setLibraryContentColor({ path, player1, selected })}
                   onClick={() => {
                     setDeleteSongId(songId)
                     setSelected({ playlist: DATA_FILE.LIBRARY, path })

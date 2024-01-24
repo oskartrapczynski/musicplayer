@@ -21,7 +21,7 @@ interface Props {
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
 }
@@ -32,7 +32,7 @@ const Library = ({
   playlists,
   setLibrary,
   setPlaylists,
-  player
+  player1
 }: Props) => {
   const [selected, setSelected] = useState({
     playlist: `${DATA_FILE.LIBRARY}`,
@@ -105,7 +105,7 @@ const Library = ({
                     text={name}
                     linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                     selectedPlaylist={selected.playlist}
-                    locationSong={player.locationSong}
+                    locationSong={player1.locationSong}
                     editPlaylistId={editPlaylistId}
                     setEditPlaylistId={setEditPlaylistId}
                   />
@@ -135,7 +135,7 @@ const Library = ({
                       text={name}
                       linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                       selectedPlaylist={selected.playlist}
-                      locationSong={player.locationSong}
+                      locationSong={player1.locationSong}
                       editPlaylistId={editPlaylistId}
                       setEditPlaylistId={setEditPlaylistId}
                       playlistArrayId={index}
@@ -179,7 +179,7 @@ const Library = ({
                   handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
-                  player={player}
+                  player1={player1}
                   selected={selected}
                 />
               }
@@ -196,7 +196,7 @@ const Library = ({
                   handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
-                  player={player}
+                  player1={player1}
                   selected={selected}
                 />
               }

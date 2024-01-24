@@ -19,7 +19,7 @@ interface Props {
   changeSongVolume: (volume: number) => void
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
@@ -39,7 +39,7 @@ const Layout = ({
   changeSongVolume,
   library,
   playlists,
-  player,
+  player1,
   handleReadMusicPath
 }: Props) => {
   return (
@@ -71,9 +71,47 @@ const Layout = ({
               changeSongVolume={changeSongVolume}
               library={library}
               playlists={playlists}
-              player={player}
+              player1={player1}
               handleReadMusicPath={handleReadMusicPath}
+              menuWidth="100%"
+              showTimer
             />
+          )}
+          {appMode === APP_MODE.PRO && (
+            <Box display="flex">
+              <MenuControlBottom
+                isPlaying={isPlaying}
+                toggle={toggle}
+                changeSongPos={changeSongPos}
+                duration={duration}
+                songPos={songPos}
+                currentTime={currentTime}
+                isDisabled={isDisabled}
+                volume={volume}
+                changeSongVolume={changeSongVolume}
+                library={library}
+                playlists={playlists}
+                player1={player1}
+                handleReadMusicPath={handleReadMusicPath}
+                menuWidth="50%"
+              />
+              <MenuControlBottom
+                isPlaying={isPlaying}
+                toggle={toggle}
+                changeSongPos={changeSongPos}
+                duration={duration}
+                songPos={songPos}
+                currentTime={currentTime}
+                isDisabled={isDisabled}
+                volume={volume}
+                changeSongVolume={changeSongVolume}
+                library={library}
+                playlists={playlists}
+                player1={player1}
+                handleReadMusicPath={handleReadMusicPath}
+                menuWidth="50%"
+              />
+            </Box>
           )}
         </Box>
       </Box>

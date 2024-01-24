@@ -3,7 +3,7 @@ import { Palette } from '@mui/material'
 
 interface Params {
   path: string
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   selected: {
@@ -15,7 +15,7 @@ interface Params {
 
 const setLibraryContentBoxShadow = ({
   path,
-  player: { filePath, locationSong },
+  player1: { filePath, locationSong },
   selected: { playlist },
   palette
 }: Params) => {

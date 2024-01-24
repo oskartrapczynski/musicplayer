@@ -9,19 +9,19 @@ interface Props {
   isDisabled: boolean
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
 }
 
-const Prev = ({ isDisabled, library, playlists, player, handleReadMusicPath }: Props) => {
+const Prev = ({ isDisabled, library, playlists, player1, handleReadMusicPath }: Props) => {
   const handleClick = async () => {
-    if (isDisabled || !player.locationSong || !library || library.length === 0) return
-    const currentPlayingId = await getCurrentPlayingId({ library, playlists, player })
+    if (isDisabled || !player1.locationSong || !library || library.length === 0) return
+    const currentPlayingId = await getCurrentPlayingId({ library, playlists, player1 })
     if (currentPlayingId === -1) return
 
-    player.locationSong === DATA_FILE.LIBRARY
+    player1.locationSong === DATA_FILE.LIBRARY
       ? await prevSongLibrary({
           library,
           currentPlayingId,
@@ -29,7 +29,7 @@ const Prev = ({ isDisabled, library, playlists, player, handleReadMusicPath }: P
         })
       : await prevSongPlaylist({
           playlists,
-          player,
+          player1,
           currentPlayingId,
           library,
           handleReadMusicPath

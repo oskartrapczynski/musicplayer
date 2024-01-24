@@ -5,20 +5,20 @@ import { getSongsById } from '..'
 interface Params {
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
 }
 
-const getCurrentPlayingId = async ({ library, playlists, player }: Params) => {
-  if (player.locationSong === DATA_FILE.LIBRARY) {
+const getCurrentPlayingId = async ({ library, playlists, player1 }: Params) => {
+  if (player1.locationSong === DATA_FILE.LIBRARY) {
     if (!library || library.length === 0) return -1
-    return library?.findIndex(({ path }) => path === player.filePath)
+    return library?.findIndex(({ path }) => path === player1.filePath)
   }
   // locationSong = 'playlistId
   if (!playlists || playlists.length === 0) return -1
   const playlistArrayId = playlists?.findIndex(
-    ({ playlistId }) => playlistId === player.locationSong
+    ({ playlistId }) => playlistId === player1.locationSong
   )
   if (playlistArrayId === -1) return -1
   const songs = playlists[playlistArrayId].songs
@@ -27,7 +27,7 @@ const getCurrentPlayingId = async ({ library, playlists, player }: Params) => {
   const librarySongs = await getSongsById({ library, songIds: songs })
   console.log('librarySongs', librarySongs)
 
-  const currentPlayingId = librarySongs.findIndex(({ path }) => path === player.filePath)
+  const currentPlayingId = librarySongs.findIndex(({ path }) => path === player1.filePath)
 
   return currentPlayingId
 }

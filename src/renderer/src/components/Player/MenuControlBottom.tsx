@@ -17,10 +17,12 @@ interface Props {
   locationSong?: string
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
+  player1: IMusicResponse & {
     locationSong: string | undefined
   }
   handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  menuWidth?: string
+  showTimer?: boolean
 }
 
 const MenuControlBottom = ({
@@ -34,17 +36,19 @@ const MenuControlBottom = ({
   changeSongVolume,
   library,
   playlists,
-  player,
-  handleReadMusicPath
+  player1,
+  handleReadMusicPath,
+  menuWidth = '100%',
+  showTimer
 }: Props) => {
   return (
-    <Box sx={{ width: '100%', height: '150px', backgroundColor: 'green' }}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', padding: 3 }}>
+    <Box sx={{ width: menuWidth, height: '150px', backgroundColor: 'green' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', height: '100%', padding: 3 }}>
         <Prev
           isDisabled={isDisabled}
           library={library}
           playlists={playlists}
-          player={player}
+          player1={player1}
           handleReadMusicPath={handleReadMusicPath}
         />
         {isPlaying ? (
@@ -57,13 +61,13 @@ const MenuControlBottom = ({
           isDisabled={isDisabled}
           library={library}
           playlists={playlists}
-          player={player}
+          player1={player1}
           handleReadMusicPath={handleReadMusicPath}
         />
-        {!isDisabled && (
-          <Typography>{`${secondsToMusicTime(currentTime)}/${secondsToMusicTime(
-            duration
-          )}`}</Typography>
+        {showTimer && (
+          <Typography sx={{ color: isDisabled ? '#005f00' : 'black' }}>{`${secondsToMusicTime(
+            currentTime
+          )}/${secondsToMusicTime(duration)}`}</Typography>
         )}
         <SliderVolume volume={volume} changeSongVolume={changeSongVolume} isDisabled={isDisabled} />
 

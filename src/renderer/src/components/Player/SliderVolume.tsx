@@ -3,19 +3,12 @@ import { VolumeDown, VolumeUp } from '@mui/icons-material'
 
 interface Props {
   direction?: 'row' | 'column'
-  width?: string
   volume: number
   changeSongVolume: (volume: number) => void
   isDisabled: boolean
 }
 
-const SliderVolume = ({
-  direction = 'row',
-  volume,
-  changeSongVolume,
-  width = '100px',
-  isDisabled
-}: Props) => {
+const SliderVolume = ({ direction = 'row', volume, changeSongVolume, isDisabled }: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongVolume(newValue as number)
   }
@@ -26,7 +19,7 @@ const SliderVolume = ({
     if (volume < 100) changeSongVolume(100)
   }
   return (
-    <Stack spacing={2} direction={direction} sx={{ mb: 1 }} alignItems="center">
+    <Stack flexGrow={1} spacing={2} direction={direction} sx={{ mb: 1 }} alignItems="center">
       <IconButton onClick={setVolumeMin} disabled={isDisabled}>
         <VolumeDown />
       </IconButton>
@@ -34,8 +27,8 @@ const SliderVolume = ({
         aria-label="Volume"
         value={volume}
         onChange={handleChange}
-        sx={{ width }}
         disabled={isDisabled}
+        sx={{ maxWidth: '300px' }}
       />
       <IconButton onClick={setVolumeMax} disabled={isDisabled}>
         <VolumeUp />
