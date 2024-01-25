@@ -96,7 +96,7 @@ const PlayerPro = ({
         flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '40%',
+        width: '50%',
         height: '100%',
         px: 2
       }}

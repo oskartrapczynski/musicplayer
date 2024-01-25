@@ -46,7 +46,6 @@ const LibraryPlaylistButton = ({
   const [isEditName, setIsEditName] = useState(false)
   const thisPlaylist = linkPath.split('/').pop()!
   const [playlistName, setPlaylistName] = useState(text)
-  const open = Boolean(anchorEl)
   const { palette } = useTheme()
   const boxShadow = setLibraryPlaylistBoxShadow(
     thisPlaylist,
@@ -56,6 +55,7 @@ const LibraryPlaylistButton = ({
     locationSong1,
     locationSong2
   )
+  const open = Boolean(anchorEl)
 
   useEffect(() => {
     if (editPlaylistId !== thisPlaylist && isEditName) setIsEditName(false)

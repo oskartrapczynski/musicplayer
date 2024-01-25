@@ -47,8 +47,6 @@ const Library = ({
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
 
-  console.log(selected)
-
   const handleLoad = async ({
     filePath,
     locationSong,

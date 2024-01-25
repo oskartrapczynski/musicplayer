@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Alert, Box, Button, CircularProgress, useTheme } from '@mui/material'
+import { Alert, Box, Button, CircularProgress, Menu, useTheme } from '@mui/material'
 import { LibraryContent, InputSearch } from '..'
 import {
   getSongsById,
@@ -11,7 +11,11 @@ import {
   setLibraryContentColor
 } from '@renderer/utils'
 import { IReadMusicPath, Player } from '@renderer/interfaces'
-import { LibraryAdd as LibraryAddIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import {
+  LibraryAdd as LibraryAddIcon,
+  Delete as DeleteIcon,
+  Album as AlbumIcon
+} from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
 import { enqueueSnackbar } from 'notistack'
 import removeSongFromPlaylist from '@renderer/utils/library/removeSongFromPlaylist'
@@ -55,7 +59,6 @@ const LibraryPlaylistData = ({
   setPlaylists,
   library,
   setLibrary,
-  setSelected,
   handleLoad,
   handleReadMusicDialog,
   searchSong,
@@ -63,12 +66,20 @@ const LibraryPlaylistData = ({
   player1,
   player2,
   selected,
+  setSelected,
   type
 }: Props) => {
   const [filteredLibrary, setFilteredLibrary] = useState<ILibrary[] | null>(null)
   const [deleteSongId, setDeleteSongId] = useState('')
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const { id: currentPlaylistId } = useParams()
   const { palette } = useTheme()
+
+  const isSearchCondition =
+    type === 'library'
+      ? library && library.length > 0
+      : playlists &&
+        playlists.filter(({ playlistId }) => selected.playlist === playlistId)[0]?.songs?.length > 0
 
   useEffect(() => {
     type === 'library' ? loadSongsLibrary() : loadSongsPlaylist()
@@ -168,14 +179,62 @@ const LibraryPlaylistData = ({
     setSelected({ playlist: currentPlaylistId ? currentPlaylistId : DATA_FILE.LIBRARY, path })
   }
 
-  const isSearchCondition =
-    type === 'library'
-      ? library && library.length > 0
-      : playlists &&
-        playlists.filter(({ playlistId }) => selected.playlist === playlistId)[0]?.songs?.length > 0
+  const handleOpenMenu = (
+    event: React.MouseEvent<HTMLElement>,
+    path: string,
+    playlistId?: string
+  ) => {
+    if (appMode === APP_MODE.NORMAL) return
+    setAnchorEl(event.currentTarget)
+    setSelected({ playlist: playlistId ? playlistId : DATA_FILE.LIBRARY, path })
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
+
+  const handleMenuClick = (playerId: PLAYER) => {
+    if (!selected.path || !selected.playlist) return
+    handleLoad({
+      filePath: selected.path,
+      locationSong: selected.playlist,
+      playerId: playerId
+    })
+    handleCloseMenu()
+  }
 
   return (
     <>
+      {appMode === APP_MODE.PRO && (
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left'
+          }}
+        >
+          <Button
+            color="success"
+            startIcon={<AlbumIcon />}
+            onClick={() => handleMenuClick(PLAYER.one)}
+          >
+            Odtwarzaj na 1
+          </Button>
+          <Button
+            color="success"
+            startIcon={<AlbumIcon />}
+            onClick={() => handleMenuClick(PLAYER.two)}
+          >
+            Odtwarzaj na 2
+          </Button>
+        </Menu>
+      )}
       {!filteredLibrary ? (
         <Box
           sx={{
@@ -241,6 +300,7 @@ const LibraryPlaylistData = ({
                   color={setLibraryContentColor({ path, player1, player2, selected })}
                   onClick={() => handleClickButtonPlaylist(songId, path)}
                   onDoubleClick={() => handleDoubleClick(path, currentPlaylistId)}
+                  onContextMenu={(e) => handleOpenMenu(e, path, currentPlaylistId)}
                 >
                   {getFileName(path)}
                 </Button>
