@@ -38,9 +38,17 @@ const usePlayer = ({ audioObj, src }: Props) => {
     setDuration(audio.duration)
   }
 
-  audio.ontimeupdate = () => {
-    setCurrentTime(audio.currentTime)
-  }
+  // audio.ontimeupdate = () => {
+  //   setCurrentTime(Math.round(audio.currentTime * 10) / 10)
+  // }
+  useEffect(() => {
+    // if(!isPlaying) return
+    const intervalId = setInterval(
+      () => setCurrentTime(Math.round(audio.currentTime * 10) / 10),
+      100
+    )
+    return () => clearInterval(intervalId)
+  }, [])
 
   audio.onended = () => {
     toggle(false)

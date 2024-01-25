@@ -11,7 +11,7 @@ import {
   PlayerProPage,
   SettingsPage
 } from '@renderer/pages'
-import { APP_MODE } from '@renderer/constants'
+import { APP_MODE, PLAYER } from '@renderer/constants'
 import {
   writeFileJSON,
   readFileJSON,
@@ -23,7 +23,7 @@ import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { v4 as uuidv4 } from 'uuid'
 import { Box, CircularProgress } from '@mui/material'
-import { IReadMusicPath } from './interfaces'
+import { IReadMusicPath, Player } from './interfaces'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
@@ -50,12 +50,10 @@ const App = () => {
     writeFileJSON(DATA_FILE.DB, { library, playlists })
   }, [library, playlists])
 
-  // const db = useMemo(() => audioObj, [])
-
   const audioObj1 = new Audio(undefined)
-  // const audioObj2 = new Audio(undefined)
+  const audioObj2 = new Audio(undefined)
 
-  const [player1, setPlayer1] = useState<IMusicResponse & { locationSong: string | undefined }>({
+  const [player1, setPlayer1] = useState<Player>({
     song: undefined,
     songTags: undefined,
     info: READ_MUSIC_STATE.NOT_LOADED,
@@ -63,8 +61,14 @@ const App = () => {
     locationSong: undefined,
     hotCues: [null, null, null, null]
   })
-  // aliasy
-  // const { isPlaying:isPlaying1, toggle:toggle1, duration:duration1, changeSongPos:changeSongPos1, songPos:songPos1, currentTime:currentTime1 }
+  const [player2, setPlayer2] = useState<Player>({
+    song: undefined,
+    songTags: undefined,
+    info: READ_MUSIC_STATE.NOT_LOADED,
+    filePath: undefined,
+    locationSong: undefined,
+    hotCues: [null, null, null, null]
+  })
   const {
     isPlaying: isPlaying1,
     toggle: toggle1,
@@ -78,9 +82,23 @@ const App = () => {
     audioObj: audioObj1,
     src: player1.song as string
   })
+  const {
+    isPlaying: isPlaying2,
+    toggle: toggle2,
+    duration: duration2,
+    changeSongPos: changeSongPos2,
+    songPos: songPos2,
+    currentTime: currentTime2,
+    volume: volume2,
+    changeSongVolume: changeSongVolume2
+  } = usePlayer({
+    audioObj: audioObj2,
+    src: player2.song as string
+  })
 
-  const handleReadMusicDialog = async (playlistId?: string) => {
+  const handleReadMusicDialog = async (playerId: PLAYER, playlistId?: string) => {
     const { song, songTags, info, filePath, hotCues } = await readMusicDialog()
+    const setPlayer = playerId === PLAYER.one ? setPlayer1 : setPlayer2
     if (
       !song ||
       !filePath ||
@@ -90,7 +108,7 @@ const App = () => {
       enqueueSnackbar('Nie załadowano utwóru', { variant: 'warning' })
       return
     }
-    setPlayer1({
+    setPlayer({
       song,
       songTags,
       info,
@@ -122,9 +140,14 @@ const App = () => {
     enqueueSnackbar('Załadowano utwór', { variant: 'success' })
   }
 
-  const handleReadMusicPath = async ({ filePath, locationSong }: IReadMusicPath) => {
+  const handleReadMusicPath = async ({
+    filePath,
+    locationSong,
+    playerId
+  }: IReadMusicPath & { playerId: PLAYER }) => {
     const data = await readMusicPath(filePath)
-    setPlayer1({
+    const setPlayer = playerId === PLAYER.one ? setPlayer1 : setPlayer2
+    setPlayer({
       song: data?.song,
       songTags: data?.songTags,
       info: data?.info as READ_MUSIC_STATE,
@@ -178,6 +201,16 @@ const App = () => {
                     isDisabled1={!player1.song}
                     volume1={volume1}
                     changeSongVolume1={changeSongVolume1}
+                    player2={player2}
+                    isPlaying2={isPlaying2}
+                    toggle2={toggle2}
+                    changeSongPos2={changeSongPos2}
+                    duration2={duration2}
+                    songPos2={songPos2}
+                    currentTime2={currentTime2}
+                    isDisabled2={!player2.song}
+                    volume2={volume2}
+                    changeSongVolume2={changeSongVolume2}
                   />
                 }
               >
@@ -194,17 +227,24 @@ const App = () => {
                       <PlayerProPage
                         library={library}
                         setLibrary={setLibrary}
-                        setPlayer1={setPlayer1}
                         player1={player1}
+                        setPlayer1={setPlayer1}
                         duration1={duration1}
                         volume1={volume1}
                         changeSongVolume1={changeSongVolume1}
                         isPlaying1={isPlaying1}
-                        isDisabled1={!player1.song}
                         currentTime1={currentTime1}
                         changeSongPos1={changeSongPos1}
                         toggle1={toggle1}
-                        hotCues1={player1.hotCues}
+                        player2={player2}
+                        setPlayer2={setPlayer2}
+                        duration2={duration2}
+                        volume2={volume2}
+                        changeSongVolume2={changeSongVolume2}
+                        isPlaying2={isPlaying2}
+                        currentTime2={currentTime2}
+                        changeSongPos2={changeSongPos2}
+                        toggle2={toggle2}
                       />
                     )
                   }
@@ -213,6 +253,7 @@ const App = () => {
                   path="/library/*"
                   element={
                     <LibraryPage
+                      appMode={appMode}
                       library={library as ILibrary[]}
                       setLibrary={setLibrary as React.Dispatch<React.SetStateAction<ILibrary[]>>}
                       playlists={playlists as IPlaylist[]}
@@ -222,6 +263,7 @@ const App = () => {
                       handleReadMusicPath={handleReadMusicPath}
                       handleReadMusicDialog={handleReadMusicDialog}
                       player1={player1}
+                      player2={player2}
                     />
                   }
                 />

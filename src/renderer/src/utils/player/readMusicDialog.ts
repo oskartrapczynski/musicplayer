@@ -12,13 +12,21 @@ const readMusicDialog = async () => {
     hotCues = [null, null, null, null]
   }: IMusicResponse = await window.api[FUNCTIONS.READ_MUSIC_DIALOG]()
 
+  const resp = {
+    song,
+    filePath,
+    songTags,
+    info,
+    hotCues
+  }
+
   try {
-    if (info === READ_MUSIC_STATE.CANCELLED) throw { info: 'Anulowano!', variant: 'warning' }
+    if (info === READ_MUSIC_STATE.CANCELLED) throw { info: 'Anulowano!', variant: 'warning', resp }
 
     if (info === READ_MUSIC_STATE.ERROR)
-      throw { info: 'Błąd podczas otwierania!', variant: 'error' }
+      throw { info: 'Błąd podczas otwierania!', variant: 'error', resp }
 
-    if (!filePath || !song) throw { info: 'Nie załadowano!', variant: 'error' }
+    if (!filePath || !song) throw { info: 'Nie załadowano!', variant: 'error', resp }
     const extension = filePath!.split('.').pop()
     const convertedSong = convertBufferToSong(song as Buffer, extension!)
     return { song: convertedSong, songTags, info, filePath, hotCues } as IMusicResponse
@@ -28,7 +36,7 @@ const readMusicDialog = async () => {
         obj as { variant: 'default' | 'warning' | 'success' | 'error' | 'info' | undefined }
       ).variant
     })
-    return { song, songTags, info, filePath, hotCues } as IMusicResponse
+    return { ...(obj as { resp: IMusicResponse }).resp } as IMusicResponse
   }
 }
 

@@ -5,9 +5,11 @@ const setLibraryPlaylistBoxShadow = (
   selectedPlaylist: string,
   color: 'warning' | 'error' | 'success' | 'info' | 'inherit' | 'primary' | 'secondary' | undefined,
   palette: Palette,
-  locationSong?: string
+  locationSong1?: string,
+  locationSong2?: string
 ) => {
-  if (locationSong === thisPlaylist) return `${palette.success.main} 0px 0px 25px 0px`
+  if (locationSong1 === thisPlaylist || locationSong2 === thisPlaylist)
+    return `${palette.success.main} 0px 0px 25px 0px`
   const boxShadowColor = color ? color : 'primary'
   return thisPlaylist === selectedPlaylist
     ? `${palette[`${boxShadowColor}`].main} 0px 0px 25px 0px`

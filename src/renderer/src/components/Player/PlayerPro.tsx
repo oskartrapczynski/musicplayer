@@ -1,8 +1,8 @@
-import { ILibrary, IMusicResponse } from '@global/interfaces'
+import { ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { Box, Typography, Button, Slider } from '@mui/material'
 import { HOT_CUE_LABELS } from '@renderer/constants'
-import { HotCue, IMusicLoop } from '@renderer/interfaces'
+import { HotCue, IMusicLoop, Player } from '@renderer/interfaces'
 import { useEffect, useState } from 'react'
 import SliderVolumeTooltipLabel from './SliderVolumeTooltipLabel'
 import SongImage from './SongImage'
@@ -10,16 +10,8 @@ import SongImage from './SongImage'
 interface Props {
   library: ILibrary[] | null
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[] | null>>
-  player: IMusicResponse & {
-    locationSong: string | undefined
-  }
-  setPlayer: React.Dispatch<
-    React.SetStateAction<
-      IMusicResponse & {
-        locationSong: string | undefined
-      }
-    >
-  >
+  player: Player
+  setPlayer: React.Dispatch<React.SetStateAction<Player>>
   duration: null | number
   text: string
   volume: number

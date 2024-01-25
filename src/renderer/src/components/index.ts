@@ -12,8 +12,6 @@ import ContentSection from './player/ContentSection'
 import SnackbarCloseButton from './notistack/SnackbarCloseButton'
 import Library from './player/Library'
 import SliderVolume from './player/SliderVolume'
-import LibraryAllSongs from './player/LibraryAllSongs'
-import LibraryPlaylistSongs from './player/LibraryPlaylistSongs'
 import InputSearch from './player/InputSearch'
 import AddPlaylist from './player/AddPlaylist'
 import LibraryContent from './player/LibraryContent'
@@ -22,6 +20,7 @@ import SongImage from './player/SongImage'
 import SliderSongPosTooltipLabel from './player/SliderSongPosTooltipLabel'
 import SliderVolumeTooltipLabel from './player/SliderVolumeTooltipLabel'
 import PlayerPro from './player/PlayerPro'
+import LibraryPlaylistData from './player/LibraryPlaylistData'
 
 export {
   MenuControlBottom,
@@ -38,8 +37,6 @@ export {
   SnackbarCloseButton,
   Library,
   SliderVolume,
-  LibraryAllSongs,
-  LibraryPlaylistSongs,
   InputSearch,
   AddPlaylist,
   LibraryContent,
@@ -47,5 +44,6 @@ export {
   SongImage,
   SliderSongPosTooltipLabel,
   SliderVolumeTooltipLabel,
-  PlayerPro
+  PlayerPro,
+  LibraryPlaylistData
 }

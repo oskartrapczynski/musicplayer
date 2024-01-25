@@ -20,7 +20,8 @@ interface Props {
   text: string
   color?: 'warning' | 'error' | 'success' | 'info' | 'inherit' | 'primary' | 'secondary' | undefined
   selectedPlaylist: string
-  locationSong?: string
+  locationSong1?: string
+  locationSong2?: string
   editPlaylistId?: string
   setEditPlaylistId?: React.Dispatch<React.SetStateAction<string>>
   playlistArrayId?: number
@@ -35,7 +36,8 @@ const LibraryPlaylistButton = ({
   text,
   color,
   selectedPlaylist,
-  locationSong,
+  locationSong1,
+  locationSong2,
   editPlaylistId,
   setEditPlaylistId,
   playlistArrayId
@@ -51,7 +53,8 @@ const LibraryPlaylistButton = ({
     selectedPlaylist,
     color,
     palette,
-    locationSong
+    locationSong1,
+    locationSong2
   )
 
   useEffect(() => {
@@ -106,7 +109,7 @@ const LibraryPlaylistButton = ({
   }
 
   const handleDeletePlaylist = async () => {
-    if (locationSong === thisPlaylist) {
+    if (locationSong1 === thisPlaylist || locationSong2 === thisPlaylist) {
       enqueueSnackbar('Nie można usunąć odtwarzanej listy!', { variant: 'warning' })
       return
     }

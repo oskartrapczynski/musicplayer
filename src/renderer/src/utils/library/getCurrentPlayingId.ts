@@ -1,13 +1,12 @@
 import { DATA_FILE } from '@global/constants'
-import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
+import { ILibrary, IPlaylist } from '@global/interfaces'
+import { Player } from '@renderer/interfaces'
 import { getSongsById } from '..'
 
 interface Params {
   library: ILibrary[] | null
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
-    locationSong: string | undefined
-  }
+  player: Player
 }
 
 const getCurrentPlayingId = async ({ library, playlists, player }: Params) => {

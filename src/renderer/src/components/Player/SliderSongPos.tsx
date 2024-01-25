@@ -1,5 +1,5 @@
-import { IMusicResponse } from '@global/interfaces'
 import { Box, Slider } from '@mui/material'
+import { Player } from '@renderer/interfaces'
 import { createSliderMarks } from '@renderer/utils'
 import { useEffect, useState } from 'react'
 import { SliderSongPosTooltipLabel } from '..'
@@ -12,9 +12,7 @@ interface Props {
   currentTime: number
   isDisabled: boolean
   marks?: boolean
-  player: IMusicResponse & {
-    locationSong: string | undefined
-  }
+  player: Player
 }
 
 const SliderSongPos = ({
@@ -39,7 +37,6 @@ const SliderSongPos = ({
   }
 
   useEffect(() => {
-    console.log('xd')
     setMarkCues(marks ? createSliderMarks(hotCues) : undefined)
   }, [hotCues])
 
@@ -56,6 +53,7 @@ const SliderSongPos = ({
         max={duration ? duration : 0}
         disabled={isDisabled}
         valueLabelDisplay="auto"
+        step={0.1}
         slots={{
           valueLabel: SliderSongPosTooltipLabel
         }}

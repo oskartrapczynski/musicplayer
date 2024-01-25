@@ -1,38 +1,41 @@
 import { useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
-import {
-  AddPlaylist,
-  InputSearch,
-  LibraryAllSongs,
-  LibraryPlaylistButton,
-  LibraryPlaylistSongs
-} from '..'
-import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
+import { AddPlaylist, InputSearch, LibraryPlaylistButton, LibraryPlaylistData } from '..'
+import { ILibrary, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
 import { Box, Stack } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon, Add as AddIcon } from '@mui/icons-material'
-import { IReadMusicPath } from '@renderer/interfaces'
+import { IReadMusicPath, Player } from '@renderer/interfaces'
 import { Route, Routes } from 'react-router-dom'
-import { ROUTE } from '@renderer/constants'
+import { APP_MODE, PLAYER, ROUTE } from '@renderer/constants'
+
 interface Props {
+  appMode: APP_MODE
   library: ILibrary[]
-  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
-  handleReadMusicDialog: (playlistId?: string) => Promise<void>
+  handleReadMusicPath: ({
+    filePath,
+    locationSong,
+    playerId
+  }: IReadMusicPath & {
+    playerId: PLAYER
+  }) => Promise<void>
+  handleReadMusicDialog: (playeId: PLAYER, playlistId?: string) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
-  player1: IMusicResponse & {
-    locationSong: string | undefined
-  }
+  player1: Player
+  player2: Player
 }
 const Library = ({
+  appMode,
   library,
   handleReadMusicPath,
   handleReadMusicDialog,
   playlists,
   setLibrary,
   setPlaylists,
-  player1
+  player1,
+  player2
 }: Props) => {
   const [selected, setSelected] = useState({
     playlist: `${DATA_FILE.LIBRARY}`,
@@ -44,12 +47,18 @@ const Library = ({
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
 
-  const handleLoad = async ({ filePath, locationSong }: IReadMusicPath) => {
+  console.log(selected)
+
+  const handleLoad = async ({
+    filePath,
+    locationSong,
+    playerId
+  }: IReadMusicPath & { playerId: PLAYER }) => {
     if (!filePath) {
       enqueueSnackbar('Wybierz utwór aby załadować', { variant: 'warning' })
       return
     }
-    return await handleReadMusicPath({ filePath, locationSong })
+    return await handleReadMusicPath({ filePath, locationSong, playerId })
   }
 
   const filterPlaylists = ({ name }: IPlaylist) => {
@@ -103,7 +112,8 @@ const Library = ({
                     text={name}
                     linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                     selectedPlaylist={selected.playlist}
-                    locationSong={player1.locationSong}
+                    locationSong1={player1.locationSong}
+                    locationSong2={player2.locationSong}
                     editPlaylistId={editPlaylistId}
                     setEditPlaylistId={setEditPlaylistId}
                   />
@@ -133,7 +143,8 @@ const Library = ({
                       text={name}
                       linkPath={`/${ROUTE.LIBRARY}/${playlistId}`}
                       selectedPlaylist={selected.playlist}
-                      locationSong={player1.locationSong}
+                      locationSong1={player1.locationSong}
+                      locationSong2={player2.locationSong}
                       editPlaylistId={editPlaylistId}
                       setEditPlaylistId={setEditPlaylistId}
                       playlistArrayId={index}
@@ -167,7 +178,9 @@ const Library = ({
             <Route
               path="/"
               element={
-                <LibraryAllSongs
+                <LibraryPlaylistData
+                  type="library"
+                  appMode={appMode}
                   library={library}
                   setLibrary={setLibrary}
                   playlists={playlists}
@@ -177,16 +190,20 @@ const Library = ({
                   handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
-                  player1={player1}
                   selected={selected}
+                  player1={player1}
+                  player2={player2}
                 />
               }
             />
             <Route
               path="/:id"
               element={
-                <LibraryPlaylistSongs
+                <LibraryPlaylistData
+                  type="playlist"
+                  appMode={appMode}
                   library={library}
+                  setLibrary={setLibrary}
                   playlists={playlists}
                   setPlaylists={setPlaylists}
                   setSelected={setSelected}
@@ -194,8 +211,9 @@ const Library = ({
                   handleReadMusicDialog={handleReadMusicDialog}
                   searchSong={searchSong}
                   setSearchSong={setSearchSong}
-                  player1={player1}
                   selected={selected}
+                  player1={player1}
+                  player2={player2}
                 />
               }
             />

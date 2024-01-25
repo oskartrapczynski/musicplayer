@@ -1,15 +1,21 @@
-import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
+import { ILibrary, IPlaylist } from '@global/interfaces'
+import { PLAYER } from '@renderer/constants'
 import { getSongsById } from '@renderer/utils'
-import { IReadMusicPath } from '../../interfaces'
+import { IReadMusicPath, Player } from '../../interfaces'
 
 interface Params {
   playlists: IPlaylist[] | null
-  player: IMusicResponse & {
-    locationSong: string | undefined
-  }
+  player: Player
   currentPlayingId: number
   library: ILibrary[] | null
-  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
+  playerId: PLAYER
+  handleReadMusicPath: ({
+    filePath,
+    locationSong,
+    playerId
+  }: IReadMusicPath & {
+    playerId: PLAYER
+  }) => Promise<void>
 }
 
 const nextSongPlaylist = async ({
@@ -17,7 +23,8 @@ const nextSongPlaylist = async ({
   player,
   currentPlayingId,
   library,
-  handleReadMusicPath
+  handleReadMusicPath,
+  playerId
 }: Params) => {
   const playlistArrayId = playlists!.findIndex(
     ({ playlistId }) => playlistId === player.locationSong
@@ -31,7 +38,8 @@ const nextSongPlaylist = async ({
   })
   await handleReadMusicPath({
     filePath: nextFilePath[0].path,
-    locationSong: playlists![playlistArrayId].playlistId
+    locationSong: playlists![playlistArrayId].playlistId,
+    playerId
   })
 }
 

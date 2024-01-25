@@ -1,32 +1,42 @@
-import { ILibrary, IMusicResponse, IPlaylist } from '@global/interfaces'
+import { ILibrary, IPlaylist } from '@global/interfaces'
 import { ContentSection } from '@renderer/components'
 import { Library } from '@renderer/components'
-import { IReadMusicPath } from '@renderer/interfaces'
+import { APP_MODE, PLAYER } from '@renderer/constants'
+import { IReadMusicPath, Player } from '@renderer/interfaces'
 
 interface Props {
+  appMode: APP_MODE
   library: ILibrary[]
-  handleReadMusicPath: ({ filePath, locationSong }: IReadMusicPath) => Promise<void>
-  handleReadMusicDialog: (playlistId?: string) => Promise<void>
+  handleReadMusicPath: ({
+    filePath,
+    locationSong,
+    playerId
+  }: IReadMusicPath & {
+    playerId: PLAYER
+  }) => Promise<void>
+  handleReadMusicDialog: (playeId: PLAYER, playlistId?: string) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
-  player1: IMusicResponse & {
-    locationSong: string | undefined
-  }
+  player1: Player
+  player2: Player
 }
 
 const LibraryPage = ({
+  appMode,
   library,
   handleReadMusicPath,
   handleReadMusicDialog,
   playlists,
   setLibrary,
   setPlaylists,
-  player1
+  player1,
+  player2
 }: Props) => {
   return (
     <ContentSection>
       <Library
+        appMode={appMode}
         library={library}
         handleReadMusicPath={handleReadMusicPath}
         handleReadMusicDialog={handleReadMusicDialog}
@@ -34,6 +44,7 @@ const LibraryPage = ({
         setLibrary={setLibrary}
         setPlaylists={setPlaylists}
         player1={player1}
+        player2={player2}
       />
     </ContentSection>
   )
