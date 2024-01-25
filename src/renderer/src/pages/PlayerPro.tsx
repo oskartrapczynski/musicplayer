@@ -8,6 +8,13 @@ interface Props {
   player1: IMusicResponse & {
     locationSong: string | undefined
   }
+  setPlayer1: React.Dispatch<
+    React.SetStateAction<
+      IMusicResponse & {
+        locationSong: string | undefined
+      }
+    >
+  >
   duration1: null | number
   volume1: number
   changeSongVolume1: (volume: number) => void
@@ -23,6 +30,7 @@ const PlayerProPage = ({
   library,
   setLibrary,
   player1,
+  setPlayer1,
   duration1,
   volume1,
   changeSongVolume1,
@@ -39,6 +47,7 @@ const PlayerProPage = ({
         library={library}
         setLibrary={setLibrary}
         player={player1}
+        setPlayer={setPlayer1}
         duration={duration1}
         text="Odtwarzacz 1"
         volume={volume1}
@@ -48,7 +57,6 @@ const PlayerProPage = ({
         currentTime={currentTime1}
         changeSongPos={changeSongPos1}
         toggle={toggle1}
-        hotCues={hotCues1}
       />
       {/* <PlayerPro 2 */}
     </ContentSection>

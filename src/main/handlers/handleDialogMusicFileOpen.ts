@@ -7,6 +7,7 @@ import NodeID3 from 'node-id3'
 const handleDialogMusicFileOpen = async () => {
   let song: string | Buffer | undefined = undefined,
     songTags: NodeID3.Tags | undefined = undefined
+  const hotCues = [null, null, null, null]
 
   try {
     const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -23,14 +24,16 @@ const handleDialogMusicFileOpen = async () => {
       song,
       filePath: filePaths[0],
       songTags,
-      info: READ_MUSIC_STATE.SUCCESS
+      info: READ_MUSIC_STATE.SUCCESS,
+      hotCues
     } as IMusicResponse
   } catch (err) {
     return {
       song,
       filePath: undefined,
       songTags,
-      info: (err as Error).message
+      info: (err as Error).message,
+      hotCues
     } as IMusicResponse
   }
 }

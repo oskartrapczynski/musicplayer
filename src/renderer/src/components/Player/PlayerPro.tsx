@@ -13,6 +13,13 @@ interface Props {
   player: IMusicResponse & {
     locationSong: string | undefined
   }
+  setPlayer: React.Dispatch<
+    React.SetStateAction<
+      IMusicResponse & {
+        locationSong: string | undefined
+      }
+    >
+  >
   duration: null | number
   text: string
   volume: number
@@ -22,13 +29,13 @@ interface Props {
   currentTime: number
   changeSongPos: (seek: number) => void
   toggle: (play: boolean) => void
-  hotCues: HotCue
 }
 
 const PlayerPro = ({
   library,
   setLibrary,
-  player: { filePath, songTags },
+  player: { filePath, songTags, hotCues: hotCuesProps },
+  setPlayer,
   duration,
   text,
   volume,
@@ -37,8 +44,7 @@ const PlayerPro = ({
   isPlaying,
   currentTime,
   changeSongPos,
-  toggle,
-  hotCues: hotCuesProps
+  toggle
 }: Props) => {
   const [hotCues, setHotCues] = useState<HotCue>(hotCuesProps)
   const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
@@ -66,14 +72,15 @@ const PlayerPro = ({
 
   const handleSetHotCue = (hotCue: number | null, index: number) => {
     if (!duration || isPlaying || currentTime > duration! || hotCue) return
-    const newHoutCues = hotCues.map((thisHotCue, thisIndex) =>
+    const newHotCues = hotCues.map((thisHotCue, thisIndex) =>
       thisIndex === index ? currentTime : thisHotCue
     )
-    setHotCues(newHoutCues)
+    setPlayer((prev) => ({ ...prev, hotCues: newHotCues }))
+    setHotCues(newHotCues)
     const newLibrary: ILibrary[] = JSON.parse(JSON.stringify(library))
     const libraryArrayId = newLibrary.findIndex(({ path }) => path === filePath)
     if (libraryArrayId === -1) return
-    newLibrary[libraryArrayId].hotCues = newHoutCues
+    newLibrary[libraryArrayId].hotCues = newHotCues
     setLibrary(newLibrary)
   }
 
@@ -131,16 +138,17 @@ const PlayerPro = ({
         </Button>
       </Box>
       <Box display="flex" gap={1} width="100%">
-        {hotCues.map((hotCue, index) => (
-          <Button
-            key={index}
-            variant={hotCue ? 'contained' : 'outlined'}
-            color="error"
-            onClick={() => (hotCue ? handleHotCueClick(hotCue) : handleSetHotCue(hotCue, index))}
-          >
-            {HOT_CUE_LABELS[index]}
-          </Button>
-        ))}
+        {hotCues &&
+          hotCues.map((hotCue, index) => (
+            <Button
+              key={index}
+              variant={hotCue ? 'contained' : 'outlined'}
+              color="error"
+              onClick={() => (hotCue ? handleHotCueClick(hotCue) : handleSetHotCue(hotCue, index))}
+            >
+              {HOT_CUE_LABELS[index]}
+            </Button>
+          ))}
       </Box>
       <Box>
         <Slider

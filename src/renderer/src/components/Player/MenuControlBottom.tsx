@@ -76,7 +76,7 @@ const MenuControlBottom = ({
           isDisabled={isDisabled}
           library={library}
           playlists={playlists}
-          player1={player}
+          player={player}
           handleReadMusicPath={handleReadMusicPath}
         />
         {pathname === '/' && appMode === APP_MODE.PRO ? (

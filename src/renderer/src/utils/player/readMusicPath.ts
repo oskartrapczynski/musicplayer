@@ -10,7 +10,7 @@ const readMusicPath = async (path: string) => {
     info = READ_MUSIC_STATE.ERROR,
     hotCues
   try {
-    let {
+    const {
       song = undefined,
       filePath = undefined,
       songTags = undefined,
@@ -18,21 +18,12 @@ const readMusicPath = async (path: string) => {
       hotCues
     }: IMusicResponse = await window.electron.ipcRenderer.invoke(FUNCTIONS.READ_MUSIC_PATH, path)
 
-    if (info === READ_MUSIC_STATE.CANCELLED) {
-      throw { info: 'Anulowano!', variant: 'warning' }
-      // enqueueSnackbar('Anulowano!', { variant: 'warning' })
-      // return
-    }
-    if (info === READ_MUSIC_STATE.ERROR) {
-      throw { info: 'Błąd podczas otwierania!', variant: 'error' }
-      // enqueueSnackbar('Błąd podczas otwierania!', { variant: 'error' })
-      // return
-    }
+    if (info === READ_MUSIC_STATE.CANCELLED) throw { info: 'Anulowano!', variant: 'warning' }
 
-    if (!filePath || !song) {
-      throw { info: 'Nie załadowano!', variant: 'error' }
-      // return { song, songTags, info, filePath, hotCues } as IMusicResponse
-    }
+    if (info === READ_MUSIC_STATE.ERROR)
+      throw { info: 'Błąd podczas otwierania!', variant: 'error' }
+
+    if (!filePath || !song) throw { info: 'Nie załadowano!', variant: 'error' }
 
     const extension = filePath.split('.').pop()
     const convertedSong = convertBufferToSong(song as Buffer, extension!)

@@ -1,6 +1,7 @@
 import { IMusicResponse } from '@global/interfaces'
 import { Box, Slider } from '@mui/material'
 import { createSliderMarks } from '@renderer/utils'
+import { useEffect, useState } from 'react'
 import { SliderSongPosTooltipLabel } from '..'
 
 interface Props {
@@ -26,10 +27,21 @@ const SliderSongPos = ({
   marks,
   player: { hotCues }
 }: Props) => {
+  const [markCues, setMarkCues] = useState<
+    | {
+        label: string
+        value: number
+      }[]
+    | undefined
+  >()
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongPos(newValue as number)
   }
-  const markCues = marks ? createSliderMarks(hotCues) : undefined
+
+  useEffect(() => {
+    console.log('xd')
+    setMarkCues(marks ? createSliderMarks(hotCues) : undefined)
+  }, [hotCues])
 
   return (
     <Box

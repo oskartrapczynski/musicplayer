@@ -194,6 +194,7 @@ const App = () => {
                       <PlayerProPage
                         library={library}
                         setLibrary={setLibrary}
+                        setPlayer1={setPlayer1}
                         player1={player1}
                         duration1={duration1}
                         volume1={volume1}
