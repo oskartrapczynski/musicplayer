@@ -1,11 +1,11 @@
+import { useEffect, useState } from 'react'
+import { SliderVolume, SongImage } from '..'
 import { ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { Box, Typography, Button, Slider } from '@mui/material'
-import { HOT_CUE_LABELS } from '@renderer/constants'
 import { HotCue, IMusicLoop, Player } from '@renderer/interfaces'
-import { useEffect, useState } from 'react'
-import SliderVolumeTooltipLabel from './SliderVolumeTooltipLabel'
-import SongImage from './SongImage'
+import { HOT_CUE_LABELS } from '@renderer/constants'
+import { Box, Typography, Button, Menu } from '@mui/material'
+import { Close as CloseIcon } from '@mui/icons-material'
 
 interface Props {
   library: ILibrary[] | null
@@ -40,6 +40,8 @@ const PlayerPro = ({
 }: Props) => {
   const [hotCues, setHotCues] = useState<HotCue>(hotCuesProps)
   const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const [deletedHotCueId, setDeletedHotCueId] = useState<number | null>(null)
 
   useEffect(() => {
     setHotCues(hotCuesProps)
@@ -52,21 +54,17 @@ const PlayerPro = ({
 
   const resetLoop = () => setLoop({ in: null, out: null })
 
-  const handleChange = (_: Event, newValue: number | number[]) => {
-    changeSongVolume(newValue as number)
-  }
-  const handleHotCueClick = (hotCue: number | null) => {
-    if (!hotCue || hotCue > duration!) return
-    resetLoop()
-    changeSongPos(hotCue)
-    if (!isPlaying) toggle(true)
+  const deleteHotCue = () => {
+    const newHotCues = hotCues.map((thisHotCue, thisIndex) =>
+      thisIndex === deletedHotCueId ? null : thisHotCue
+    )
+    console.log(deletedHotCueId)
+    console.log(newHotCues)
+    updateHotCuesLibrary(newHotCues)
+    setDeletedHotCueId(null)
   }
 
-  const handleSetHotCue = (hotCue: number | null, index: number) => {
-    if (!duration || isPlaying || currentTime > duration! || hotCue) return
-    const newHotCues = hotCues.map((thisHotCue, thisIndex) =>
-      thisIndex === index ? currentTime : thisHotCue
-    )
+  const updateHotCuesLibrary = (newHotCues: HotCue) => {
     setPlayer((prev) => ({ ...prev, hotCues: newHotCues }))
     setHotCues(newHotCues)
     const newLibrary: ILibrary[] = JSON.parse(JSON.stringify(library))
@@ -76,17 +74,49 @@ const PlayerPro = ({
     setLibrary(newLibrary)
   }
 
+  const changeHotCue = (index: number) => {
+    if (duration === null || isPlaying || currentTime > duration!) return
+    const newHotCues = hotCues.map((thisHotCue, thisIndex) =>
+      thisIndex === index ? currentTime : thisHotCue
+    )
+    updateHotCuesLibrary(newHotCues)
+  }
   const handleLoopIn = () => {
     setLoop((prev) => ({ ...prev, in: currentTime }))
   }
   const handleLoopOut = () => {
-    if (!loop.in) return
-    setLoop((prev) => ({ ...prev, out: currentTime }))
+    if (loop.in === null) return
+    const loopOutVal = currentTime + 0.1 < duration! ? currentTime + 0.1 : currentTime
+    setLoop((prev) => ({ ...prev, out: loopOutVal }))
     changeSongPos(loop.in)
+  }
+
+  const handleHotCueClick = (hotCue: number | null, hotCueIndex: number) => {
+    if (hotCue && hotCue > duration!) return
+
+    if (hotCue === null) return changeHotCue(hotCueIndex)
+    resetLoop()
+    changeSongPos(hotCue!)
+    if (!isPlaying) toggle(true)
   }
 
   const handleLoopExit = () => {
     resetLoop()
+  }
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, hotCueIndex: number) => {
+    if (hotCues[hotCueIndex] === null) return
+    setAnchorEl(event.currentTarget)
+    setDeletedHotCueId(hotCueIndex)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
+
+  const handleMenuClick = () => {
+    deleteHotCue()
+    handleCloseMenu()
   }
 
   return (
@@ -101,6 +131,23 @@ const PlayerPro = ({
         px: 2
       }}
     >
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+      >
+        <Button color="error" startIcon={<CloseIcon />} onClick={handleMenuClick}>
+          Usuń
+        </Button>
+      </Menu>
       <Box width="100%">
         <Box gap={1} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <SongImage height="50px" width="50px" songTags={songTags} />
@@ -136,24 +183,14 @@ const PlayerPro = ({
               key={index}
               variant={hotCue ? 'contained' : 'outlined'}
               color="error"
-              onClick={() => (hotCue ? handleHotCueClick(hotCue) : handleSetHotCue(hotCue, index))}
+              onClick={() => handleHotCueClick(hotCue, index)}
+              onContextMenu={(e) => handleOpenMenu(e, index)}
             >
               {HOT_CUE_LABELS[index]}
             </Button>
           ))}
       </Box>
-      <Box>
-        <Slider
-          aria-label="Volume"
-          disabled={isDisabled}
-          value={volume}
-          onChange={handleChange}
-          orientation="vertical"
-          sx={{ height: '100px' }}
-          valueLabelDisplay="auto"
-          slots={{ valueLabel: SliderVolumeTooltipLabel }}
-        />
-      </Box>
+      <SliderVolume volume={volume} changeSongVolume={changeSongVolume} isDisabled={isDisabled} />
     </Box>
   )
 }

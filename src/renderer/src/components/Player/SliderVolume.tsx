@@ -7,9 +7,16 @@ interface Props {
   volume: number
   changeSongVolume: (volume: number) => void
   isDisabled: boolean
+  sliderSizeVolume?: 'small' | 'medium'
 }
 
-const SliderVolume = ({ direction = 'row', volume, changeSongVolume, isDisabled }: Props) => {
+const SliderVolume = ({
+  direction = 'row',
+  volume,
+  changeSongVolume,
+  isDisabled,
+  sliderSizeVolume
+}: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongVolume(newValue as number)
   }
@@ -30,7 +37,7 @@ const SliderVolume = ({ direction = 'row', volume, changeSongVolume, isDisabled 
       </IconButton>
       <Slider
         aria-label="Volume"
-        size="small"
+        size={sliderSizeVolume}
         value={volume}
         onChange={handleChange}
         disabled={isDisabled}

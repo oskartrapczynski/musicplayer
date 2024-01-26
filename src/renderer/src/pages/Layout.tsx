@@ -122,6 +122,7 @@ const Layout = ({
                 player={player1}
                 playerId={PLAYER.one}
                 marks
+                sliderSizeVolume="small"
               />
               <MenuControlBottom
                 appMode={appMode}
@@ -141,6 +142,7 @@ const Layout = ({
                 player={player2}
                 playerId={PLAYER.two}
                 marks
+                sliderSizeVolume="small"
               />
             </Box>
           )}

@@ -31,6 +31,7 @@ interface Props {
   }) => Promise<void>
   menuWidth?: string
   marks?: boolean
+  sliderSizeVolume?: 'small' | 'medium'
 }
 
 const MenuControlBottom = ({
@@ -49,7 +50,8 @@ const MenuControlBottom = ({
   playerId,
   handleReadMusicPath,
   menuWidth = '100%',
-  marks
+  marks,
+  sliderSizeVolume
 }: Props) => {
   const { pathname } = useLocation()
   return (
@@ -96,6 +98,7 @@ const MenuControlBottom = ({
             volume={volume}
             changeSongVolume={changeSongVolume}
             isDisabled={isDisabled}
+            sliderSizeVolume={sliderSizeVolume}
           />
         )}
 
