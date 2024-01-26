@@ -187,7 +187,6 @@ const LibraryPlaylistData = ({
     path: string,
     playlistId?: string
   ) => {
-    if (appMode === APP_MODE.NORMAL) return
     setAnchorEl(event.currentTarget)
     setSelected({ playlist: playlistId ? playlistId : DATA_FILE.LIBRARY, path })
   }
@@ -208,27 +207,27 @@ const LibraryPlaylistData = ({
 
   return (
     <>
-      {appMode === APP_MODE.PRO && (
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+      >
+        <Button
+          color="success"
+          startIcon={<AlbumIcon />}
+          onClick={() => handleMenuClick(PLAYER.one)}
         >
-          <Button
-            color="success"
-            startIcon={<AlbumIcon />}
-            onClick={() => handleMenuClick(PLAYER.one)}
-          >
-            Odtwarzaj na 1
-          </Button>
+          {`Odtwarzaj${appMode === APP_MODE.PRO ? ' 1' : ''}`}
+        </Button>
+        {appMode === APP_MODE.PRO && (
           <Button
             color="success"
             startIcon={<AlbumIcon />}
@@ -236,8 +235,8 @@ const LibraryPlaylistData = ({
           >
             Odtwarzaj na 2
           </Button>
-        </Menu>
-      )}
+        )}
+      </Menu>
       {!filteredLibrary ? (
         <Box
           sx={{
