@@ -137,7 +137,10 @@ const LibraryPlaylistData = ({
   }
 
   const handleDeleteLibrary = async () => {
-    if (selected.playlist === DATA_FILE.LIBRARY && selected.path === player1.filePath) {
+    if (
+      selected.playlist === DATA_FILE.LIBRARY &&
+      (selected.path === player1.filePath || selected.path === player2.filePath)
+    ) {
       enqueueSnackbar('Nie można usunąć odtwarzanego utworu!', { variant: 'warning' })
       return
     }
