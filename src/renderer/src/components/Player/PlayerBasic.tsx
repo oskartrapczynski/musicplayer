@@ -15,7 +15,7 @@ interface Props {
 
 const PlayerBasic = ({ songTags, duration, filePath }: Props) => {
   return (
-    <Box sx={{ display: 'flex', p: 5, width: '100%', height: '100%', backgroundColor: 'yellow' }}>
+    <Box sx={{ display: 'flex', p: 5, width: '100%', height: '100%' }}>
       {!filePath ? (
         <Stack gap={1} sx={{ width: '100%' }}>
           <Alert severity="warning" sx={{ width: '100%', maxHeight: '50px' }}>

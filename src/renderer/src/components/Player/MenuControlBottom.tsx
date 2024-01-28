@@ -1,10 +1,11 @@
 import { Prev, Play, Stop, Next, Pause, SliderSongPos, SliderVolume } from '@renderer/components'
 import { secondsToMusicTime } from '@renderer/utils'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useTheme } from '@mui/material'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { IReadMusicPath, Player } from '@renderer/interfaces'
 import { useLocation } from 'react-router-dom'
 import { APP_MODE, PLAYER } from '@renderer/constants'
+import { grey } from '@mui/material/colors'
 
 interface Props {
   appMode: APP_MODE
@@ -54,8 +55,15 @@ const MenuControlBottom = ({
   sliderSizeVolume
 }: Props) => {
   const { pathname } = useLocation()
+
+  const {
+    palette: { mode: colorMode }
+  } = useTheme()
+
+  const backgroundColor = colorMode === 'light' ? grey[100] : grey[900]
+
   return (
-    <Box sx={{ width: menuWidth, height: '150px', backgroundColor: 'green' }}>
+    <Box sx={{ width: menuWidth, height: '150px', backgroundColor }}>
       <Box
         sx={{
           display: 'flex',

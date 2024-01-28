@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { enqueueSnackbar, SnackbarProvider } from 'notistack'
-import { IMusicResponse, ILibrary, IResponseFileJSON, IDB, IPlaylist } from '@global/interfaces'
+import { ILibrary, IResponseFileJSON, IDB, IPlaylist } from '@global/interfaces'
 import { DATA_FILE, READ_MUSIC_STATE } from '@global/constants'
 import {
   TagsPage,
@@ -22,13 +22,20 @@ import {
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
 import { v4 as uuidv4 } from 'uuid'
-import { Box, CircularProgress } from '@mui/material'
+import { Box, CircularProgress, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { IReadMusicPath, Player } from './interfaces'
 
 const App = () => {
   const [appMode, setAppMode] = useState(APP_MODE.NORMAL)
+  const [colorMode, setColorMode] = useState<'light' | 'dark'>('light')
   const [library, setLibrary] = useState<ILibrary[] | null>(null)
   const [playlists, setPlaylists] = useState<IPlaylist[] | null>(null)
+
+  const theme = createTheme({
+    palette: {
+      mode: colorMode
+    }
+  })
 
   const handleLoadDb = async () => {
     try {
@@ -105,7 +112,7 @@ const App = () => {
       info === READ_MUSIC_STATE.ERROR ||
       info === READ_MUSIC_STATE.NOT_LOADED
     ) {
-      enqueueSnackbar('Nie załadowano utwóru', { variant: 'warning' })
+      enqueueSnackbar('Nie załadowano utworu', { variant: 'warning' })
       return
     }
     setPlayer({
@@ -158,7 +165,8 @@ const App = () => {
   }
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       {!playlists && !library ? (
         <Box
           sx={{
@@ -268,13 +276,16 @@ const App = () => {
                   }
                 />
                 <Route path="/tags" element={<TagsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route
+                  path="/settings"
+                  element={<SettingsPage colorMode={colorMode} setColorMode={setColorMode} />}
+                />
               </Route>
             </Routes>
           </HashRouter>
         </SnackbarProvider>
       )}
-    </>
+    </ThemeProvider>
   )
 }
 

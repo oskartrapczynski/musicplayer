@@ -3,11 +3,12 @@ import { enqueueSnackbar } from 'notistack'
 import { AddPlaylist, InputSearch, LibraryPlaylistButton, LibraryPlaylistData } from '..'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
-import { Box, Stack } from '@mui/material'
+import { Box, Stack, useTheme } from '@mui/material'
 import { Apps as AppsIcon, List as ListIcon, Add as AddIcon } from '@mui/icons-material'
 import { IReadMusicPath, Player } from '@renderer/interfaces'
 import { Route, Routes } from 'react-router-dom'
 import { APP_MODE, PLAYER, ROUTE } from '@renderer/constants'
+import { grey } from '@mui/material/colors'
 
 interface Props {
   appMode: APP_MODE
@@ -47,6 +48,13 @@ const Library = ({
   const [searchPlaylist, setSearchPlaylist] = useState('')
   const [searchSong, setSearchSong] = useState('')
 
+  const {
+    palette: { mode: colorMode }
+  } = useTheme()
+
+  const backgroundColorPlaylists = colorMode === 'light' ? grey[200] : grey[800]
+  const backgroundColorContent = colorMode === 'light' ? grey[300] : grey[700]
+
   const handleLoad = async ({
     filePath,
     locationSong,
@@ -71,8 +79,7 @@ const Library = ({
           display: 'flex',
           overflow: 'hidden',
           width: '100%',
-          height: '100%',
-          backgroundColor: 'gray'
+          height: '100%'
         }}
       >
         <Box
@@ -81,7 +88,7 @@ const Library = ({
             height: '100%',
             overflow: 'scroll',
             p: 2,
-            backgroundColor: '#666',
+            backgroundColor: backgroundColorPlaylists,
             '&::-webkit-scrollbar': { display: 'none' }
           }}
         >
@@ -156,7 +163,7 @@ const Library = ({
         <Box
           sx={{
             width: '70%',
-            backgroundColor: '#333',
+            backgroundColor: backgroundColorContent,
             overflow: 'scroll',
             '&::-webkit-scrollbar': { display: 'none' }
           }}
