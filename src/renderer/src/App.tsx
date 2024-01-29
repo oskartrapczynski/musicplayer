@@ -278,7 +278,16 @@ const App = () => {
                 <Route path="/tags" element={<TagsPage />} />
                 <Route
                   path="/settings"
-                  element={<SettingsPage colorMode={colorMode} setColorMode={setColorMode} />}
+                  element={
+                    <SettingsPage
+                      colorMode={colorMode}
+                      setColorMode={setColorMode}
+                      library={library}
+                      setLibrary={setLibrary}
+                      playlists={playlists}
+                      setPlaylists={setPlaylists}
+                    />
+                  }
                 />
               </Route>
             </Routes>

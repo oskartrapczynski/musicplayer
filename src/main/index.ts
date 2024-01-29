@@ -6,11 +6,20 @@ import {
   handleWriteFileJSON,
   handleDialogMusicFileOpen,
   handleReadFileJSON,
-  handleReadMusicFromPath
+  handleReadMusicFromPath,
+  handleDialogExportFile,
+  handleDialogImportFile
 } from '@main/handlers'
 import { FUNCTIONS } from '@global/constants'
 
-const { READ_MUSIC_DIALOG, READ_MUSIC_PATH, READ_FILE_JSON, WRITE_FILE_JSON } = FUNCTIONS
+const {
+  READ_MUSIC_DIALOG,
+  READ_MUSIC_PATH,
+  READ_FILE_JSON,
+  WRITE_FILE_JSON,
+  EXPORT_DIALOG_JSON,
+  IMPORT_DIALOG_JSON
+} = FUNCTIONS
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -68,6 +77,8 @@ app.whenReady().then(() => {
   ipcMain.handle(READ_MUSIC_PATH, handleReadMusicFromPath)
   ipcMain.handle(READ_FILE_JSON, handleReadFileJSON)
   ipcMain.handle(WRITE_FILE_JSON, handleWriteFileJSON)
+  ipcMain.handle(EXPORT_DIALOG_JSON, handleDialogExportFile)
+  ipcMain.handle(IMPORT_DIALOG_JSON, handleDialogImportFile)
 
   createWindow()
 
