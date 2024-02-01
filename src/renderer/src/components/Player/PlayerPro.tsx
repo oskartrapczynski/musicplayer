@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { SliderVolume, SongImage } from '..'
 import { ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { HotCue, IMusicLoop, Player } from '@renderer/interfaces'
-import { HOT_CUE_LABELS } from '@renderer/constants'
+import { HotCue, IMixVolumes, IMusicLoop, Player } from '@renderer/interfaces'
+import { HOT_CUE_LABELS, PLAYER } from '@renderer/constants'
 import { Box, Typography, Button, Menu } from '@mui/material'
-import { Close as CloseIcon } from '@mui/icons-material'
+import { Close as CloseIcon, Shuffle as ShuffleIcon } from '@mui/icons-material'
 
 interface Props {
   library: ILibrary[] | null
@@ -21,6 +21,9 @@ interface Props {
   currentTime: number
   changeSongPos: (seek: number) => void
   toggle: (play: boolean) => void
+  playerId: PLAYER
+  handleSetActivePlayerPlay: (playerId: PLAYER) => void
+  mix: IMixVolumes
 }
 
 const PlayerPro = ({
@@ -36,7 +39,10 @@ const PlayerPro = ({
   isPlaying,
   currentTime,
   changeSongPos,
-  toggle
+  toggle,
+  playerId,
+  handleSetActivePlayerPlay,
+  mix
 }: Props) => {
   const [hotCues, setHotCues] = useState<HotCue>(hotCuesProps)
   const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
@@ -119,6 +125,16 @@ const PlayerPro = ({
     handleCloseMenu()
   }
 
+  // const [mix, setMix] = useState<{
+  //   type: 'up' | 'down'
+  //   initValue: number
+  //   value: number
+  // } | null>(null)
+
+  const handlePlayerNameClick = () => {
+    handleSetActivePlayerPlay(playerId)
+  }
+
   return (
     <Box
       sx={{
@@ -151,7 +167,17 @@ const PlayerPro = ({
       <Box width="100%">
         <Box gap={1} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <SongImage height="50px" width="50px" songTags={songTags} />
-          <Typography sx={{ textTransform: 'uppercase' }}>{text}</Typography>
+          <Typography>{text}</Typography>
+
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handlePlayerNameClick}
+            disabled={Boolean(mix[PLAYER.one]) && Boolean(mix[PLAYER.two])}
+            endIcon={<ShuffleIcon />}
+          >
+            AutoMix
+          </Button>
         </Box>
         <Typography>{`Nazwa: ${filePath ? getFileName(filePath) : '-'}`}</Typography>
         <Typography>{`Tytuł: ${songTags?.title ? songTags?.title : '-'}`}</Typography>

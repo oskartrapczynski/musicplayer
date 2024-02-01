@@ -19,10 +19,6 @@ export default interface ICustomAPI {
     type: DATA_FILE,
     data: ILibrary[]
   ) => Promise<string> //invoke
-  [EXPORT_DIALOG_JSON]: (
-    _: Electron.IpcMainInvokeEvent,
-    dataFile: DATA_FILE,
-    data: IDB[]
-  ) => Promise<boolean> //invoke
+  [EXPORT_DIALOG_JSON]: (_: Electron.IpcMainInvokeEvent, data: IDB[]) => Promise<boolean> //invoke
   [IMPORT_DIALOG_JSON]: () => Promise<IResponseFileJSON<unknown>> // invoke
 }

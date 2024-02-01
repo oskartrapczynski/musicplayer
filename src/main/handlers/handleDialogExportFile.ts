@@ -1,16 +1,12 @@
-import { DATA_FILE } from '@global/constants'
 import { IDB } from '@global/interfaces'
 import { dialog } from 'electron'
 import { writeFile } from 'fs'
 
-const handleDialogExportFile = async (
-  _: Electron.IpcMainInvokeEvent,
-  dataFile: DATA_FILE,
-  data: IDB[]
-) => {
+const handleDialogExportFile = async (_: Electron.IpcMainInvokeEvent, data: IDB[]) => {
   try {
     const { filePath, canceled } = await dialog.showSaveDialog({
-      filters: [{ name: 'Baza muzyki', extensions: ['json'] }]
+      filters: [{ name: 'Baza muzyki', extensions: ['json'] }],
+      defaultPath: 'db.json'
     })
 
     if (!filePath || canceled) throw new Error()

@@ -25,9 +25,9 @@ const SettingsPage = ({
     setColorMode(e.target.checked ? 'dark' : 'light')
   }
 
-  const handleExportFile = (dataFile: DATA_FILE) => {
+  const handleExportFile = () => {
     if (!library || !playlists) return
-    window.electron.ipcRenderer.invoke(FUNCTIONS.EXPORT_DIALOG_JSON, dataFile, {
+    window.electron.ipcRenderer.invoke(FUNCTIONS.EXPORT_DIALOG_JSON, {
       library: [...library],
       playlists: [...playlists]
     })
@@ -57,7 +57,7 @@ const SettingsPage = ({
         <Button variant="contained" onClick={handleImportFile}>
           Importuj bazę z muzyką
         </Button>
-        <Button variant="contained" onClick={() => handleExportFile(DATA_FILE.DB)}>
+        <Button variant="contained" onClick={handleExportFile}>
           Eksportuj bazę z muzyką
         </Button>
       </Stack>

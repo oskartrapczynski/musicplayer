@@ -7,7 +7,8 @@ const handleDialogImportFile = async () => {
   try {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
-      filters: [{ name: 'Baza muzyki', extensions: ['json'] }]
+      filters: [{ name: 'Baza muzyki', extensions: ['json'] }],
+      defaultPath: 'db.json'
     })
     if (canceled || !filePaths[0]) throw new Error(READ_MUSIC_STATE.CANCELLED)
 
