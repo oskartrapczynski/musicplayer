@@ -1,6 +1,7 @@
 import { IconButton, Slider, Stack } from '@mui/material'
 import { VolumeDown, VolumeUp } from '@mui/icons-material'
 import { SliderVolumeTooltipLabel } from '..'
+import { PLAYER } from '@renderer/constants'
 
 interface Props {
   direction?: 'row' | 'column'
@@ -8,6 +9,7 @@ interface Props {
   changeSongVolume: (volume: number) => void
   isDisabled: boolean
   sliderSizeVolume?: 'small' | 'medium'
+  resetMix?: () => void
 }
 
 const SliderVolume = ({
@@ -15,16 +17,22 @@ const SliderVolume = ({
   volume,
   changeSongVolume,
   isDisabled,
-  sliderSizeVolume
+  sliderSizeVolume,
+  resetMix
 }: Props) => {
   const handleChange = (_: Event, newValue: number | number[]) => {
     changeSongVolume(newValue as number)
+    resetMix && resetMix()
   }
   const setVolumeMin = () => {
-    if (volume > 0) changeSongVolume(0)
+    if (volume === 0) return
+    changeSongVolume(0)
+    resetMix && resetMix()
   }
   const setVolumeMax = () => {
-    if (volume < 100) changeSongVolume(100)
+    if (volume === 100) return
+    resetMix && resetMix()
+    changeSongVolume(100)
   }
   return (
     <Stack

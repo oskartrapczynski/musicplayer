@@ -1,5 +1,5 @@
 import { DATA_FILE, FUNCTIONS } from '@global/constants'
-import { IDB, ILibrary, IMusicResponse, IResponseFileJSON } from '@global/interfaces'
+import { IDB, ILibrary, IMusicDialogResponse, IResponseFileJSON } from '@global/interfaces'
 
 const {
   READ_MUSIC_DIALOG,
@@ -11,7 +11,7 @@ const {
 } = FUNCTIONS
 
 export default interface ICustomAPI {
-  [READ_MUSIC_DIALOG]: () => Promise<IMusicResponse> // api
+  [READ_MUSIC_DIALOG]: () => Promise<IMusicDialogResponse> // api
   [READ_MUSIC_PATH]: (_: Electron.IpcMainInvokeEvent, path: string) => Promise<Buffer> //invoke
   [READ_FILE_JSON]: (_: Electron.IpcMainInvokeEvent, type: DATA_FILE) => Promise<JSON> //invoke
   [WRITE_FILE_JSON]: (

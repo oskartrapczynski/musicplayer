@@ -1,6 +1,6 @@
 enum PLAYER {
-  one,
-  two
+  one = 'one',
+  two = 'two'
 }
 
 export default PLAYER

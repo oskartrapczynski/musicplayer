@@ -41,7 +41,7 @@ interface Props {
   }: IReadMusicPath & {
     playerId: PLAYER
   }) => Promise<void>
-  handleReadMusicDialog: (playeId: PLAYER, playlistId?: string) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
   player1: Player
@@ -104,10 +104,9 @@ const LibraryPlaylistData = ({
     setFilteredLibrary(searchSong ? searchPathFromWords({ library, searchSong }) : library)
   }
 
-  const handleClickAddSongPlaylist = async (player: PLAYER) =>
-    await handleReadMusicDialog(player, currentPlaylistId!)
+  const handleClickAddSongPlaylist = async () => await handleReadMusicDialog(currentPlaylistId!)
 
-  const handleClickAddSongLibrary = async (player: PLAYER) => await handleReadMusicDialog(player)
+  const handleClickAddSongLibrary = async () => await handleReadMusicDialog()
 
   const handleDeletePlaylist = async () => {
     if (
@@ -174,7 +173,7 @@ const LibraryPlaylistData = ({
   }
 
   const handleClickAddSong = (playerId: PLAYER) => {
-    type === 'library' ? handleClickAddSongLibrary(playerId) : handleClickAddSongPlaylist(playerId)
+    type === 'library' ? handleClickAddSongLibrary() : handleClickAddSongPlaylist()
   }
 
   const handleClickButtonPlaylist = (songId: string, path) => {
@@ -260,18 +259,8 @@ const LibraryPlaylistData = ({
               onClick={() => handleClickAddSong(PLAYER.one)}
               startIcon={<LibraryAddIcon />}
             >
-              {`Dodaj utwór${appMode === APP_MODE.PRO ? ' 1' : ''}`}
+              Dodaj utwór/utwory
             </Button>
-            {appMode === APP_MODE.PRO && (
-              <Button
-                color="success"
-                variant="outlined"
-                onClick={() => handleClickAddSong(PLAYER.two)}
-                startIcon={<LibraryAddIcon />}
-              >
-                Dodaj utwór 2
-              </Button>
-            )}
             {filteredLibrary && filteredLibrary.length > 0 && (
               <Button
                 color="error"

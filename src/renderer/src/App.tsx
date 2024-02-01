@@ -103,48 +103,37 @@ const App = () => {
     src: player2.song as string
   })
 
-  const handleReadMusicDialog = async (playerId: PLAYER, playlistId?: string) => {
-    const { song, songTags, info, filePath, hotCues } = await readMusicDialog()
-    const setPlayer = playerId === PLAYER.one ? setPlayer1 : setPlayer2
-    if (
-      !song ||
-      !filePath ||
-      info === READ_MUSIC_STATE.ERROR ||
-      info === READ_MUSIC_STATE.NOT_LOADED
-    ) {
-      enqueueSnackbar('Nie załadowano utworu', { variant: 'warning' })
+  const handleReadMusicDialog = async (playlistId?: string) => {
+    const { info, filePaths } = await readMusicDialog()
+    if (!filePaths || info === READ_MUSIC_STATE.ERROR || info === READ_MUSIC_STATE.NOT_LOADED) {
       return
     }
-    setPlayer({
-      song,
-      songTags,
-      info,
-      filePath,
-      locationSong: playlistId ? playlistId : DATA_FILE.LIBRARY,
-      hotCues
-    })
-    const savedSongInLibrary = library?.filter(({ path }) => path === filePath)
-    const newSong = savedSongInLibrary?.length
-      ? { ...savedSongInLibrary[0] }
-      : { songId: uuidv4(), path: filePath!, hotCues: [null, null, null, null] }
+    const notSavedSongsInLibrary = library
+      ? filePaths.filter((filePath) => !library.some(({ path }) => path === filePath))
+      : filePaths
+    const newSongs = notSavedSongsInLibrary.map((filePath) => ({
+      songId: uuidv4(),
+      path: filePath,
+      hotCues: [null, null, null, null]
+    }))
 
     const newPlaylist = await addSongToPlaylist({
       playlistId,
       playlists: playlists!,
-      songId: newSong.songId
+      newSongs
     })
 
-    const newLibrary: ILibrary[] = library ? [...library, newSong] : [newSong]
+    const newLibrary: ILibrary[] = library ? [...library, ...newSongs] : [...newSongs]
 
     const updatedDB = {
-      [DATA_FILE.LIBRARY]: savedSongInLibrary?.length ? library! : newLibrary,
+      [DATA_FILE.LIBRARY]: newLibrary,
       [DATA_FILE.PLAYLISTS]: newPlaylist
     }
 
     await writeFileJSON(DATA_FILE.DB, updatedDB)
     setLibrary(updatedDB[DATA_FILE.LIBRARY])
     setPlaylists(updatedDB[DATA_FILE.PLAYLISTS])
-    enqueueSnackbar('Załadowano utwór', { variant: 'success' })
+    enqueueSnackbar(`Dodano utwory: ${newSongs.length}`, { variant: 'success' })
   }
 
   const handleReadMusicPath = async ({

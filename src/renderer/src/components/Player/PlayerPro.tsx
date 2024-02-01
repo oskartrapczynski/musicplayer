@@ -4,8 +4,13 @@ import { ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
 import { HotCue, IMixVolumes, IMusicLoop, Player } from '@renderer/interfaces'
 import { HOT_CUE_LABELS, PLAYER } from '@renderer/constants'
-import { Box, Typography, Button, Menu } from '@mui/material'
-import { Close as CloseIcon, Shuffle as ShuffleIcon } from '@mui/icons-material'
+import { Box, Typography, Button, Menu, Fab } from '@mui/material'
+import {
+  Close as CloseIcon,
+  Shuffle as ShuffleIcon,
+  South as SouthIcon,
+  North as NorthIcon
+} from '@mui/icons-material'
 
 interface Props {
   library: ILibrary[] | null
@@ -22,8 +27,9 @@ interface Props {
   changeSongPos: (seek: number) => void
   toggle: (play: boolean) => void
   playerId: PLAYER
-  handleSetActivePlayerPlay: (playerId: PLAYER) => void
+  handleMix: (playerId: PLAYER, type?: 'up' | 'down') => void
   mix: IMixVolumes
+  resetMix: (playerId?: PLAYER) => void
 }
 
 const PlayerPro = ({
@@ -41,8 +47,9 @@ const PlayerPro = ({
   changeSongPos,
   toggle,
   playerId,
-  handleSetActivePlayerPlay,
-  mix
+  handleMix,
+  mix,
+  resetMix
 }: Props) => {
   const [hotCues, setHotCues] = useState<HotCue>(hotCuesProps)
   const [loop, setLoop] = useState<IMusicLoop>({ in: null, out: null })
@@ -125,14 +132,18 @@ const PlayerPro = ({
     handleCloseMenu()
   }
 
-  // const [mix, setMix] = useState<{
-  //   type: 'up' | 'down'
-  //   initValue: number
-  //   value: number
-  // } | null>(null)
+  const handleVolumeAutoMix = () => {
+    if (volume === 100) return
+    handleMix(playerId)
+  }
 
-  const handlePlayerNameClick = () => {
-    handleSetActivePlayerPlay(playerId)
+  const handleVolumeUp = () => {
+    if (volume === 100) return
+    handleMix(playerId, 'up')
+  }
+  const handleVolumeDown = () => {
+    if (volume === 0) return
+    handleMix(playerId, 'down')
   }
 
   return (
@@ -168,21 +179,12 @@ const PlayerPro = ({
         <Box gap={1} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <SongImage height="50px" width="50px" songTags={songTags} />
           <Typography>{text}</Typography>
-
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handlePlayerNameClick}
-            disabled={Boolean(mix[PLAYER.one]) && Boolean(mix[PLAYER.two])}
-            endIcon={<ShuffleIcon />}
-          >
-            AutoMix
-          </Button>
         </Box>
         <Typography>{`Nazwa: ${filePath ? getFileName(filePath) : '-'}`}</Typography>
         <Typography>{`Tytuł: ${songTags?.title ? songTags?.title : '-'}`}</Typography>
         <Typography>{`Autor: ${songTags?.artist ? songTags?.artist : '-'}`}</Typography>
       </Box>
+
       <Box display="flex" gap={1} width="100%">
         <Button variant={loop.in ? 'contained' : 'outlined'} color="warning" onClick={handleLoopIn}>
           IN
@@ -216,7 +218,38 @@ const PlayerPro = ({
             </Button>
           ))}
       </Box>
-      <SliderVolume volume={volume} changeSongVolume={changeSongVolume} isDisabled={isDisabled} />
+      <Box display="flex" gap={1} width="100%">
+        <Fab
+          color="primary"
+          size="small"
+          onClick={handleVolumeDown}
+          disabled={Boolean(mix[PLAYER.one]) || Boolean(mix[PLAYER.two])}
+        >
+          <SouthIcon />
+        </Fab>
+        <Button
+          variant="contained"
+          onClick={handleVolumeAutoMix}
+          disabled={Boolean(mix[PLAYER.one]) || Boolean(mix[PLAYER.two])}
+          startIcon={<ShuffleIcon />}
+        >
+          AutoMix
+        </Button>
+        <Fab
+          color="primary"
+          size="small"
+          onClick={handleVolumeUp}
+          disabled={Boolean(mix[PLAYER.one]) || Boolean(mix[PLAYER.two])}
+        >
+          <NorthIcon />
+        </Fab>
+      </Box>
+      <SliderVolume
+        volume={volume}
+        changeSongVolume={changeSongVolume}
+        isDisabled={isDisabled}
+        resetMix={() => resetMix(playerId)}
+      />
     </Box>
   )
 }

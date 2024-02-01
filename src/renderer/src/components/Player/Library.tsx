@@ -20,7 +20,7 @@ interface Props {
   }: IReadMusicPath & {
     playerId: PLAYER
   }) => Promise<void>
-  handleReadMusicDialog: (playeId: PLAYER, playlistId?: string) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<void>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>

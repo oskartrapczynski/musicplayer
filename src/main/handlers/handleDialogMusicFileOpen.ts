@@ -1,40 +1,25 @@
 import { READ_MUSIC_STATE } from '@global/constants'
-import { IMusicResponse } from '@global/interfaces'
-import { readMusicFile, readAudioTags } from '@main/utils'
+import { IMusicDialogResponse } from '@global/interfaces'
 import { dialog } from 'electron'
-import NodeID3 from 'node-id3'
 
 const handleDialogMusicFileOpen = async () => {
-  let song: string | Buffer | undefined = undefined,
-    songTags: NodeID3.Tags | undefined = undefined
-  const hotCues = [null, null, null, null]
-
   try {
     const { canceled, filePaths } = await dialog.showOpenDialog({
-      properties: ['openFile'],
+      properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Music files', extensions: ['mp3', 'wav'] }]
     })
     if (canceled) throw new Error(READ_MUSIC_STATE.CANCELLED)
-    if (!filePaths[0]) throw new Error(READ_MUSIC_STATE.ERROR)
-    song = await readMusicFile(filePaths[0])
-    if (!song.byteLength) throw new Error(READ_MUSIC_STATE.ERROR)
-    songTags = await readAudioTags(song)
+    if (!filePaths.every((path) => Boolean(path) === true)) throw new Error(READ_MUSIC_STATE.ERROR)
 
     return {
-      song,
-      filePath: filePaths[0],
-      songTags,
       info: READ_MUSIC_STATE.SUCCESS,
-      hotCues
-    } as IMusicResponse
+      filePaths
+    } as IMusicDialogResponse
   } catch (err) {
     return {
-      song,
-      filePath: undefined,
-      songTags,
       info: (err as Error).message,
-      hotCues
-    } as IMusicResponse
+      filePaths: null
+    } as IMusicDialogResponse
   }
 }
 
