@@ -17,11 +17,11 @@ import {
   readFileJSON,
   readMusicDialog,
   readMusicPath,
-  addSongToPlaylist
+  addSongToPlaylist,
+  createNewSong
 } from '@renderer/utils'
 import { usePlayer } from '@renderer/hooks'
 import { SnackbarCloseButton } from '@renderer/components'
-import { v4 as uuidv4 } from 'uuid'
 import { Box, CircularProgress, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { IReadMusicPath, Player } from './interfaces'
 
@@ -104,36 +104,59 @@ const App = () => {
   })
 
   const handleReadMusicDialog = async (playlistId?: string) => {
-    const { info, filePaths } = await readMusicDialog()
-    if (!filePaths || info === READ_MUSIC_STATE.ERROR || info === READ_MUSIC_STATE.NOT_LOADED) {
-      return
+    try {
+      const { info, filePaths } = await readMusicDialog()
+      if (!filePaths || !filePaths.length) throw new Error('Brak wybranych utworów')
+      if (info === READ_MUSIC_STATE.ERROR) throw new Error('Błąd podczas ładowania')
+      if (info === READ_MUSIC_STATE.NOT_LOADED) throw new Error('Nie załadowano')
+
+      const playlistArrayId =
+        playlists && playlists.length && playlistId !== undefined
+          ? playlists.findIndex(({ playlistId: playlistIndex }) => playlistIndex === playlistId)
+          : null
+
+      const savedInLibrary: ILibrary[] = []
+      const notSavedInLibrary: ILibrary[] = []
+
+      filePaths.forEach((filePath) => {
+        if (!library || !library.length) return notSavedInLibrary.push(createNewSong(filePath))
+        return library.some(({ path }) => path === filePath)
+          ? savedInLibrary.push(library!.filter(({ path }) => path === filePath)[0])
+          : notSavedInLibrary.push(createNewSong(filePath))
+      })
+
+      const newPlaylist = await addSongToPlaylist({
+        playlistArrayId,
+        playlists: playlists!,
+        savedInLibrary,
+        notSavedInLibrary
+      })
+
+      if (
+        playlistArrayId !== null &&
+        newPlaylist[playlistArrayId].songs.length === playlists![playlistArrayId].songs.length
+      )
+        throw new Error('Nie wprowadzono zmian')
+
+      const newLibrary: ILibrary[] = library
+        ? [...library, ...notSavedInLibrary]
+        : [...notSavedInLibrary]
+
+      if (playlistArrayId === null && library && library.length === newLibrary.length)
+        throw new Error('Nie wprowadzono zmian')
+
+      const updatedDB = {
+        [DATA_FILE.LIBRARY]: newLibrary,
+        [DATA_FILE.PLAYLISTS]: newPlaylist
+      }
+
+      await writeFileJSON(DATA_FILE.DB, updatedDB)
+      setLibrary(updatedDB[DATA_FILE.LIBRARY])
+      setPlaylists(updatedDB[DATA_FILE.PLAYLISTS])
+      return enqueueSnackbar('Pomyślnie dodano utwory', { variant: 'success' })
+    } catch (err) {
+      return enqueueSnackbar((err as Error).message, { variant: 'warning' })
     }
-    const notSavedSongsInLibrary = library
-      ? filePaths.filter((filePath) => !library.some(({ path }) => path === filePath))
-      : filePaths
-    const newSongs = notSavedSongsInLibrary.map((filePath) => ({
-      songId: uuidv4(),
-      path: filePath,
-      hotCues: [null, null, null, null]
-    }))
-
-    const newPlaylist = await addSongToPlaylist({
-      playlistId,
-      playlists: playlists!,
-      newSongs
-    })
-
-    const newLibrary: ILibrary[] = library ? [...library, ...newSongs] : [...newSongs]
-
-    const updatedDB = {
-      [DATA_FILE.LIBRARY]: newLibrary,
-      [DATA_FILE.PLAYLISTS]: newPlaylist
-    }
-
-    await writeFileJSON(DATA_FILE.DB, updatedDB)
-    setLibrary(updatedDB[DATA_FILE.LIBRARY])
-    setPlaylists(updatedDB[DATA_FILE.PLAYLISTS])
-    enqueueSnackbar(`Dodano utwory: ${newSongs.length}`, { variant: 'success' })
   }
 
   const handleReadMusicPath = async ({

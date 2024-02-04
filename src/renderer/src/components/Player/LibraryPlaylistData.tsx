@@ -17,7 +17,7 @@ import {
   Album as AlbumIcon
 } from '@mui/icons-material'
 import { useParams } from 'react-router-dom'
-import { enqueueSnackbar } from 'notistack'
+import { enqueueSnackbar, SnackbarKey } from 'notistack'
 import removeSongFromPlaylist from '@renderer/utils/library/removeSongFromPlaylist'
 import { APP_MODE, PLAYER } from '@renderer/constants'
 import { DATA_FILE } from '@global/constants'
@@ -41,7 +41,7 @@ interface Props {
   }: IReadMusicPath & {
     playerId: PLAYER
   }) => Promise<void>
-  handleReadMusicDialog: (playlistId?: string) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<SnackbarKey>
   searchSong: string
   setSearchSong: React.Dispatch<React.SetStateAction<string>>
   player1: Player
@@ -172,7 +172,7 @@ const LibraryPlaylistData = ({
     type === 'library' ? handleDeleteLibrary() : handleDeletePlaylist()
   }
 
-  const handleClickAddSong = (playerId: PLAYER) => {
+  const handleClickAddSong = () => {
     type === 'library' ? handleClickAddSongLibrary() : handleClickAddSongPlaylist()
   }
 
@@ -256,7 +256,7 @@ const LibraryPlaylistData = ({
             <Button
               color="success"
               variant="outlined"
-              onClick={() => handleClickAddSong(PLAYER.one)}
+              onClick={() => handleClickAddSong()}
               startIcon={<LibraryAddIcon />}
             >
               Dodaj utwór/utwory

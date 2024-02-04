@@ -3,6 +3,7 @@ import { ContentSection } from '@renderer/components'
 import { Library } from '@renderer/components'
 import { APP_MODE, PLAYER } from '@renderer/constants'
 import { IReadMusicPath, Player } from '@renderer/interfaces'
+import { SnackbarKey } from 'notistack'
 
 interface Props {
   appMode: APP_MODE
@@ -14,7 +15,7 @@ interface Props {
   }: IReadMusicPath & {
     playerId: PLAYER
   }) => Promise<void>
-  handleReadMusicDialog: (playlistId?: string) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<SnackbarKey>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>

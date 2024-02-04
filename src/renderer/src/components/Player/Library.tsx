@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { enqueueSnackbar } from 'notistack'
+import { enqueueSnackbar, SnackbarKey } from 'notistack'
 import { AddPlaylist, InputSearch, LibraryPlaylistButton, LibraryPlaylistData } from '..'
 import { ILibrary, IPlaylist } from '@global/interfaces'
 import { DATA_FILE } from '@global/constants'
@@ -20,7 +20,7 @@ interface Props {
   }: IReadMusicPath & {
     playerId: PLAYER
   }) => Promise<void>
-  handleReadMusicDialog: (playlistId?: string) => Promise<void>
+  handleReadMusicDialog: (playlistId?: string) => Promise<SnackbarKey>
   playlists: IPlaylist[]
   setLibrary: React.Dispatch<React.SetStateAction<ILibrary[]>>
   setPlaylists: React.Dispatch<React.SetStateAction<IPlaylist[]>>
@@ -121,6 +121,7 @@ const Library = ({
                     locationSong2={player2.locationSong}
                     editPlaylistId={editPlaylistId}
                     setEditPlaylistId={setEditPlaylistId}
+                    playlistArrayId={index}
                   />
                 ))}
               </>

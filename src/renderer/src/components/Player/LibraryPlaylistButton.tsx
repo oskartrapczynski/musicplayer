@@ -74,7 +74,7 @@ const LibraryPlaylistButton = ({
   }
 
   const updatePlaylistName = () => {
-    if (!playlists || !playlistArrayId) return
+    if (!playlists || playlistArrayId === undefined) return
     const newPlaylists: IPlaylist[] = JSON.parse(JSON.stringify(playlists))
     newPlaylists[playlistArrayId].name = playlistName
     setPlaylists!(newPlaylists)

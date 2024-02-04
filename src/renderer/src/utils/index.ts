@@ -17,11 +17,11 @@ import setLibraryContentBoxShadow from './library/setLibraryContentBoxShadow'
 import setLibraryPlaylistBoxShadow from './library/setLibraryPlaylistBoxShadow'
 import addSongToPlaylist from './library/addSongToPlaylist'
 import removePlaylist from './library/removePlaylist'
-import checkIsMusicSavedInPlaylist from './library/checlIsMusicSavedInPlaylist'
 import createMusicCover from './library/createMusicCover'
 import createSliderMarks from './library/createSliderMarks'
 import removeSongFromDb from './library/removeSongFromDb'
 import removeSongFromPlaylist from './library/removeSongFromPlaylist'
+import createNewSong from './library/createNewSong'
 
 export {
   convertBufferToSong,
@@ -45,7 +45,7 @@ export {
   removePlaylist,
   removeSongFromDb,
   removeSongFromPlaylist,
-  checkIsMusicSavedInPlaylist,
   createMusicCover,
-  createSliderMarks
+  createSliderMarks,
+  createNewSong
 }

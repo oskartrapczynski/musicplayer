@@ -1,30 +1,46 @@
-import { IPlaylist } from '@global/interfaces'
-import { checkIsMusicSavedInPlaylist } from '..'
+import { ILibrary, IPlaylist } from '@global/interfaces'
 
 interface Params {
+  playlistArrayId: number | null
   playlists: IPlaylist[]
-  playlistId?: string
-  newSongs: {
-    songId: any
-    path: string
-    hotCues: null[]
-  }[]
+  savedInLibrary: ILibrary[]
+  notSavedInLibrary: ILibrary[]
 }
 
-const addSongToPlaylist = async ({ playlists, playlistId, newSongs }: Params) => {
-  if (playlistId === undefined || !newSongs.length) return playlists
-  const musicNotSavedInPlaylist = newSongs.filter(
-    ({ songId }) => !checkIsMusicSavedInPlaylist({ playlists, songId })
-  )
-  if (!musicNotSavedInPlaylist.length) return playlists
-  const songIds = musicNotSavedInPlaylist.map(({ songId }) => songId)
-  const playlistArrayId = playlists.findIndex(
-    ({ playlistId: playlistIndex }) => playlistIndex === playlistId
-  )
-  if (playlistArrayId === -1) return playlists
-  const newPlaylists: IPlaylist[] = JSON.parse(JSON.stringify(playlists))
-  newPlaylists[playlistArrayId].songs.push(...songIds)
-  return newPlaylists
+const addSongToPlaylist = async ({
+  playlistArrayId,
+  playlists,
+  savedInLibrary,
+  notSavedInLibrary
+}: Params) => {
+  try {
+    if (playlistArrayId === null) throw new Error('missing playlistId')
+    if (playlistArrayId === -1) throw new Error('can not find index of playlist')
+
+    const savedInLibrarySongIds = savedInLibrary.map(({ songId }) => songId)
+    const notSavedInLibrarySongIds = notSavedInLibrary.map(({ songId }) => songId)
+
+    const filteredSavedInLibrarySongIds = savedInLibrarySongIds.filter(
+      (songId) => !playlists[playlistArrayId].songs.includes(songId)
+    )
+
+    const newPlaylists: IPlaylist[] = JSON.parse(JSON.stringify(playlists))
+
+    if (!filteredSavedInLibrarySongIds.length) {
+      newPlaylists[playlistArrayId].songs.push(...notSavedInLibrarySongIds)
+      return newPlaylists
+    }
+
+    newPlaylists[playlistArrayId].songs.push(
+      ...notSavedInLibrarySongIds,
+      ...filteredSavedInLibrarySongIds
+    )
+
+    return newPlaylists
+  } catch (err) {
+    console.log((err as Error).message)
+    return playlists
+  }
 }
 
 export default addSongToPlaylist
