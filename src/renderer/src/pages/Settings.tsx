@@ -1,4 +1,3 @@
-import { DATA_FILE } from '@global/constants'
 import { IDB, ILibrary, IPlaylist, IResponseFileJSON } from '@global/interfaces'
 import { Button, FormControlLabel, Stack, Switch } from '@mui/material'
 import { ContentSection } from '@renderer/components'
@@ -35,7 +34,7 @@ const SettingsPage = ({
 
   const handleImportFile = async () => {
     try {
-      const { data, info }: IResponseFileJSON = await window.electron.ipcRenderer.invoke(
+      const { data }: IResponseFileJSON = await window.electron.ipcRenderer.invoke(
         FUNCTIONS.IMPORT_DIALOG_JSON
       )
       const db = data as IDB

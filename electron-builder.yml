@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: musicplayer
+productName: Odtwarzacz muzyczny
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: musicplayer
+  executableName: odtwarzacz_muzyczny
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

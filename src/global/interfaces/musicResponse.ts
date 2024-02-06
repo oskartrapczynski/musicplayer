@@ -1,6 +1,6 @@
 import NodeID3 from 'node-id3'
 import { READ_MUSIC_STATE } from '@global/constants'
-import { HotCue } from '@renderer/interfaces'
+import { HotCue } from '.'
 
 export default interface IMusicResponse {
   song?: Buffer | string

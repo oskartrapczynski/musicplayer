@@ -1,4 +1,3 @@
-import HotCue from './player/hotCues'
 import IMixVolume from './player/mixVolume'
 import IMixVolumes from './player/mixVolumes'
 import IMusicLoop from './player/musicLoop'
@@ -12,7 +11,6 @@ export type {
   IReadMusicPath,
   ISongPath,
   IMusicLoop,
-  HotCue,
   Player,
   IMixVolume,
   IMixVolumes

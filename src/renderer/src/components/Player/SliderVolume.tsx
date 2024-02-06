@@ -1,7 +1,6 @@
 import { IconButton, Slider, Stack } from '@mui/material'
 import { VolumeDown, VolumeUp } from '@mui/icons-material'
 import { SliderVolumeTooltipLabel } from '..'
-import { PLAYER } from '@renderer/constants'
 
 interface Props {
   direction?: 'row' | 'column'

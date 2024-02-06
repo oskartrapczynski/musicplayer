@@ -30,12 +30,13 @@ const createWindow = (): void => {
     minWidth: 900,
     minHeight: 600,
     autoHideMenuBar: true,
+    icon,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       // webSecurity: true,
-      webSecurity: false,
+      webSecurity: true,
       nodeIntegration: true
     }
   })

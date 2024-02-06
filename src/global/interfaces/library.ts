@@ -1,4 +1,4 @@
-import { HotCue } from '@renderer/interfaces'
+import { HotCue } from '.'
 
 export default interface ILibrary {
   songId: string

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { SliderVolume, SongImage } from '..'
-import { ILibrary } from '@global/interfaces'
+import { HotCue, ILibrary } from '@global/interfaces'
 import { getFileName } from '@global/utils'
-import { HotCue, IMixVolumes, IMusicLoop, Player } from '@renderer/interfaces'
+import { IMixVolumes, IMusicLoop, Player } from '@renderer/interfaces'
 import { HOT_CUE_LABELS, PLAYER } from '@renderer/constants'
 import { Box, Typography, Button, Menu, Fab } from '@mui/material'
 import {
